@@ -1,7 +1,5 @@
 package com.example.api.province;
 
-import com.example.api.dto.RequestMeta;
-import com.example.api.utils.TokenHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +14,6 @@ public class ProvinceController {
     private final ProvinceService provinceService;
 
     @Autowired
-    private RequestMeta requestMeta;
-
-    @Autowired
     public ProvinceController(ProvinceService provinceService){this.provinceService = provinceService;}
 
     @GetMapping
@@ -27,13 +22,13 @@ public class ProvinceController {
     }
 
     @PostMapping(path = "/new")
-    public ResponseEntity<Object>addProvince(@RequestBody Province province){
-        return this.provinceService.newProvince(province);
+    public ResponseEntity<Object>addProvince(@RequestBody ProvinceDTO provinceDTO){
+        return this.provinceService.newProvince(provinceDTO);
     }
 
     @PutMapping(path = "/edit/{provinceId}")
-    public ResponseEntity<Object>editProvince(@PathVariable("provinceId") Long id, @RequestBody Province province){
-        return this.provinceService.editProvince(id, province);
+    public ResponseEntity<Object>editProvince(@PathVariable("provinceId") Long id, @RequestBody ProvinceDTO provinceDTO){
+        return this.provinceService.editProvince(id, provinceDTO);
     }
 
     @DeleteMapping(path="/delete/{provinceId}")

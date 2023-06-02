@@ -20,16 +20,18 @@ public class ProvinceService {
     public List<Province> getProvinces() {return this.provinceRepository.findByDeletedAtIsNull();}
 
 
-    public ResponseEntity<Object> newProvince(Province province) {
-        Optional<Province> res = provinceRepository.findProvinceByName(province.getName());
+    public ResponseEntity<Object> newProvince(ProvinceDTO provinceDTO) {
+        Optional<Province> res = provinceRepository.findProvinceByName(provinceDTO.getName());
         data = new HashMap<>();
 
-        if (res.isPresent() && province.getId() == null){
+        if (res.isPresent()){
             data.put("error",true);
             data.put("message", "Ya existe un registro con este nombre");
             return new ResponseEntity<>(data, HttpStatus.CONFLICT);
         }
 
+        Province province = new Province();
+        province.setName(provinceDTO.getName());
         data.put("message", "Se guardó con éxito el registro");
 
         provinceRepository.save(province);
@@ -38,13 +40,13 @@ public class ProvinceService {
         return new ResponseEntity<>(data,HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Object> editProvince(Long id, Province province){
+    public ResponseEntity<Object> editProvince(Long id, ProvinceDTO provinceDTO){
         Optional<Province> optionalProvince = provinceRepository.findByIdAndDeletedAtIsNull(id);
         data = new HashMap<>();
 
         if (optionalProvince.isPresent()){
             Province existingProvince = optionalProvince.get();
-            existingProvince.setName(province.getName());
+            existingProvince.setName(provinceDTO.getName());
 
             provinceRepository.save(existingProvince);
             data.put("message", "Registro actualizado exitosamente");
