@@ -1,5 +1,6 @@
 package com.example.api.user;
 
+import com.example.api.common.MessagesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,11 @@ public class UserService {
 
         if (res.isPresent() && user.getId() == null){
             data.put("error",true);
-            data.put("message", "Ya existe un registro con este nombre");
+            data.put("message", MessagesResponse.recordNameExists);
             return new ResponseEntity<>(data, HttpStatus.CONFLICT);
         }
 
-        data.put("message", "Se guardó con éxito el registro");
+        data.put("message", MessagesResponse.addSuccess);
         userRepository.save(user);
         data.put("data", user);
         return new ResponseEntity<>(data, HttpStatus.CREATED);
@@ -45,13 +46,13 @@ public class UserService {
             existingUser.setUsername(user.getUsername());
 
             userRepository.save(existingUser);
-            data.put("message", "Registro actualizado exitosamente");
+            data.put("message", MessagesResponse.editSuccess);
             data.put("data", existingUser);
 
             return new ResponseEntity<>(data, HttpStatus.OK);
         } else {
             data.put("error", true);
-            data.put("message", "No se encontro un registro con ese id:" + id);
+            data.put("message", MessagesResponse.recordNotFound);
             return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
         }
     }
@@ -62,7 +63,7 @@ public class UserService {
 
         if (!exists){
             data.put("error", true);
-            data.put("message", "No existe el registro");
+            data.put("message", MessagesResponse.recordNotFound);
 
             return new ResponseEntity<>(data, HttpStatus.CONFLICT);
         }
@@ -71,7 +72,7 @@ public class UserService {
         existingUser.setDeletedAt(LocalDateTime.now());
 
         userRepository.save(existingUser);
-        data.put("message", "Registro eliminado");
+        data.put("message", MessagesResponse.deleteSuccess);
         return new ResponseEntity<>(data,HttpStatus.OK);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.api.login;
 
 import com.example.api.common.APIResponse;
+import com.example.api.common.MessagesResponse;
 import com.example.api.person.Person;
 import com.example.api.person.PersonRepository;
 import com.example.api.rol.Rol;
@@ -62,11 +63,12 @@ public class LoginService {
 
         //Response
         if(user == null){
-            apiResponse.setData("User Login Failed");
+            apiResponse.setData(MessagesResponse.loginFailed);
             return apiResponse;
         }
         String token = jwtUtils.generateJwt(user);
         TokenHolder.accessToken = token;
+        data.put("message", MessagesResponse.loginSuccess);
         data.put("accessToken", token);
         apiResponse.setData(data);
         return apiResponse;

@@ -1,6 +1,7 @@
 package com.example.api.phoneType;
 
 import com.example.api.common.APIResponse;
+import com.example.api.common.MessagesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +29,13 @@ public class PhoneTypeService {
 
         if (res.isPresent()){
             data.put("error", true);
-            data.put("message", "Ya existe un registro con ese nombre");
+            data.put("message", MessagesResponse.recordNameExists);
             apiResponse.setData(data);
             return apiResponse;
         }
         PhoneType phoneType = new PhoneType();
         phoneType.setName(phoneTypeDTO.getName());
-        data.put("message", "Se guardo el registro con éxito");
+        data.put("message", MessagesResponse.addSuccess);
 
         phoneTypeRepository.save(phoneType);
         data.put("data", phoneType);
@@ -53,12 +54,12 @@ public class PhoneTypeService {
             existingPhoneType.setName(phoneTypeDTO.getName());
 
             phoneTypeRepository.save(existingPhoneType);
-            data.put("message", "Se actualizo el registro con éxito");
+            data.put("message", MessagesResponse.editSuccess);
             data.put("data", existingPhoneType);
             apiResponse.setData(data);
         } else {
             data.put("error",true);
-            data.put("message", "Ocurrio un error al actualizar");
+            data.put("message", MessagesResponse.recordNotFound);
             apiResponse.setData(data);
         }
         return apiResponse;
@@ -72,7 +73,7 @@ public class PhoneTypeService {
 
         if (!exists){
             data.put("error", true);
-            data.put("message", "No existe el registro");
+            data.put("message", MessagesResponse.recordNotFound);
             apiResponse.setData(data);
             return apiResponse;
         }
@@ -82,7 +83,7 @@ public class PhoneTypeService {
         existingPhoneType.setDeletedAt(LocalDateTime.now());
 
         phoneTypeRepository.save(existingPhoneType);
-        data.put("message", "registro eliminado");
+        data.put("message", MessagesResponse.deleteSuccess);
         apiResponse.setData(data);
         return apiResponse;
     }
