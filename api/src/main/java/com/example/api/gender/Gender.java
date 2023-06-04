@@ -1,5 +1,6 @@
 package com.example.api.gender;
 
+import com.example.api.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 @Table
 @Getter
 @Setter
-public class Gender {
+public class Gender extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

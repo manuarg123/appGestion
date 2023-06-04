@@ -1,6 +1,7 @@
 package com.example.api.logout;
 
 import com.example.api.common.APIResponse;
+import com.example.api.common.MessagesResponse;
 import com.example.api.utils.TokenHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class LogoutController {
         } catch (Exception e) {
             APIResponse errorResponse = new APIResponse();
             errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            errorResponse.setData("Ocurrió un error durante el logout.");
+            errorResponse.setData(MessagesResponse.logoutFailed);
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorResponse);
