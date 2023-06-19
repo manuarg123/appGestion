@@ -3,6 +3,7 @@ package com.example.api.email;
 import com.example.api.AuditableEntity;
 import com.example.api.emalType.EmailType;
 import com.example.api.person.Person;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class Email extends AuditableEntity {
 
     @ManyToOne
     @JoinColumn(name="person_id", nullable=false)
+    @JsonBackReference
     private Person person;
 
     @ManyToOne

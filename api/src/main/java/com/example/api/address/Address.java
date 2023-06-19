@@ -3,14 +3,20 @@ package com.example.api.address;
 import com.example.api.AuditableEntity;
 import com.example.api.location.Location;
 import com.example.api.person.Person;
+import com.example.api.province.Province;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Address extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,39 +48,14 @@ public class Address extends AuditableEntity {
 
     @ManyToOne
     @JoinColumn(name="person_id", nullable = false)
+    @JsonBackReference
     private Person person;
 
     @ManyToOne
     @JoinColumn(name="location_id", nullable = true)
     private Location location;
 
-    public Address() {
-    }
-
-    public Address(Long id, String street, String section, String number, String building, String floor, String apartment, String zip, String complete_address, Person person, Location location) {
-        this.id = id;
-        this.street = street;
-        this.section = section;
-        this.number = number;
-        this.building = building;
-        this.floor = floor;
-        this.apartment = apartment;
-        this.zip = zip;
-        this.complete_address = complete_address;
-        this.person = person;
-        this.location = location;
-    }
-
-    public Address(String street, String section, String number, String building, String floor, String apartment, String zip, String complete_address, Person person, Location location) {
-        this.street = street;
-        this.section = section;
-        this.number = number;
-        this.building = building;
-        this.floor = floor;
-        this.apartment = apartment;
-        this.zip = zip;
-        this.complete_address = complete_address;
-        this.person = person;
-        this.location = location;
-    }
+    @ManyToOne
+    @JoinColumn(name="province_id", nullable = true)
+    private Province province;
 }

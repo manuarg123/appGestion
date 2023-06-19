@@ -3,6 +3,7 @@ package com.example.api.identification;
 import com.example.api.AuditableEntity;
 import com.example.api.identificationType.IdentificationType;
 import com.example.api.person.Person;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class Identification extends AuditableEntity {
 
     @ManyToOne
     @JoinColumn(name="person_id", nullable = false)
+    @JsonBackReference
     private Person person;
 
     public Identification() {

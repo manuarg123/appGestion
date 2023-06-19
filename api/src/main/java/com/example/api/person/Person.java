@@ -5,6 +5,7 @@ import com.example.api.address.Address;
 import com.example.api.email.Email;
 import com.example.api.identification.Identification;
 import com.example.api.phone.Phone;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,15 +26,19 @@ public class Person extends AuditableEntity {
     private String fullName;
 
     @OneToMany(mappedBy = "person")
+    @JsonManagedReference
     private List<Address> addresses;
 
     @OneToMany(mappedBy = "person")
+    @JsonManagedReference
     private List<Phone> phones;
 
     @OneToMany(mappedBy = "person")
+    @JsonManagedReference
     private List<Email> emails;
 
     @OneToMany(mappedBy = "person")
+    @JsonManagedReference
     private List<Identification> identifications;
 
     public Person(){
