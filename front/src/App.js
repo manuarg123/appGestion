@@ -1,31 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Login } from './Login.js';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Login } from './components/login/Login.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import Hola from './Hola.js';
 function App() {
- const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
 
-   useEffect(() => {
-     axios.get('http://localhost:8080/api/medicalCenters')
-       .then(response => {
-         setData(response.data);
-       })
-       .catch(error => {
-         console.error(error);
-       });
-   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:8080/api/medicalCenters', {
+          headers: {
+            'Content-Type' : 'application/json',
+            Authorization : `Bearer ${localStorage.token}`
+          }
+        });
 
-    return (
+        setData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <Router>
       <div>
-        {data.length === 0 && <Login />}
-        {data.map(item => (
-          <p key={item.id}>{item.name}</p>
-        ))}
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Hola data={data} />} />
+        </Routes>
       </div>
-    );
+    </Router>
+  );
 }
 
 export default App;

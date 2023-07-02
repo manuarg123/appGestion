@@ -2,6 +2,7 @@ package com.example.api.common;
 
 import com.example.api.config.JwtInterceptor;
 import com.example.api.dto.RequestMeta;
+import com.example.api.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,11 @@ public class CustomWebConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    @RequestScope
+    public JwtUtils getJwtUtils(){ return new JwtUtils();}
+
+    @Bean
     public JwtInterceptor jwtInterceptor(){
-        return new JwtInterceptor(getRequestMeta());
+        return new JwtInterceptor(getRequestMeta(), getJwtUtils());
     }
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
+import axios from 'axios';
 
 export function Login() {
   const [username, setUsername] = useState('');
@@ -14,20 +15,16 @@ export function Login() {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/login', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:8080/login', data, {
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        }
       });
 
-      if (response.ok) {
-        const token = await response.json();
-
+      if (response.status === 200) {
+        const token = response.data.data.accessToken;
         // Guardar el token en el Local Storage
         localStorage.setItem('token', token);
-
         // Redireccionar o realizar otras acciones según necesidad
       } else {
         console.error('Error:', response.status);
@@ -35,6 +32,11 @@ export function Login() {
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const manejadorBoton = (e) => {
+    e.preventDefault();
+    handleSubmit(e);
   };
 
   return (
@@ -53,7 +55,7 @@ export function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" onClick={manejadorBoton}>
           Login
         </Button>
       </form>
