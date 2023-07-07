@@ -44,7 +44,7 @@ export function Login() {
   };
 
   return (
-    <div className="login text-center">
+    <div className="login text-center main-color">
       <h1 className="login-title">Iniciar Sesión</h1>
       <form onSubmit={handleSubmit}>
         <div className='form-group margin-top'>

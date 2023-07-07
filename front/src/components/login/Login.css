@@ -17,3 +17,14 @@
     border: 1px solid rgba(0, 0, 0, 0.368);
     border-radius: 3px;
 }
+.logout-button {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.logout-button img {
+    width: 33px; 
+    height: 33px;
+    cursor: pointer;
+}

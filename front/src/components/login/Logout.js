@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
+import './Login.css';
 
 export function Logout() {
   const handleSubmit = async (e) => {
@@ -8,12 +9,11 @@ export function Logout() {
   };
 
   return (
-    <div >
-      <h1 className="login-title">Log in to Twitter</h1>
+    <div>
       <form onSubmit={handleSubmit}>
-        <Button type="submit" variant="primary">
-          Logout
-        </Button>
+        <button type="submit" className="logout-button">
+          <img src={`${process.env.PUBLIC_URL}/images/logout.png`} alt="Logout" />
+        </button>
       </form>
     </div>
   );

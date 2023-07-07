@@ -5,6 +5,7 @@ import { Login } from './components/login/Login.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Logout } from './components/login/Logout.js';
 import MedicalCenterList from './components/medicalCenter/MedicalCenterList.js';
+import Home from './components/layout/home/Home.js';
 import { Container } from 'react-bootstrap';
 import './style.css';
 
@@ -47,7 +48,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/logout" element={<Logout />} />
                 {hasToken ? (
-                  <Route path="/" element={<MedicalCenterList data={data} />} />
+                  <Route path="/" element={<Home></Home>} />
                 ) : (
                   <Route path="/" element={<Navigate to="/login" />} />
                 )}          
