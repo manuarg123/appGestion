@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
+import './Login.css';
 
 export function Login() {
   const [username, setUsername] = useState('');
@@ -23,9 +24,8 @@ export function Login() {
 
       if (response.status === 200) {
         const token = response.data.data.accessToken;
-        // Guardar el token en el Local Storage
         localStorage.setItem('token', token);
-        // Redireccionar o realizar otras acciones según necesidad
+        window.location.href = "/";
       } else {
         console.error('Error:', response.status);
       }
@@ -34,30 +34,45 @@ export function Login() {
     }
   };
 
-  const manejadorBoton = (e) => {
+  const iniciarSesion = (e) => {
     e.preventDefault();
     handleSubmit(e);
   };
 
+  const crearUsuario = (e) => {
+    console.log("hola")
+  };
+
   return (
-    <div className="login">
-      <h1 className="login-title">Log in to Twitter</h1>
+    <div className="login text-center">
+      <h1 className="login-title">Iniciar Sesión</h1>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button type="submit" variant="primary" onClick={manejadorBoton}>
-          Login
-        </Button>
+        <div className='form-group margin-top'>
+          <input
+            className='input-inline'
+            type="text"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
+        <div className='form-group margin-top'>
+          <input
+            type="password"
+            name="password"
+            class="input-inline"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className='form-group margin-top'>            
+          <Button type="submit" variant="primary" size="sm" onClick={iniciarSesion}>
+            Login
+          </Button>
+          <Button className="btn-margin" variant="success" size="sm" onClick={crearUsuario}>
+            Crear Usuario
+          </Button>
+        </div>
       </form>
     </div>
   );

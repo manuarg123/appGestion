@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Logout } from '../login/Logout';
 
-function Hola({ data }) {
+function MedicalCenterList({ data }) {
     return (
       <div>
-        <h1>HOLA</h1>
         {data.map((item) => (
           <p key={item.id}>{item.name}</p>
         ))}
+        <Logout>Logout</Logout>
       </div>
     );
   }
-export default Hola;
+export default MedicalCenterList;

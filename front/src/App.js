@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from './components/login/Login.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Hola from './Hola.js';
+import { Logout } from './components/login/Logout.js';
+import MedicalCenterList from './components/medicalCenter/MedicalCenterList.js';
+import { Container } from 'react-bootstrap';
+import './style.css';
+
 function App() {
   const [data, setData] = useState([]);
 
@@ -11,6 +15,11 @@ function App() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
+
+        if (!token) {
+          return;
+        }
+
         const response = await axios.get('http://localhost:8080/api/medicalCenters', {
           headers: {
             'Content-Type' : 'application/json',
@@ -27,15 +36,25 @@ function App() {
     fetchData();
   }, []);
 
+  const hasToken = localStorage.getItem('token');
+
   return (
-    <Router>
-      <div>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Hola data={data} />} />
-        </Routes>
-      </div>
-    </Router>
+    
+    <Container className="body-color">
+      <Router>
+        <div>
+          <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<Logout />} />
+                {hasToken ? (
+                  <Route path="/" element={<MedicalCenterList data={data} />} />
+                ) : (
+                  <Route path="/" element={<Navigate to="/login" />} />
+                )}          
+          </Routes>
+        </div>
+      </Router>
+    </Container>
   );
 }
 
