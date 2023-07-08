@@ -14,7 +14,7 @@ public class Province extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true, length = 255)
+    @Column(nullable = true, length = 55)
     private String name;
 
     public Province() {

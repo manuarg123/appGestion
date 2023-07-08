@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import MedicalCenterList from "./MedicalCenterList";
-import { Container, Button, Modal } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 import MedicalCenterForm from "./MedicalCenterForm";
 
 function MedicalCenterIndex() {

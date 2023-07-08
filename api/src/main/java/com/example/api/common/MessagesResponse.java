@@ -17,4 +17,5 @@ public class MessagesResponse {
     public static String logoutFailed = "Logout Failed";
     public static String loginSuccess = "Login Sucess";
     public static String loginFailed = "Login Failed";
+    public static String nameNotNull = "Name cannot be null";
 }

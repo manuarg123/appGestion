@@ -1,8 +1,10 @@
 package com.example.api.province;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class ProvinceController {
     }
 
     @PostMapping(path = "/new")
-    public ResponseEntity<Object>addProvince(@RequestBody ProvinceDTO provinceDTO){
+    public ResponseEntity<Object>addProvince(@RequestBody @Valid ProvinceDTO provinceDTO){
         return this.provinceService.newProvince(provinceDTO);
     }
 
