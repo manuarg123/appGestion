@@ -2,10 +2,18 @@ package com.example.api.common;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ControllerAdvice
+@Component
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
@@ -37,6 +45,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 
+    /**
+     * Manejo de excepciones en cuanto a validez de datos que se intentan agregar a clases
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity handleValidationException(MethodArgumentNotValidException e) {
+        BindingResult result = e.getBindingResult();
+        List<FieldError> fieldErrors = result.getFieldErrors();
 
+        //Procesa errores de validación y genera respuesta
+        List<String> errors = new ArrayList<>();
+        for (FieldError fieldError : fieldErrors){
+            errors.add(fieldError.getDefaultMessage());
+        }
 
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        apiResponse.setError(errors);
+
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
 }

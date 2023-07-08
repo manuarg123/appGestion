@@ -3,12 +3,13 @@ package com.example.api.province;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.constraints.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping(path="api/provinces")
 public class ProvinceController {
 
