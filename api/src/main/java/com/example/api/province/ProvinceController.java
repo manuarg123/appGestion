@@ -30,7 +30,7 @@ public class ProvinceController {
     }
 
     @PutMapping(path = "/edit/{provinceId}")
-    public ResponseEntity<Object>editProvince(@PathVariable("provinceId") Long id, @RequestBody ProvinceDTO provinceDTO){
+    public ResponseEntity<Object>editProvince(@PathVariable("provinceId") Long id, @Valid @RequestBody ProvinceDTO provinceDTO){
         return this.provinceService.editProvince(id, provinceDTO);
     }
 

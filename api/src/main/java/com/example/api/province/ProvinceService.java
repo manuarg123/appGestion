@@ -1,5 +1,6 @@
 package com.example.api.province;
 
+import com.example.api.common.DuplicateRecordException;
 import com.example.api.common.MessagesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,10 +28,11 @@ public class ProvinceService {
         Optional<Province> res = provinceRepository.findProvinceByName(provinceDTO.getName());
         data = new HashMap<>();
 
-        if (res.isPresent()){
-            data.put("error",true);
-            data.put("message", MessagesResponse.recordNameExists);
-            return new ResponseEntity<>(data, HttpStatus.CONFLICT);
+        if (res.isPresent()) {
+            Province existingProvince = res.get();
+            if (existingProvince.getDeletedAt() == null){
+                throw new DuplicateRecordException("Record with the same name already exists.");
+            }
         }
 
         Province province = new Province();

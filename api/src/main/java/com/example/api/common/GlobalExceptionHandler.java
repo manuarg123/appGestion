@@ -65,4 +65,12 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(apiResponse);
     }
+
+    @ExceptionHandler(DuplicateRecordException.class)
+    public ResponseEntity<Object> handleDuplicateRecordException(DuplicateRecordException e) {
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setStatus(HttpStatus.CONFLICT.value());
+        apiResponse.setError(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT.value()).body(apiResponse);
+    }
 }
