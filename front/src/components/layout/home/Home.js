@@ -1,6 +1,6 @@
 
 import AppNavbar from '../navbar/AppNavbar.js';
-import MedicalCenterList from '../../medicalCenter/MedicalCenterList'; 
+import MedicalCenterIndex from '../../medicalCenter/MedicalCenterIndex'; 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -10,10 +10,7 @@ const Home = () => {
     <div>
       <AppNavbar />
       <div>
-        {/* Contenido de la página principal */}
-        <h1>Bienvenido a mi página principal</h1>
-        <p>Este es el contenido de la página de inicio.</p>
-        <MedicalCenterList />
+        <MedicalCenterIndex />
       </div>
     </div>
   );
