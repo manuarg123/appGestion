@@ -29,7 +29,7 @@ const Home = () => {
       </Container>
       <Routes>
         <Route path="/medicalCenters" element={<MedicalCenterIndex />} />
-        <Route path="/provinceCenters" element={<ProvinceIndex />} />
+        <Route path="/provinces" element={<ProvinceIndex />} />
       </Routes>
     </div>
   );
