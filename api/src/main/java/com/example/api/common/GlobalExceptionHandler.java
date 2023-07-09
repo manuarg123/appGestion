@@ -73,4 +73,20 @@ public class GlobalExceptionHandler {
         apiResponse.setError(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT.value()).body(apiResponse);
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException e){
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setStatus(HttpStatus.NOT_FOUND.value());
+        apiResponse.setError(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(apiResponse);
+    }
+
+    @ExceptionHandler(NotValidException.class)
+    public ResponseEntity<Object> handleNotValidException(NotValidException e){
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+        apiResponse.setError(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE.value()).body(apiResponse);
+    }
 }

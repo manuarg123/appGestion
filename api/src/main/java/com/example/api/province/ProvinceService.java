@@ -2,6 +2,8 @@ package com.example.api.province;
 
 import com.example.api.common.DuplicateRecordException;
 import com.example.api.common.MessagesResponse;
+import com.example.api.common.NotFoundException;
+import com.example.api.common.NotValidException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +13,9 @@ import org.springframework.validation.annotation.Validated;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 @Validated
@@ -25,13 +29,20 @@ public class ProvinceService {
 
 
     public ResponseEntity<Object> newProvince(ProvinceDTO provinceDTO) {
+
+        if (Stream.of(provinceDTO)
+                .map(ProvinceDTO::getName)
+                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 55)){
+            throw new NotValidException(MessagesResponse.notValidParameters);
+        }
+
         Optional<Province> res = provinceRepository.findProvinceByName(provinceDTO.getName());
         data = new HashMap<>();
 
         if (res.isPresent()) {
             Province existingProvince = res.get();
             if (existingProvince.getDeletedAt() == null){
-                throw new DuplicateRecordException("Record with the same name already exists.");
+                throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
             }
         }
 
@@ -46,6 +57,13 @@ public class ProvinceService {
     }
 
     public ResponseEntity<Object> editProvince(Long id, ProvinceDTO provinceDTO){
+
+        if (Stream.of(provinceDTO)
+                .map(ProvinceDTO::getName)
+                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 55)){
+            throw new NotValidException(MessagesResponse.notValidParameters);
+        }
+
         Optional<Province> optionalProvince = provinceRepository.findByIdAndDeletedAtIsNull(id);
         data = new HashMap<>();
 
@@ -59,9 +77,7 @@ public class ProvinceService {
 
             return new ResponseEntity<>(data, HttpStatus.OK);
         } else {
-            data.put("error", true);
-            data.put("message", MessagesResponse.recordNotFound);
-            return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+            throw new NotFoundException(MessagesResponse.recordNotFound);
         }
 
     }
@@ -71,10 +87,7 @@ public class ProvinceService {
         data = new HashMap<>();
 
         if (!exists){
-            data.put("error", true);
-            data.put("message", MessagesResponse.recordNotFound);
-
-            return new ResponseEntity<>(data, HttpStatus.CONFLICT);
+            throw new NotFoundException(MessagesResponse.recordNotFound);
         }
         Optional<Province> optionalProvince = provinceRepository.findById(id);
         Province existingProvince = optionalProvince.get();

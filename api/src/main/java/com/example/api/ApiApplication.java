@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.example.api", "com.example.api.common", "com.example.api.province"})
+@ComponentScan(basePackages = "com.example.api")
 public class ApiApplication {
 
 	public static void main(String[] args) {
