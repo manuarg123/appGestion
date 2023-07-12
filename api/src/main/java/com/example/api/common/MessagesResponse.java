@@ -21,4 +21,5 @@ public class MessagesResponse {
     public static String recordWasDeleted = "This record was deleted";
     public static String nameAlreadyExists = "Record with the same name already exists.";
     public static String notValidParameters = "The parameters received are not valid";
+    public static String recordWasSoftDeleted = "The record is Soft deleted";
 }

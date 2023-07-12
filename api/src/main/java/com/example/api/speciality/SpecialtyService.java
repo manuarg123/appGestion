@@ -32,8 +32,6 @@ public class SpecialtyService {
             throw new NotValidException(MessagesResponse.notValidParameters);
         }
 
-        APIResponse apiResponse = new APIResponse();
-
         Optional<Speciality> res = specialtyRepository.findSpecialityByName(specialtyDTO.getName());
 
         if (res.isPresent()) {
@@ -43,11 +41,11 @@ public class SpecialtyService {
             }
         }
 
+        APIResponse apiResponse = new APIResponse();
         Speciality speciality = new Speciality();
         speciality.setName(specialtyDTO.getName());
-
-
         specialtyRepository.save(speciality);
+
         apiResponse.setData(speciality);
         apiResponse.setMessage(MessagesResponse.addSuccess);
         apiResponse.setStatus(HttpStatus.CREATED.value());
@@ -62,15 +60,23 @@ public class SpecialtyService {
             throw new NotValidException(MessagesResponse.notValidParameters);
         }
 
-        APIResponse apiResponse = new APIResponse();
+        Optional<Speciality> res = specialtyRepository.findSpecialityByName(specialtyDTO.getName());
 
+        if (res.isPresent()) {
+            Speciality existingSpecialty = res.get();
+            if (existingSpecialty.getDeletedAt() == null){
+                throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
+            }
+        }
+
+        APIResponse apiResponse = new APIResponse();
         Optional<Speciality> optionalSpeciality = specialtyRepository.findByIdAndDeletedAtIsNull(id);
 
         if (optionalSpeciality.isPresent()) {
             Speciality existingSpeciality = optionalSpeciality.get();
             existingSpeciality.setName(specialtyDTO.getName());
-
             specialtyRepository.save(existingSpeciality);
+
             apiResponse.setStatus(HttpStatus.OK.value());
             apiResponse.setMessage(MessagesResponse.editSuccess);
             apiResponse.setData(existingSpeciality);
@@ -83,18 +89,16 @@ public class SpecialtyService {
 
     public APIResponse deleteSpeciality(Long id) {
         APIResponse apiResponse = new APIResponse();
+        Optional<Speciality> optionalSpeciality = specialtyRepository.findByIdAndDeletedAtIsNull(id);
 
-        boolean exists = this.specialtyRepository.existsById(id);
-
-        if (!exists) {
+        if (!optionalSpeciality.isPresent()) {
             throw new NotFoundException(MessagesResponse.recordNotFound);
         }
 
-        Optional<Speciality> optionalSpeciality = specialtyRepository.findById(id);
         Speciality existingSpeciality = optionalSpeciality.get();
         existingSpeciality.setDeletedAt(LocalDateTime.now());
-
         specialtyRepository.save(existingSpeciality);
+
         apiResponse.setMessage(MessagesResponse.deleteSuccess);
         apiResponse.setData(existingSpeciality);
         apiResponse.setStatus(HttpStatus.OK.value());
@@ -102,17 +106,14 @@ public class SpecialtyService {
     }
 
     public APIResponse getSpeciality(Long id) {
-        boolean exists = this.specialtyRepository.existsById(id);
+        Optional<Speciality> optionalSpeciality = specialtyRepository.findByIdAndDeletedAtIsNull(id);
 
-        if (!exists) {
+        if (!optionalSpeciality.isPresent()) {
             throw new NotFoundException(MessagesResponse.recordNotFound);
         }
 
         APIResponse apiResponse = new APIResponse();
-
-        Optional<Speciality> optionalSpeciality = specialtyRepository.findById(id);
         Speciality existingSpeciality = optionalSpeciality.get();
-
         apiResponse.setStatus(HttpStatus.OK.value());
         apiResponse.setData(existingSpeciality);
         return apiResponse;
