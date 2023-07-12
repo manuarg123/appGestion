@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ProvinceForm from './ProvinceForm';
-import ProvinceList from './ProvinceList';
-import {Container, Button} from 'react-bootstrap';
+import ProvinceForm from "./ProvinceForm";
+import ProvinceList from "./ProvinceList";
+import { Container, Button } from "react-bootstrap";
 
 function ProvinceIndex() {
-    const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
-    const handleAddProvince = () => {
-        setShowForm(true);
-      };
+  const handleAddProvince = () => {
+    setShowForm(true);
+  };
 
-      const handleCloseForm = () => {
-        setShowForm(false);
-      };
+  const handleCloseForm = () => {
+    setShowForm(false);
+  };
 
-    return (
-       <Container className="main-color">
+  return (
+    <Container className="main-color">
       <div>
         <Button
           className="btn-index"
@@ -30,6 +30,6 @@ function ProvinceIndex() {
         <ProvinceList />
       </div>
     </Container>
-    );
+  );
 }
 export default ProvinceIndex;

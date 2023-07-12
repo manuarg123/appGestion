@@ -1,6 +1,7 @@
 package com.example.api.speciality;
 
 import com.example.api.common.APIResponse;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,13 +15,16 @@ public class SpecialtyController {
     @GetMapping
     public List<Speciality> getSpecialities(){return specialtyService.getSpecialities();}
 
+    @GetMapping(path="/show/{specialityId}")
+    public APIResponse getSpeciality(@PathVariable("specialityId") Long id) { return this.specialtyService.getSpeciality(id);}
+
     @PostMapping(path="/new")
-    public APIResponse addSpeciality(@RequestBody SpecialtyDTO specialtyDTO){
+    public APIResponse addSpeciality(@RequestBody @Valid SpecialtyDTO specialtyDTO){
         return this.specialtyService.newSpeciality(specialtyDTO);
     }
 
     @PutMapping(path="/edit/{specialityId}")
-    public APIResponse editSpeciality(@PathVariable("specialityId") Long id, @RequestBody SpecialtyDTO specialtyDTO){
+    public APIResponse editSpeciality(@PathVariable("specialityId") Long id, @RequestBody  @Valid SpecialtyDTO specialtyDTO){
         return this.specialtyService.editSpeciality(id, specialtyDTO);
     }
 

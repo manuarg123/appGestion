@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 @ComponentScan(basePackages = "com.example.api")
 public class ApiApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
 	}

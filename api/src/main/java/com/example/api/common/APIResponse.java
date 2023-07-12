@@ -1,13 +1,16 @@
 package com.example.api.common;
 import org.springframework.http.HttpStatus;
 
+
 public class APIResponse {
     private Integer status;
+    private String message;
     private Object data;
     private Object error;
 
     public APIResponse() {
         this.status = HttpStatus.OK.value();
+        this.message = message;
         this.data = data;
         this.error = error;
     }
@@ -20,6 +23,9 @@ public class APIResponse {
         this.status = status;
     }
 
+    public String getMessage(){return message;}
+
+    public void setMessage(String message) {this.message = message;}
     public Object getData() {
         return data;
     }

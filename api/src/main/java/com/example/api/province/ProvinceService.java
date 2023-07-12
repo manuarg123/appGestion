@@ -1,9 +1,6 @@
 package com.example.api.province;
 
-import com.example.api.common.DuplicateRecordException;
-import com.example.api.common.MessagesResponse;
-import com.example.api.common.NotFoundException;
-import com.example.api.common.NotValidException;
+import com.example.api.common.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,5 +93,21 @@ public class ProvinceService {
         provinceRepository.save(existingProvince);
         data.put("message", MessagesResponse.deleteSuccess);
         return new ResponseEntity<>(data,HttpStatus.OK);
+    }
+
+    public APIResponse getProvince(Long id) {
+        boolean exists = this.provinceRepository.existsById(id);
+        if (!exists){
+            throw new NotFoundException(MessagesResponse.recordNotFound);
+        }
+
+        APIResponse apiResponse = new APIResponse();
+
+        Optional<Province> optionalProvince = provinceRepository.findById(id);
+        Province existingProvince = optionalProvince.get();
+
+        apiResponse.setStatus(HttpStatus.OK.value());
+        apiResponse.setData(existingProvince);
+        return apiResponse;
     }
 }

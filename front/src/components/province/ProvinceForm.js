@@ -2,13 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 
-function ProvinceForm({ show, handleClose, provinceId = null }) {
-  const [data, setData] = useState("");
-  const [name, setName] = useState("");
+function ProvinceForm({
+  show,
+  handleClose,
+  provinceId = null,
+  fetchProvinceList,
+}) {
+  const [provinceData, setProvinceData] = useState(null);
+  const [name, setName] = useState(provinceData ? provinceData.name : "");
   const [shouldPostData, setShouldPostData] = useState(false);
-  
+
   useEffect(() => {
-    const postData = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
 
@@ -16,9 +21,41 @@ function ProvinceForm({ show, handleClose, provinceId = null }) {
           return;
         }
 
-        const response = await axios.post(
-          "http://localhost:8080/api/provinces/new",
-          data,
+        if (provinceId) {
+          const response = await axios.get(
+            `http://localhost:8080/api/provinces/show/${provinceId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.token}`,
+              },
+            }
+          );
+          setProvinceData(response.data.data);
+          setName(response.data.data.name);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [provinceId]);
+
+  const handleSubmit = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        return;
+      }
+
+      if (provinceId) {
+        const response = await axios.put(
+          `http://localhost:8080/api/provinces/edit/${provinceId}`,
+          {
+            name: name,
+          },
           {
             headers: {
               "Content-Type": "application/json",
@@ -26,25 +63,25 @@ function ProvinceForm({ show, handleClose, provinceId = null }) {
             },
           }
         );
-        console.log(response);
-      } catch (error) {
-        console.error(error);
+      } else {
+        // Agregar nueva provincia
+        const response = await axios.post(
+          "http://localhost:8080/api/provinces/new",
+          {
+            name: name,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.token}`,
+            },
+          }
+        );
       }
-    };
-
-    if (shouldPostData) {
-      postData();
-      setShouldPostData(false);
+      fetchProvinceList(); //Actualiza lista
+    } catch (error) {
+      console.error(error);
     }
-  }, [data, shouldPostData]);
-
-  const handleSubmit = () => {
-    const postData = {
-      name: name,
-    };
-
-    setData(postData);
-    setShouldPostData(true);
   };
 
   return (
@@ -56,7 +93,9 @@ function ProvinceForm({ show, handleClose, provinceId = null }) {
       onHide={handleClose}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Agregar Provincia</Modal.Title>
+        <Modal.Title>
+          {provinceId ? "Editar Provincia" : "Agregar Provincia"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -76,7 +115,7 @@ function ProvinceForm({ show, handleClose, provinceId = null }) {
           Cerrar
         </Button>
         <Button variant="primary" onClick={handleSubmit}>
-          Guardar
+          {provinceId ? "Guardar Cambios" : "Agregar"}
         </Button>
       </Modal.Footer>
     </Modal>

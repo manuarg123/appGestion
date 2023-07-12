@@ -1,5 +1,6 @@
 package com.example.api.province;
 
+import com.example.api.common.APIResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,11 @@ public class ProvinceController {
     @GetMapping
     public List<Province> getProvinces(){
         return provinceService.getProvinces();
+    }
+
+    @GetMapping(path= "/show/{provinceId}")
+    public APIResponse getProvince(@PathVariable("provinceId") Long id){
+        return this.provinceService.getProvince(id);
     }
 
     @PostMapping(path = "/new")
