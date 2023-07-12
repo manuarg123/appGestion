@@ -60,19 +60,19 @@ public class SpecialtyService {
             throw new NotValidException(MessagesResponse.notValidParameters);
         }
 
-        Optional<Speciality> res = specialtyRepository.findSpecialityByName(specialtyDTO.getName());
-
-        if (res.isPresent()) {
-            Speciality existingSpecialty = res.get();
-            if (existingSpecialty.getDeletedAt() == null){
-                throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
-            }
-        }
-
         APIResponse apiResponse = new APIResponse();
         Optional<Speciality> optionalSpeciality = specialtyRepository.findByIdAndDeletedAtIsNull(id);
 
         if (optionalSpeciality.isPresent()) {
+            Optional<Speciality> res = specialtyRepository.findSpecialityByName(specialtyDTO.getName());
+
+            if (res.isPresent()) {
+                Speciality existingSpecialty = res.get();
+                if (existingSpecialty.getDeletedAt() == null){
+                    throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
+                }
+            }
+
             Speciality existingSpeciality = optionalSpeciality.get();
             existingSpeciality.setName(specialtyDTO.getName());
             specialtyRepository.save(existingSpeciality);
