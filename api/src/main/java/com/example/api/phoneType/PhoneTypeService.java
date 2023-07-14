@@ -1,90 +1,125 @@
 package com.example.api.phoneType;
 
-import com.example.api.common.APIResponse;
-import com.example.api.common.MessagesResponse;
+import com.example.api.common.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
+@Validated
 public class PhoneTypeService {
-    HashMap<String , Object> data;
-
+    HashMap<String, Object> data;
     private final PhoneTypeRepository phoneTypeRepository;
+
     @Autowired
-    public PhoneTypeService(PhoneTypeRepository phoneTypeRepository){this.phoneTypeRepository = phoneTypeRepository;}
+    public PhoneTypeService(PhoneTypeRepository phoneTypeRepository) {
+        this.phoneTypeRepository = phoneTypeRepository;
+    }
+
     public List<PhoneType> getPhoneTypes() {
         return this.phoneTypeRepository.findByDeletedAtIsNull();
     }
 
+
     public APIResponse newPhoneType(PhoneTypeDTO phoneTypeDTO) {
-        APIResponse apiResponse = new APIResponse();
-        HashMap<String, Object> data = new HashMap<>();
+        if (Stream.of(phoneTypeDTO)
+                .map(PhoneTypeDTO::getName)
+                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 144)) {
+            throw new NotValidException(MessagesResponse.notValidParameters);
+        }
 
         Optional<PhoneType> res = phoneTypeRepository.findPhoneTypeByName(phoneTypeDTO.getName());
 
-        if (res.isPresent()){
-            data.put("error", true);
-            data.put("message", MessagesResponse.recordNameExists);
-            apiResponse.setData(data);
-            return apiResponse;
+        if (res.isPresent()) {
+            PhoneType existingPhoneType = res.get();
+            if (existingPhoneType.getDeletedAt() == null) {
+                throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
+            }
         }
+
+        APIResponse apiResponse = new APIResponse();
         PhoneType phoneType = new PhoneType();
         phoneType.setName(phoneTypeDTO.getName());
-        data.put("message", MessagesResponse.addSuccess);
-
         phoneTypeRepository.save(phoneType);
-        data.put("data", phoneType);
-        apiResponse.setData(data);
+
+        apiResponse.setData(phoneType);
+        apiResponse.setMessage(MessagesResponse.addSuccess);
+        apiResponse.setStatus(HttpStatus.CREATED.value());
+
         return apiResponse;
     }
 
-    public APIResponse editPhoneType(Long id ,PhoneTypeDTO phoneTypeDTO) {
-        APIResponse apiResponse = new APIResponse();
-        HashMap<String,Object> data = new HashMap<>();
+    public APIResponse editPhoneType(Long id, PhoneTypeDTO phoneTypeDTO) {
+        if (Stream.of(phoneTypeDTO)
+                .map(PhoneTypeDTO::getName)
+                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 144)) {
+            throw new NotValidException(MessagesResponse.notValidParameters);
+        }
 
+        APIResponse apiResponse = new APIResponse();
         Optional<PhoneType> optionalPhoneType = phoneTypeRepository.findByIdAndDeletedAtIsNull(id);
 
-        if(optionalPhoneType.isPresent()){
+        if (optionalPhoneType.isPresent()) {
+            Optional<PhoneType> res = phoneTypeRepository.findPhoneTypeByName(phoneTypeDTO.getName());
+
+            if (res.isPresent()) {
+                PhoneType existingPhoneType = res.get();
+                if (existingPhoneType.getDeletedAt() == null) {
+                    throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
+                }
+            }
+
             PhoneType existingPhoneType = optionalPhoneType.get();
             existingPhoneType.setName(phoneTypeDTO.getName());
-
             phoneTypeRepository.save(existingPhoneType);
-            data.put("message", MessagesResponse.editSuccess);
-            data.put("data", existingPhoneType);
-            apiResponse.setData(data);
+
+            apiResponse.setStatus(HttpStatus.OK.value());
+            apiResponse.setMessage(MessagesResponse.editSuccess);
+            apiResponse.setData(existingPhoneType);
         } else {
-            data.put("error",true);
-            data.put("message", MessagesResponse.recordNotFound);
-            apiResponse.setData(data);
+            throw new NotFoundException(MessagesResponse.recordNotFound);
         }
         return apiResponse;
     }
 
     public APIResponse deletePhoneType(Long id) {
         APIResponse apiResponse = new APIResponse();
-        HashMap<String, Object> data = new HashMap<>();
+        Optional<PhoneType> optionalPhoneType = phoneTypeRepository.findByIdAndDeletedAtIsNull(id);
 
-        boolean exists = this.phoneTypeRepository.existsById(id);
-
-        if (!exists){
-            data.put("error", true);
-            data.put("message", MessagesResponse.recordNotFound);
-            apiResponse.setData(data);
-            return apiResponse;
+        if (!optionalPhoneType.isPresent()) {
+            throw new NotFoundException(MessagesResponse.recordNotFound);
         }
 
-        Optional<PhoneType> optionalPhoneType = phoneTypeRepository.findById(id);
         PhoneType existingPhoneType = optionalPhoneType.get();
         existingPhoneType.setDeletedAt(LocalDateTime.now());
-
         phoneTypeRepository.save(existingPhoneType);
-        data.put("message", MessagesResponse.deleteSuccess);
-        apiResponse.setData(data);
+
+        apiResponse.setMessage(MessagesResponse.deleteSuccess);
+        apiResponse.setData(existingPhoneType);
+        apiResponse.setStatus(HttpStatus.OK.value());
+        return apiResponse;
+    }
+
+    public APIResponse getPhoneType(Long id) {
+        Optional<PhoneType> optionalPhoneType = phoneTypeRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (!optionalPhoneType.isPresent()) {
+            throw new NotFoundException(MessagesResponse.recordNotFound);
+        }
+
+        APIResponse apiResponse = new APIResponse();
+        PhoneType existingPhoneType = optionalPhoneType.get();
+        apiResponse.setStatus(HttpStatus.OK.value());
+        apiResponse.setData(existingPhoneType);
         return apiResponse;
     }
 }
