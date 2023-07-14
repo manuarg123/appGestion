@@ -21,91 +21,103 @@ public class ProvinceService {
     private final ProvinceRepository provinceRepository;
 
     @Autowired
-    public ProvinceService(ProvinceRepository provinceRepository){this.provinceRepository = provinceRepository;}
-    public List<Province> getProvinces() {return this.provinceRepository.findByDeletedAtIsNull();}
+    public ProvinceService(ProvinceRepository provinceRepository) {
+        this.provinceRepository = provinceRepository;
+    }
+
+    public List<Province> getProvinces() {
+        return this.provinceRepository.findByDeletedAtIsNull();
+    }
 
 
-    public ResponseEntity<Object> newProvince(ProvinceDTO provinceDTO) {
-
+    public APIResponse newProvince(ProvinceDTO provinceDTO) {
         if (Stream.of(provinceDTO)
                 .map(ProvinceDTO::getName)
-                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 55)){
+                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 144)) {
             throw new NotValidException(MessagesResponse.notValidParameters);
         }
 
         Optional<Province> res = provinceRepository.findProvinceByName(provinceDTO.getName());
-        data = new HashMap<>();
 
         if (res.isPresent()) {
             Province existingProvince = res.get();
-            if (existingProvince.getDeletedAt() == null){
+            if (existingProvince.getDeletedAt() == null) {
                 throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
             }
         }
 
+        APIResponse apiResponse = new APIResponse();
         Province province = new Province();
         province.setName(provinceDTO.getName());
-        data.put("message", MessagesResponse.addSuccess);
-
         provinceRepository.save(province);
-        data.put("data", province);
 
-        return new ResponseEntity<>(data,HttpStatus.CREATED);
+        apiResponse.setData(province);
+        apiResponse.setMessage(MessagesResponse.addSuccess);
+        apiResponse.setStatus(HttpStatus.CREATED.value());
+
+        return apiResponse;
     }
 
-    public ResponseEntity<Object> editProvince(Long id, ProvinceDTO provinceDTO){
-
+    public APIResponse editProvince(Long id, ProvinceDTO provinceDTO) {
         if (Stream.of(provinceDTO)
                 .map(ProvinceDTO::getName)
-                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 55)){
+                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 144)) {
             throw new NotValidException(MessagesResponse.notValidParameters);
         }
 
+        APIResponse apiResponse = new APIResponse();
         Optional<Province> optionalProvince = provinceRepository.findByIdAndDeletedAtIsNull(id);
-        data = new HashMap<>();
 
-        if (optionalProvince.isPresent()){
+        if (optionalProvince.isPresent()) {
+            Optional<Province> res = provinceRepository.findProvinceByName(provinceDTO.getName());
+
+            if (res.isPresent()) {
+                Province existingProvince = res.get();
+                if (existingProvince.getDeletedAt() == null) {
+                    throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
+                }
+            }
+
             Province existingProvince = optionalProvince.get();
             existingProvince.setName(provinceDTO.getName());
-
             provinceRepository.save(existingProvince);
-            data.put("message", MessagesResponse.editSuccess);
-            data.put("data", existingProvince);
 
-            return new ResponseEntity<>(data, HttpStatus.OK);
+            apiResponse.setStatus(HttpStatus.OK.value());
+            apiResponse.setMessage(MessagesResponse.editSuccess);
+            apiResponse.setData(existingProvince);
         } else {
             throw new NotFoundException(MessagesResponse.recordNotFound);
         }
-
+        return apiResponse;
     }
 
-    public ResponseEntity<Object> deleteProvince(Long id) {
-        boolean exists = this.provinceRepository.existsById(id);
-        data = new HashMap<>();
+    public APIResponse deleteProvince(Long id) {
+        APIResponse apiResponse = new APIResponse();
+        Optional<Province> optionalProvince = provinceRepository.findByIdAndDeletedAtIsNull(id);
 
-        if (!exists){
+        if (!optionalProvince.isPresent()) {
             throw new NotFoundException(MessagesResponse.recordNotFound);
         }
-        Optional<Province> optionalProvince = provinceRepository.findById(id);
+
         Province existingProvince = optionalProvince.get();
         existingProvince.setDeletedAt(LocalDateTime.now());
-
         provinceRepository.save(existingProvince);
-        data.put("message", MessagesResponse.deleteSuccess);
-        return new ResponseEntity<>(data,HttpStatus.OK);
+
+        apiResponse.setMessage(MessagesResponse.deleteSuccess);
+        apiResponse.setData(existingProvince);
+        apiResponse.setStatus(HttpStatus.OK.value());
+        return apiResponse;
     }
 
     public APIResponse getProvince(Long id) {
-        boolean exists = this.provinceRepository.existsById(id);
-        if (!exists){
+        Optional<Province> optionalProvince = provinceRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (!optionalProvince.isPresent()) {
             throw new NotFoundException(MessagesResponse.recordNotFound);
         }
 
         APIResponse apiResponse = new APIResponse();
-
-        Optional<Province> optionalProvince = provinceRepository.findById(id);
         Province existingProvince = optionalProvince.get();
-
         apiResponse.setStatus(HttpStatus.OK.value());
         apiResponse.setData(existingProvince);
         return apiResponse;

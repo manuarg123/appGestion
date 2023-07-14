@@ -31,17 +31,17 @@ public class ProvinceController {
     }
 
     @PostMapping(path = "/new")
-    public ResponseEntity<Object>addProvince(@RequestBody @Valid ProvinceDTO provinceDTO){
+    public APIResponse addProvince(@RequestBody @Valid ProvinceDTO provinceDTO){
         return this.provinceService.newProvince(provinceDTO);
     }
 
     @PutMapping(path = "/edit/{provinceId}")
-    public ResponseEntity<Object>editProvince(@PathVariable("provinceId") Long id, @Valid @RequestBody ProvinceDTO provinceDTO){
+    public APIResponse editProvince(@PathVariable("provinceId") Long id, @Valid @RequestBody ProvinceDTO provinceDTO){
         return this.provinceService.editProvince(id, provinceDTO);
     }
 
     @DeleteMapping(path="/delete/{provinceId}")
-    public ResponseEntity<Object>deleteProvince(@PathVariable("provinceId") Long id){
+    public APIResponse deleteProvince(@PathVariable("provinceId") Long id){
         return this.provinceService.deleteProvince(id);
     }
 }
