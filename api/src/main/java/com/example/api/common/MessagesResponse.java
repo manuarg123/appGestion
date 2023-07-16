@@ -24,4 +24,5 @@ public class MessagesResponse {
     public static String recordWasSoftDeleted = "The record is Soft deleted";
     public static String phoneTypeNotFound = "Phone Type not found";
     public static String personNotFund = "Person Not Found";
+    public static String emailTypeNotFound = "Email Type not found";
 }
