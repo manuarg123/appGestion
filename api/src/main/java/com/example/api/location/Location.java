@@ -2,6 +2,7 @@ package com.example.api.location;
 
 import com.example.api.AuditableEntity;
 import com.example.api.province.Province;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,8 @@ public class Location extends AuditableEntity {
     @Column(nullable = true, length = 255)
     private String name;
 
-    @Column(nullable = true)
-    private  Long provinceId;
+    @ManyToOne
+    @JoinColumn(name="province_id", nullable=false)
+    @JsonBackReference
+    private  Province province;
 }
