@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 @Service
 @Validated
 public class ProvinceService {
-    HashMap<String, Object> data;
     private final ProvinceRepository provinceRepository;
 
     @Autowired

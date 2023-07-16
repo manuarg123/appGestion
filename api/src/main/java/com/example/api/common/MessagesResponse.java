@@ -22,4 +22,6 @@ public class MessagesResponse {
     public static String nameAlreadyExists = "Record with the same name already exists.";
     public static String notValidParameters = "The parameters received are not valid";
     public static String recordWasSoftDeleted = "The record is Soft deleted";
+    public static String phoneTypeNotFound = "Phone Type not found";
+    public static String personNotFund = "Person Not Found";
 }

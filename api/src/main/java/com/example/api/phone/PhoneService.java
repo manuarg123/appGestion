@@ -2,17 +2,22 @@ package com.example.api.phone;
 
 import com.example.api.common.APIResponse;
 import com.example.api.common.MessagesResponse;
+import com.example.api.common.NotFoundException;
+import com.example.api.common.NotValidException;
 import com.example.api.person.Person;
 import com.example.api.person.PersonRepository;
 import com.example.api.phoneType.PhoneType;
 import com.example.api.phoneType.PhoneTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class PhoneService {
@@ -22,7 +27,8 @@ public class PhoneService {
     private final PhoneTypeRepository phoneTypeRepository;
     private final PersonRepository personRepository;
 
-    @Autowired PhoneService(PhoneRepository phoneRepository, PhoneTypeRepository phoneTypeRepository, PersonRepository personRepository){
+    @Autowired
+    PhoneService(PhoneRepository phoneRepository, PhoneTypeRepository phoneTypeRepository, PersonRepository personRepository) {
         this.phoneRepository = phoneRepository;
         this.phoneTypeRepository = phoneTypeRepository;
         this.personRepository = personRepository;
@@ -33,104 +39,74 @@ public class PhoneService {
     }
 
     public APIResponse newPhone(PhoneDTO phoneDTO) {
+        validatePhone(phoneDTO);
         APIResponse apiResponse = new APIResponse();
-        HashMap<String, Object> data = new HashMap<>();
 
-        Optional<PhoneType> optionalPhoneType = phoneTypeRepository.findByIdAndDeletedAtIsNull(phoneDTO.getTypeId());
-        if (!optionalPhoneType.isPresent()){
-            PhoneType phoneType = null;
-        }
+        Optional<PhoneType> optionalPhoneType = findPhoneType(phoneDTO.getTypeId());
         PhoneType phoneType = optionalPhoneType.get();
 
-
-        Optional<Person> optionalPerson = personRepository.findById(phoneDTO.getPersonId());
-        if(!optionalPerson.isPresent()){
-            Person person = null;
-        }
+        Optional<Person> optionalPerson = findPerson(phoneDTO.getPersonId());
         Person person = optionalPerson.get();
 
         Phone phone = new Phone(phoneDTO.getValue(), person, phoneType);
         phoneRepository.save(phone);
 
-        data.put("message", MessagesResponse.addSuccess);
-        data.put("data", phone);
-        apiResponse.setData(data);
+        apiResponse.setStatus(HttpStatus.CREATED.value());
+        apiResponse.setData(phone);
+        apiResponse.setMessage(MessagesResponse.addSuccess);
         return apiResponse;
     }
 
     public APIResponse editPhone(Long id, PhoneDTO phoneDTO) {
+        validatePhone(phoneDTO);
+
         APIResponse apiResponse = new APIResponse();
-        HashMap<String,Object> data = new HashMap<>();
+        Optional<Phone> optionalPhone = findPhone(id);
+        Phone phone = optionalPhone.get();
 
-        Optional<Phone> optionalPhone = phoneRepository.findByIdAndDeletedAtIsNull(id);
+        Optional<PhoneType> optionalPhoneType = findPhoneType(phoneDTO.getTypeId());
+        PhoneType phoneType = optionalPhoneType.get();
+        Optional<Person> optionalPerson = findPerson(phoneDTO.getPersonId());
+        Person person = optionalPerson.get();
 
-        if (optionalPhone.isPresent()){
-            Phone phone = optionalPhone.get();
+        phone.setPerson(person);
+        phone.setType(phoneType);
+        phone.setNumber(phoneDTO.getValue());
+        phoneRepository.save(phone);
 
-            Optional<PhoneType> optionalPhoneType = phoneTypeRepository.findByIdAndDeletedAtIsNull(phoneDTO.getTypeId());
-            if (!optionalPhoneType.isPresent()){
-                PhoneType phoneType = null;
-            }
-            PhoneType phoneType = optionalPhoneType.get();
-
-            Optional<Person> optionalPerson = personRepository.findById(phoneDTO.getPersonId());
-            if(!optionalPerson.isPresent()){
-                Person person = null;
-            }
-            Person person = optionalPerson.get();
-
-            phone.setPerson(person);
-            phone.setType(phoneType);
-            phone.setNumber(phoneDTO.getValue());
-
-            phoneRepository.save(phone);
-            data.put("message", MessagesResponse.editSuccess);
-            data.put("data", phone);
-            apiResponse.setData(data);
-        }else{
-            data.put("error",true);
-            data.put("message", MessagesResponse.recordNotFound);
-            apiResponse.setData(data);
-        }
+        apiResponse.setStatus(HttpStatus.OK.value());
+        apiResponse.setData(phone);
+        apiResponse.setMessage(MessagesResponse.editSuccess);
         return apiResponse;
     }
 
     public APIResponse deletePhone(Long id) {
         APIResponse apiResponse = new APIResponse();
-        HashMap<String, Object> data = new HashMap<>();
+        Optional<Phone> optionalPhone = findPhone(id);
 
-        boolean exists = this.phoneRepository.existsById(id);
-
-        if (!exists){
-            data.put("error", true);
-            data.put("message", MessagesResponse.recordNotFound);
-            apiResponse.setData(data);
-            return apiResponse;
-        }
-
-        Optional<Phone> optionalPhone = phoneRepository.findById(id);
         Phone existingPhone = optionalPhone.get();
         existingPhone.setDeletedAt(LocalDateTime.now());
-
         phoneRepository.save(existingPhone);
-        data.put("message", MessagesResponse.deleteSuccess);
-        apiResponse.setData(data);
+
+        apiResponse.setMessage(MessagesResponse.deleteSuccess);
+        apiResponse.setData(existingPhone);
+        apiResponse.setStatus(HttpStatus.OK.value());
         return apiResponse;
     }
 
-    public HashMap createPhone(PhoneDTO phoneDTO, HashMap data, Long personId){
+    public HashMap createPhone(PhoneDTO phoneDTO, HashMap data, Long personId) {
         Phone phone = new Phone();
         phone.setNumber(phoneDTO.getValue());
 
         Optional<PhoneType> optionalPhoneType = phoneTypeRepository.findByIdAndDeletedAtIsNull(phoneDTO.getTypeId());
-        if (!optionalPhoneType.isPresent()){
+        if (!optionalPhoneType.isPresent()) {
             PhoneType phoneType = null;
         }
         PhoneType phoneType = optionalPhoneType.get();
         phone.setType(phoneType);
 
         Optional<Person> optionalPerson = personRepository.findById(personId);
-        if(!optionalPerson.isPresent()){
+        if (!optionalPerson.isPresent()) {
             Person person = null;
         }
         Person person = optionalPerson.get();
@@ -141,5 +117,59 @@ public class PhoneService {
         data.put("phone", phone);
 
         return data;
+    }
+
+    public APIResponse getPhone(Long id) {
+        Optional<Phone> optionalPhone = findPhone(id);
+
+        APIResponse apiResponse = new APIResponse();
+        Phone existingPhone = optionalPhone.get();
+        apiResponse.setStatus(HttpStatus.OK.value());
+        apiResponse.setData(existingPhone);
+        return apiResponse;
+    }
+
+    public void validatePhone(PhoneDTO phoneDTO) {
+        if (Stream.of(phoneDTO)
+                .map(PhoneDTO::getValue)
+                .anyMatch(value -> value == null || value.isBlank() || value.length() > 45)) {
+            throw new NotValidException(MessagesResponse.notValidParameters);
+        }
+
+        if (Stream.of(phoneDTO)
+                .map(PhoneDTO::getPersonId)
+                .anyMatch(personId -> personId == null || String.valueOf(personId).isBlank())) {
+            throw new NotValidException(MessagesResponse.notValidParameters);
+        }
+
+        if (Stream.of(phoneDTO)
+                .map(PhoneDTO::getTypeId)
+                .anyMatch(typeId -> typeId == null || String.valueOf(typeId).isBlank())) {
+            throw new NotValidException(MessagesResponse.notValidParameters);
+        }
+    }
+
+    public Optional<Phone> findPhone(Long id) {
+        Optional<Phone> optionalPhone = phoneRepository.findByIdAndDeletedAtIsNull(id);
+        if (!optionalPhone.isPresent()) {
+            throw new NotFoundException(MessagesResponse.recordNotFound);
+        }
+        return optionalPhone;
+    }
+
+    public Optional<PhoneType> findPhoneType(Long id) {
+        Optional<PhoneType> optionalPhoneType = phoneTypeRepository.findByIdAndDeletedAtIsNull(id);
+        if (!optionalPhoneType.isPresent()) {
+            throw new NotFoundException(MessagesResponse.phoneTypeNotFound);
+        }
+        return optionalPhoneType;
+    }
+
+    public Optional<Person> findPerson(Long id) {
+        Optional<Person> optionalPerson = personRepository.findById(id);
+        if (!optionalPerson.isPresent()) {
+            throw new NotFoundException(MessagesResponse.personNotFund);
+        }
+        return optionalPerson;
     }
 }

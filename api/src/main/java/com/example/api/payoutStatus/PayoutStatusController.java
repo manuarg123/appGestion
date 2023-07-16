@@ -1,28 +1,42 @@
 package com.example.api.payoutStatus;
 
 import com.example.api.common.APIResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/api/payoutStatus")
+@Validated
+@RequestMapping(path="api/payoutStatuses")
 public class PayoutStatusController {
+
     @Autowired
     private final PayoutStatusService payoutStatusService;
+
+    @Autowired
     public PayoutStatusController(PayoutStatusService payoutStatusService){this.payoutStatusService = payoutStatusService;}
 
     @GetMapping
-    public List<PayoutStatus> getPayoutStatus(){return this.payoutStatusService.getPayoutStatus();}
+    public List<PayoutStatus> getpayoutStatuses(){
+        return payoutStatusService.getPayoutStatuses();
+    }
 
-    @PostMapping(path="/new")
-    public APIResponse addPayoutStatus(@RequestBody PayoutStatusDTO payoutStatusDTO){
+    @GetMapping(path= "/show/{payoutStatusId}")
+    public APIResponse getPayoutStatus(@PathVariable("payoutStatusId") Long id){
+        return this.payoutStatusService.getPayoutStatus(id);
+    }
+
+    @PostMapping(path = "/new")
+    public APIResponse addPayoutStatus(@RequestBody @Valid PayoutStatusDTO payoutStatusDTO){
         return this.payoutStatusService.newPayoutStatus(payoutStatusDTO);
     }
 
-    @PutMapping(path="/edit/{payoutStatusId}")
-    public APIResponse editPayoutStatus(@PathVariable("payoutStatusId") Long id, @RequestBody PayoutStatusDTO payoutStatusDTO){
+    @PutMapping(path = "/edit/{payoutStatusId}")
+    public APIResponse editPayoutStatus(@PathVariable("payoutStatusId") Long id, @Valid @RequestBody PayoutStatusDTO payoutStatusDTO){
         return this.payoutStatusService.editPayoutStatus(id, payoutStatusDTO);
     }
 

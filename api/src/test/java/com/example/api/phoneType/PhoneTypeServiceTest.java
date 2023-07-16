@@ -77,7 +77,7 @@ class PhoneTypeServiceTest {
     }
 
     @Test
-    @DisplayName("GetPhoneTypes: Should return list of Specialities")
+    @DisplayName("GetPhoneTypes: Should return list of PhoneTypes")
     void testGetSpecialties_ShouldReturnListOfSpecialties(){
         when(phoneTypeRepository.findByDeletedAtIsNull()).thenReturn(phoneTypeList);
 
