@@ -94,29 +94,18 @@ public class PhoneService {
         return apiResponse;
     }
 
-    public HashMap createPhone(PhoneDTO phoneDTO, HashMap data, Long personId) {
+    public void createPhone(PhoneDTO phoneDTO){
+        validatePhone(phoneDTO);
+        Optional<PhoneType> optionalPhoneType = findPhoneType(phoneDTO.getTypeId());
+        Optional<Person> optionalPerson = findPerson(phoneDTO.getPersonId());
+        Person existingPerson = optionalPerson.get();
+        PhoneType existingPhoneType = optionalPhoneType.get();
+
         Phone phone = new Phone();
         phone.setNumber(phoneDTO.getValue());
-
-        Optional<PhoneType> optionalPhoneType = phoneTypeRepository.findByIdAndDeletedAtIsNull(phoneDTO.getTypeId());
-        if (!optionalPhoneType.isPresent()) {
-            PhoneType phoneType = null;
-        }
-        PhoneType phoneType = optionalPhoneType.get();
-        phone.setType(phoneType);
-
-        Optional<Person> optionalPerson = personRepository.findById(personId);
-        if (!optionalPerson.isPresent()) {
-            Person person = null;
-        }
-        Person person = optionalPerson.get();
-        phone.setPerson(person);
-
+        phone.setType(existingPhoneType);
+        phone.setPerson(existingPerson);
         phoneRepository.save(phone);
-        data.put("phone-message", MessagesResponse.addSuccess);
-        data.put("phone", phone);
-
-        return data;
     }
 
     public APIResponse getPhone(Long id) {

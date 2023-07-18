@@ -93,32 +93,19 @@ public class EmailService {
         apiResponse.setStatus(HttpStatus.OK.value());
         return apiResponse;
     }
+    public void createEmail(EmailDTO emailDTO){
+        validateEmail(emailDTO);
+        Optional<EmailType> optionalEmailType = findEmailType(emailDTO.getTypeId());
+        Optional<Person> optionalPerson = findPerson(emailDTO.getPersonId());
+        Person existingPerson = optionalPerson.get();
+        EmailType existingEmailType = optionalEmailType.get();
 
-    public HashMap createEmail(EmailDTO emailDTO, HashMap data, Long personId){
         Email email = new Email();
         email.setValue(emailDTO.getValue());
-
-        Optional<EmailType> optionalEmailType = emailTypeRepository.findByIdAndDeletedAtIsNull(emailDTO.getTypeId());
-        if (!optionalEmailType.isPresent()){
-            EmailType emailType = null;
-        }
-        EmailType emailType = optionalEmailType.get();
-        email.setType(emailType);
-
-        Optional<Person> optionalPerson = personRepository.findById(personId);
-        if(!optionalPerson.isPresent()){
-            Person person = null;
-        }
-        Person person = optionalPerson.get();
-        email.setPerson(person);
-
+        email.setType(existingEmailType);
+        email.setPerson(existingPerson);
         emailRepository.save(email);
-        data.put("email-message", MessagesResponse.addSuccess);
-        data.put("email", email);
-
-        return data;
     }
-
     public APIResponse getEmail(Long id) {
         Optional<Email> optionalEmail = findEmail(id);
 

@@ -1,6 +1,7 @@
 package com.example.api.address;
 
 import com.example.api.common.APIResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +17,18 @@ public class AddressController {
     @GetMapping
     public List<Address> getAddresses(){return this.addressService.getAddresses();}
 
+    @GetMapping(path="/show/{addressId}")
+    public APIResponse getAddress(@PathVariable("addressId") Long id){
+        return this.addressService.getAddress(id);
+    }
+
     @PostMapping(path="/new")
-    public APIResponse addAddress(@RequestBody AddressDTO addressDTO){
+    public APIResponse addAddress(@RequestBody @Valid AddressDTO addressDTO){
         return this.addressService.newAddress(addressDTO);
     }
 
     @PutMapping(path="/edit/{addressId}")
-    public APIResponse editAddress(@PathVariable("addressId") Long id, @RequestBody AddressDTO addressDTO){
+    public APIResponse editAddress(@PathVariable("addressId") Long id, @RequestBody @Valid AddressDTO addressDTO){
         return this.addressService.editAddress(id, addressDTO);
     }
 

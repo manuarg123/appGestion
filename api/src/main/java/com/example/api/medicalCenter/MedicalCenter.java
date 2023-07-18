@@ -1,9 +1,6 @@
 package com.example.api.medicalCenter;
 
-import com.example.api.address.Address;
-import com.example.api.email.Email;
 import com.example.api.person.Person;
-import com.example.api.phone.Phone;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

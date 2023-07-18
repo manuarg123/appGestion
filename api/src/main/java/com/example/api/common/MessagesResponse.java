@@ -25,4 +25,9 @@ public class MessagesResponse {
     public static String phoneTypeNotFound = "Phone Type not found";
     public static String personNotFund = "Person Not Found";
     public static String emailTypeNotFound = "Email Type not found";
+    public static String personCannotBeNull = "PersonID cannot be null";
+    public static String addressNotFound = "Address not found";
+    public static String medicalCenterNotFound = "MedicalCenter not found";
+    public static String medicalCenterCannotBeNull = "MedicalCenter cannot be null";
+    public static String identificationTypeNotFound = "Identification Type not found";
 }

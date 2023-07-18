@@ -2,8 +2,7 @@ package com.example.api.medicalCenter;
 
 import com.example.api.address.AddressDTO;
 import com.example.api.address.AddressService;
-import com.example.api.common.APIResponse;
-import com.example.api.common.MessagesResponse;
+import com.example.api.common.*;
 import com.example.api.email.Email;
 import com.example.api.email.EmailDTO;
 import com.example.api.email.EmailRepository;
@@ -24,13 +23,16 @@ import com.example.api.phone.PhoneRepository;
 import com.example.api.phone.PhoneService;
 import com.example.api.phoneType.PhoneType;
 import com.example.api.phoneType.PhoneTypeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class MedicalCenterService {
@@ -41,7 +43,7 @@ public class MedicalCenterService {
     private final EmailService emailService;
 
     @Autowired
-    public MedicalCenterService(MedicalCenterRepository medicalCenterRepository, AddressService addressService, IdentificationService identificationService, PhoneService phoneService, EmailService emailService){
+    public MedicalCenterService(MedicalCenterRepository medicalCenterRepository, AddressService addressService, IdentificationService identificationService, PhoneService phoneService, EmailService emailService) {
         this.medicalCenterRepository = medicalCenterRepository;
         this.addressService = addressService;
         this.identificationService = identificationService;
@@ -54,50 +56,81 @@ public class MedicalCenterService {
     }
 
     //Normalizar el Response y los métodos para Phone , email e identification como esta el de Address
+    @Transactional(rollbackOn = BadRequestException.class)
     public APIResponse newMedicalCenter(MedicalCenterDTO medicalCenterDTO) {
-        APIResponse apiResponse = new APIResponse();
-        HashMap<String, Object> data = new HashMap<>();
+        validateMedicalCenter(medicalCenterDTO);
 
+        APIResponse apiResponse = new APIResponse();
         MedicalCenter medicalCenter = new MedicalCenter();
         medicalCenter.setName(medicalCenterDTO.getName());
         medicalCenter.setFullName(medicalCenter.getName());
 
         medicalCenterRepository.save(medicalCenter);
-        data.put("message", MessagesResponse.addSuccess);
-        data.put("data", medicalCenter);
-        apiResponse.setData(data);
 
         Long medicalCenterId = medicalCenter.getId();
 
-        for (PhoneDTO phoneDTO : medicalCenterDTO.getPhones()){
-            HashMap <String, Object> phoneHash = new HashMap<>();
-            HashMap phoneData = phoneService.createPhone(phoneDTO, phoneHash, medicalCenterId);
-            apiResponse.setData(phoneData);
+        try {
+            if (medicalCenterDTO.getPhones() != null) {
+                for (PhoneDTO phoneDTO : medicalCenterDTO.getPhones()) {
+                    phoneDTO.setPersonId(medicalCenterId);
+                    phoneService.createPhone(phoneDTO);
+                }
+            }
+            if (medicalCenterDTO.getEmails() != null) {
+                for (EmailDTO emailDTO : medicalCenterDTO.getEmails()) {
+                    emailDTO.setPersonId(medicalCenterId);
+                    emailService.createEmail(emailDTO);
+                }
+            }
+            if (medicalCenterDTO.getIdentifications() != null) {
+                for (IdentificationDTO identificationDTO : medicalCenterDTO.getIdentifications()) {
+                    identificationDTO.setPersonId(medicalCenterId);
+                    identificationService.createIdentification(identificationDTO);
+                }
+            }
+            if (medicalCenterDTO.getAddresses() != null) {
+                for (AddressDTO addressDTO : medicalCenterDTO.getAddresses()) {
+                    addressDTO.setPersonId(medicalCenterId);
+                    addressService.createAddress(addressDTO);
+                }
+            }
+        } catch (BadRequestException e) {
+            medicalCenterRepository.deleteById(medicalCenterId);
+            throw e;
         }
 
-        for (EmailDTO emailDTO : medicalCenterDTO.getEmails()){
-            HashMap <String, Object> emailHash = new HashMap<>();
-            HashMap emailData = emailService.createEmail(emailDTO, emailHash, medicalCenterId);
-            apiResponse.setData(emailData);
-        }
-
-        for (IdentificationDTO identificationDTO : medicalCenterDTO.getIdentifications()){
-            HashMap <String, Object> identificationHash = new HashMap<>();
-            HashMap identificationData = identificationService.createIdentification(identificationDTO, identificationHash, medicalCenterId);
-            apiResponse.setData(identificationData);
-        }
-
-        for (AddressDTO addressDTO : medicalCenterDTO.getAddresses()){
-            HashMap <String, Object> addressHash = new HashMap<>();
-            HashMap addressData = addressService.createAddress(addressDTO,addressHash,medicalCenterId);
-            apiResponse.setData(addressData);
-        }
         Optional<MedicalCenter> optionalMedicalCenter = medicalCenterRepository.findById(medicalCenterId);
-        if (optionalMedicalCenter.isPresent()){
-            data.put("message", MessagesResponse.addSuccess);
-            data.put("data", optionalMedicalCenter.get());
-        }
-        apiResponse.setData(data);
+        MedicalCenter createdMedicalCenter = optionalMedicalCenter.orElseThrow(() -> new NotFoundException("Medical Center not found"));
+
+        apiResponse.setStatus(HttpStatus.CREATED.value());
+        apiResponse.setMessage(MessagesResponse.addSuccess);
+        apiResponse.setData(createdMedicalCenter);
         return apiResponse;
+    }
+
+    public APIResponse getMedicalCenter(Long id) {
+        Optional<MedicalCenter> optionalMedicalCenter = findMedicalCenter(id);
+        APIResponse apiResponse = new APIResponse();
+
+        MedicalCenter existingMedicalCenter = optionalMedicalCenter.get();
+        apiResponse.setData(existingMedicalCenter);
+        apiResponse.setStatus(HttpStatus.OK.value());
+        return apiResponse;
+    }
+
+    public Optional<MedicalCenter> findMedicalCenter(Long id) {
+        Optional<MedicalCenter> optionalMedicalCenter = this.medicalCenterRepository.findByIdAndDeletedAtIsNull(id);
+        if (!optionalMedicalCenter.isPresent()) {
+            throw new NotFoundException(MessagesResponse.medicalCenterNotFound);
+        }
+        return optionalMedicalCenter;
+    }
+
+    public void validateMedicalCenter(MedicalCenterDTO medicalCenterDTO) {
+        if (Stream.of(medicalCenterDTO)
+                .map(MedicalCenterDTO::getName)
+                .anyMatch(name -> name == null)) {
+            throw new NotValidException(MessagesResponse.medicalCenterCannotBeNull);
+        }
     }
 }
