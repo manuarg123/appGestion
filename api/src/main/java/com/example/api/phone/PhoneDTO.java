@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PhoneDTO {
+    private Long id;
 
     @Size(max= 45, message = "Value cannot be exceed 55 characters")
     private String value;

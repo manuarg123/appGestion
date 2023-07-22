@@ -55,7 +55,6 @@ public class MedicalCenterService {
         return medicalCenterRepository.findByDeletedAtIsNull();
     }
 
-    //Normalizar el Response y los métodos para Phone , email e identification como esta el de Address
     @Transactional(rollbackOn = BadRequestException.class)
     public APIResponse newMedicalCenter(MedicalCenterDTO medicalCenterDTO) {
         validateMedicalCenter(medicalCenterDTO);
@@ -69,35 +68,7 @@ public class MedicalCenterService {
 
         Long medicalCenterId = medicalCenter.getId();
 
-        try {
-            if (medicalCenterDTO.getPhones() != null) {
-                for (PhoneDTO phoneDTO : medicalCenterDTO.getPhones()) {
-                    phoneDTO.setPersonId(medicalCenterId);
-                    phoneService.createPhone(phoneDTO);
-                }
-            }
-            if (medicalCenterDTO.getEmails() != null) {
-                for (EmailDTO emailDTO : medicalCenterDTO.getEmails()) {
-                    emailDTO.setPersonId(medicalCenterId);
-                    emailService.createEmail(emailDTO);
-                }
-            }
-            if (medicalCenterDTO.getIdentifications() != null) {
-                for (IdentificationDTO identificationDTO : medicalCenterDTO.getIdentifications()) {
-                    identificationDTO.setPersonId(medicalCenterId);
-                    identificationService.createIdentification(identificationDTO);
-                }
-            }
-            if (medicalCenterDTO.getAddresses() != null) {
-                for (AddressDTO addressDTO : medicalCenterDTO.getAddresses()) {
-                    addressDTO.setPersonId(medicalCenterId);
-                    addressService.createAddress(addressDTO);
-                }
-            }
-        } catch (BadRequestException e) {
-            medicalCenterRepository.deleteById(medicalCenterId);
-            throw e;
-        }
+        setDataCollectionsForPerson(medicalCenterId, medicalCenterDTO, true);
 
         Optional<MedicalCenter> optionalMedicalCenter = medicalCenterRepository.findById(medicalCenterId);
         MedicalCenter createdMedicalCenter = optionalMedicalCenter.orElseThrow(() -> new NotFoundException("Medical Center not found"));
@@ -105,6 +76,25 @@ public class MedicalCenterService {
         apiResponse.setStatus(HttpStatus.CREATED.value());
         apiResponse.setMessage(MessagesResponse.addSuccess);
         apiResponse.setData(createdMedicalCenter);
+        return apiResponse;
+    }
+
+    @Transactional(rollbackOn = BadRequestException.class)
+    public APIResponse editMedicalCenter(Long id, MedicalCenterDTO medicalCenterDTO) {
+        Optional<MedicalCenter> optionalMedicalCenter = findMedicalCenter(id);
+        validateMedicalCenter(medicalCenterDTO);
+
+        APIResponse apiResponse = new APIResponse();
+        MedicalCenter existingMedicalCenter = optionalMedicalCenter.get();
+        existingMedicalCenter.setName(medicalCenterDTO.getName());
+        existingMedicalCenter.setFullName(medicalCenterDTO.getName());
+
+        setDataCollectionsForPerson(id, medicalCenterDTO, false);
+
+        apiResponse.setStatus(HttpStatus.OK.value());
+        apiResponse.setMessage(MessagesResponse.editSuccess);
+        apiResponse.setData(existingMedicalCenter);
+
         return apiResponse;
     }
 
@@ -131,6 +121,40 @@ public class MedicalCenterService {
                 .map(MedicalCenterDTO::getName)
                 .anyMatch(name -> name == null)) {
             throw new NotValidException(MessagesResponse.medicalCenterCannotBeNull);
+        }
+    }
+
+    public void setDataCollectionsForPerson(Long medicalCenterId, MedicalCenterDTO medicalCenterDTO, Boolean isNew) {
+        try {
+            if (medicalCenterDTO.getPhones() != null) {
+                for (PhoneDTO phoneDTO : medicalCenterDTO.getPhones()) {
+                    phoneDTO.setPersonId(medicalCenterId);
+                    phoneService.createPhone(phoneDTO);
+                }
+            }
+            if (medicalCenterDTO.getEmails() != null) {
+                for (EmailDTO emailDTO : medicalCenterDTO.getEmails()) {
+                    emailDTO.setPersonId(medicalCenterId);
+                    emailService.createEmail(emailDTO);
+                }
+            }
+            if (medicalCenterDTO.getIdentifications() != null) {
+                for (IdentificationDTO identificationDTO : medicalCenterDTO.getIdentifications()) {
+                    identificationDTO.setPersonId(medicalCenterId);
+                    identificationService.createIdentification(identificationDTO);
+                }
+            }
+            if (medicalCenterDTO.getAddresses() != null) {
+                for (AddressDTO addressDTO : medicalCenterDTO.getAddresses()) {
+                    addressDTO.setPersonId(medicalCenterId);
+                    addressService.createAddress(addressDTO);
+                }
+            }
+        } catch (BadRequestException e) {
+            if (isNew){
+                medicalCenterRepository.deleteById(medicalCenterId);
+            }
+            throw e;
         }
     }
 }

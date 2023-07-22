@@ -1,11 +1,15 @@
 package com.example.api.medicalCenter;
 
+import com.example.api.address.Address;
 import com.example.api.address.AddressDTO;
 import com.example.api.address.AddressService;
 import com.example.api.common.*;
+import com.example.api.email.Email;
 import com.example.api.email.EmailDTO;
 import com.example.api.email.EmailService;
+import com.example.api.identification.Identification;
 import com.example.api.identification.IdentificationService;
+import com.example.api.phone.Phone;
 import com.example.api.phone.PhoneDTO;
 import com.example.api.phone.PhoneService;
 import jakarta.validation.ConstraintViolationException;
@@ -43,10 +47,41 @@ class MedicalCenterServiceTest {
     private MedicalCenterService medicalCenterService;
 
     private MedicalCenter medicalCenterReinaFabiola;
+    private Email emailReinaFabiola1;
+    private Email emailReinaFabiola2;
+    private List<Email> emailReinaFabiolaList;
+    private Phone phoneReinaFabiola1;
+    private Phone phoneReinaFabiola2;
+    private List<Phone> phoneReinaFabiolaList;
+    private Address addressReinaFabiola1;
+    private Address addressReinaFabiola2;
+    private List<Address> addresReinaFabiolaList;
+    private Identification identificationReinaFabiola1;
+    private Identification identificationReinaFabiola2;
+    private List<Identification> identificationReinaFabiolaList;
+
+    private MedicalCenter medicalCenterHospitalPrivado;
+    private Email emailHospitalPrivado1;
+    private Email emailHospitalPrivado2;
+    private List<Email> emailHospitalPrivadoList;
+    private Phone phoneHospitalPrivado1;
+    private Phone phoneHospitalPrivado2;
+    private List<Phone> phoneHospitalPrivadoList;
+    private Address addressHospitalPrivado1;
+    private Address addressHospitalPrivado2;
+    private List<Address> addressHospitalPrivadoList;
+    private Identification identificationHospitalPrivado1;
+    private Identification identificationHospitalPrivado2;
+    private List<Identification> identificationHospitalPrivadoList;
     private MedicalCenterDTO medicalCenterDTOReinaFabiola;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        this.medicalCenterReinaFabiola = new MedicalCenter();
+        medicalCenterReinaFabiola.setFullName("Reina Fabiola");
+        medicalCenterReinaFabiola.setName("Reina Fabiola");
+        medicalCenterReinaFabiola.setEmails();
     }
 
     @Test
@@ -76,13 +111,10 @@ class MedicalCenterServiceTest {
         MedicalCenterDTO medicalCenterDTO = new MedicalCenterDTO();
         medicalCenterDTO.setName(null);
 
-        // Simula la validación fallida con @Valid
         ConstraintViolationException exception = new ConstraintViolationException("Validation failed", null);
 
-        // Verifica que se lance la excepción NotValidException
         assertThrows(NotValidException.class, () -> medicalCenterService.newMedicalCenter(medicalCenterDTO), exception.getMessage());
 
-        // Verifica que no se haya llamado al repositorio
         verify(medicalCenterRepository, never()).save(any(MedicalCenter.class));
     }
 

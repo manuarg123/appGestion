@@ -98,14 +98,24 @@ public class IdentificationService {
         validateIdentification(identificationDTO);
         Optional<IdentificationType> optionalIdentificationType = findIdentificationType(identificationDTO.getTypeId());
         Optional<Person> optionalPerson = findPerson(identificationDTO.getPersonId());
-        Person existingPerson = optionalPerson.get();
-        IdentificationType existingIdentificationType = optionalIdentificationType.get();
 
-        Identification identification = new Identification();
-        identification.setNumber(identificationDTO.getValue());
-        identification.setType(existingIdentificationType);
-        identification.setPerson(existingPerson);
-        identificationRepository.save(identification);
+        if (identificationDTO.getId() != null) {
+            Optional<Identification> optionalIdentification = identificationRepository.findByIdAndDeletedAtIsNull(identificationDTO.getId());
+            if (optionalIdentification.isPresent()) {
+                Identification existingIdentification = optionalIdentification.get();
+                existingIdentification.setNumber(identificationDTO.getValue());
+                existingIdentification.setType(optionalIdentificationType.get());
+                existingIdentification.setPerson(optionalPerson.get());
+                identificationRepository.save(existingIdentification);
+                return;
+            }
+        }
+
+        Identification newIdentification = new Identification();
+        newIdentification.setNumber(identificationDTO.getValue());
+        newIdentification.setType(optionalIdentificationType.get());
+        newIdentification.setPerson(optionalPerson.get());
+        identificationRepository.save(newIdentification);
     }
 
     public APIResponse getIdentification(Long id) {

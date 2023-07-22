@@ -97,15 +97,25 @@ public class EmailService {
         validateEmail(emailDTO);
         Optional<EmailType> optionalEmailType = findEmailType(emailDTO.getTypeId());
         Optional<Person> optionalPerson = findPerson(emailDTO.getPersonId());
-        Person existingPerson = optionalPerson.get();
-        EmailType existingEmailType = optionalEmailType.get();
+        if (emailDTO.getId() != null) {
+            Optional<Email> optionalEmail = emailRepository.findByIdAndDeletedAtIsNull(emailDTO.getId());
+            if (optionalEmail.isPresent()) {
+                Email existingEmail = optionalEmail.get();
+                existingEmail.setValue(emailDTO.getValue());
+                existingEmail.setType(optionalEmailType.get());
+                existingEmail.setPerson(optionalPerson.get());
+                emailRepository.save(existingEmail);
+                return;
+            }
+        }
 
-        Email email = new Email();
-        email.setValue(emailDTO.getValue());
-        email.setType(existingEmailType);
-        email.setPerson(existingPerson);
-        emailRepository.save(email);
+        Email newEmail = new Email();
+        newEmail.setValue(emailDTO.getValue());
+        newEmail.setType(optionalEmailType.get());
+        newEmail.setPerson(optionalPerson.get());
+        emailRepository.save(newEmail);
     }
+
     public APIResponse getEmail(Long id) {
         Optional<Email> optionalEmail = findEmail(id);
 

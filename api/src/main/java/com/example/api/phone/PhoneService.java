@@ -98,14 +98,26 @@ public class PhoneService {
         validatePhone(phoneDTO);
         Optional<PhoneType> optionalPhoneType = findPhoneType(phoneDTO.getTypeId());
         Optional<Person> optionalPerson = findPerson(phoneDTO.getPersonId());
-        Person existingPerson = optionalPerson.get();
-        PhoneType existingPhoneType = optionalPhoneType.get();
 
-        Phone phone = new Phone();
-        phone.setNumber(phoneDTO.getValue());
-        phone.setType(existingPhoneType);
-        phone.setPerson(existingPerson);
-        phoneRepository.save(phone);
+        if (phoneDTO.getId() != null) {
+            Optional<Phone> optionalPhone = phoneRepository.findByIdAndDeletedAtIsNull(phoneDTO.getId());
+            if (optionalPhone.isPresent()) {
+                // Si el teléfono existe, actualizar sus propiedades
+                Phone existingPhone = optionalPhone.get();
+                existingPhone.setNumber(phoneDTO.getValue());
+                existingPhone.setType(optionalPhoneType.get());
+                existingPhone.setPerson(optionalPerson.get());
+                phoneRepository.save(existingPhone);
+                return;
+            }
+        }
+
+        Phone newPhone = new Phone();
+        newPhone.setNumber(phoneDTO.getValue());
+        newPhone.setType(optionalPhoneType.get());
+        newPhone.setPerson(optionalPerson.get());
+        phoneRepository.save(newPhone);
+
     }
 
     public APIResponse getPhone(Long id) {

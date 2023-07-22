@@ -12,6 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressDTO {
+    private Long id;
+
     @Size(max=255, message = "Cannot exceed 255 characters")
     private String street;
 

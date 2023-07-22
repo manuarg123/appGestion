@@ -8,23 +8,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/api/medicalCenters")
+@RequestMapping(path = "/api/medicalCenters")
 public class MedicalCenterController {
     private final MedicalCenterService medicalCenterService;
-    public MedicalCenterController(MedicalCenterService medicalCenterService){
+
+    public MedicalCenterController(MedicalCenterService medicalCenterService) {
         this.medicalCenterService = medicalCenterService;
     }
 
     @GetMapping
-    public List<MedicalCenter> getMedicalCenters(){ return this.medicalCenterService.geMedicalCenters();}
+    public List<MedicalCenter> getMedicalCenters() {
+        return this.medicalCenterService.geMedicalCenters();
+    }
 
-    @GetMapping(path="/show/{medicalCenterId}")
-    public APIResponse getMedicalCenter(@PathVariable("medicalCenterId") Long id){
+    @GetMapping(path = "/show/{medicalCenterId}")
+    public APIResponse getMedicalCenter(@PathVariable("medicalCenterId") Long id) {
         return this.medicalCenterService.getMedicalCenter(id);
     }
 
-    @PostMapping(path="/new")
-    public APIResponse addMedicalCenter(@RequestBody @Valid MedicalCenterDTO medicalCenterDTO){
+    @PostMapping(path = "/new")
+    public APIResponse addMedicalCenter(@RequestBody @Valid MedicalCenterDTO medicalCenterDTO) {
         return this.medicalCenterService.newMedicalCenter(medicalCenterDTO);
+    }
+
+    @PutMapping(path = "/edit/{medicalCenterId}")
+    public APIResponse editMedicalCenter(@PathVariable("medicalCenterId") Long id, @RequestBody @Valid MedicalCenterDTO medicalCenterDTO) {
+        return this.medicalCenterService.editMedicalCenter(id, medicalCenterDTO);
     }
 }

@@ -142,61 +142,43 @@ public class AddressService {
         return completeAddress;
     }
 
-//    public HashMap createAddress(AddressDTO addressDTO,HashMap data, Long personId){
-//        Address address = new Address();
-//        address.setStreet(addressDTO.getStreet());
-//        address.setSection(addressDTO.getSection());
-//        address.setNumber(addressDTO.getNumber());
-//        address.setFloor(addressDTO.getFloor());
-//        address.setApartment(addressDTO.getApartment());
-//        address.setZip(addressDTO.getZip());
-//        address.setComplete_address(getCompleteAddress(addressDTO));
-//
-//        Optional<Location> optionalLocation = locationRepository.findByIdAndDeletedAtIsNull(addressDTO.getLocationId());
-//        if(!optionalLocation.isPresent()){
-//            Location location = null;
-//        }
-//        Location location = optionalLocation.get();
-//        address.setLocation(location);
-//
-//        Optional<Province> optionalProvince = provinceRepository.findByIdAndDeletedAtIsNull(addressDTO.getProvinceId());
-//        if(!optionalProvince.isPresent()){
-//            Province province = null;
-//        }
-//        Province province = optionalProvince.get();
-//        address.setProvince(province);
-//
-//        Optional<Person> optionalPerson = personRepository.findById(personId);
-//        if(!optionalPerson.isPresent()){
-//            Person person = null;
-//        }
-//        Person person = optionalPerson.get();
-//        address.setPerson(person);
-//
-//        addressRepository.save(address);
-//        data.put("address-message", MessagesResponse.addSuccess);
-//        data.put("address", address);
-//        return data;
-//    }
-
     public void createAddress(AddressDTO addressDTO){
         validateAddress(addressDTO);
         Optional<Person> optionalPerson = findPerson(addressDTO.getPersonId());
         Location location = getLocation(addressDTO.getLocationId());
         Province province = getProvince(addressDTO.getProvinceId());
 
-        Address address = new Address();
-        address.setPerson(optionalPerson.get());
-        address.setLocation(location);
-        address.setProvince(province);
-        address.setStreet(addressDTO.getStreet());
-        address.setSection(addressDTO.getSection());
-        address.setNumber(addressDTO.getNumber());
-        address.setFloor(addressDTO.getFloor());
-        address.setApartment(addressDTO.getApartment());
-        address.setZip(addressDTO.getZip());
-        address.setComplete_address(getCompleteAddress(addressDTO));
-        addressRepository.save(address);
+        if (addressDTO.getId() != null) {
+            Optional<Address> optionalAddress = addressRepository.findByIdAndDeletedAtIsNull(addressDTO.getId());
+            if (optionalAddress.isPresent()) {
+                Address existingAddress = optionalAddress.get();
+                existingAddress.setPerson(optionalPerson.get());
+                existingAddress.setLocation(location);
+                existingAddress.setProvince(province);
+                existingAddress.setStreet(addressDTO.getStreet());
+                existingAddress.setSection(addressDTO.getSection());
+                existingAddress.setNumber(addressDTO.getNumber());
+                existingAddress.setFloor(addressDTO.getFloor());
+                existingAddress.setApartment(addressDTO.getApartment());
+                existingAddress.setZip(addressDTO.getZip());
+                existingAddress.setComplete_address(getCompleteAddress(addressDTO));
+                addressRepository.save(existingAddress);
+                return;
+            }
+        }
+        
+        Address newAddress = new Address();
+        newAddress.setPerson(optionalPerson.get());
+        newAddress.setLocation(location);
+        newAddress.setProvince(province);
+        newAddress.setStreet(addressDTO.getStreet());
+        newAddress.setSection(addressDTO.getSection());
+        newAddress.setNumber(addressDTO.getNumber());
+        newAddress.setFloor(addressDTO.getFloor());
+        newAddress.setApartment(addressDTO.getApartment());
+        newAddress.setZip(addressDTO.getZip());
+        newAddress.setComplete_address(getCompleteAddress(addressDTO));
+        addressRepository.save(newAddress);
     }
     public APIResponse getAddress(Long id) {
         APIResponse apiResponse = new APIResponse();
