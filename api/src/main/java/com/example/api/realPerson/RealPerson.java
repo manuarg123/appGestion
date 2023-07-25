@@ -3,6 +3,7 @@ package com.example.api.realPerson;
 import com.example.api.address.Address;
 import com.example.api.email.Email;
 import com.example.api.gender.Gender;
+import com.example.api.identification.Identification;
 import com.example.api.person.Person;
 import com.example.api.phone.Phone;
 import jakarta.persistence.*;
@@ -40,8 +41,8 @@ public class RealPerson extends Person {
     public RealPerson(){
 
     }
-    public RealPerson(Long id, String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender) {
-        super(id, fullName, addresses, phones, emails);
+    public RealPerson(Long id, String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, List<Identification> identifications, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender) {
+        super(id, fullName, addresses, phones, emails, identifications);
         this.firstName = firstName;
         this.secondName = secondName;
         this.lastName = lastName;
@@ -50,8 +51,8 @@ public class RealPerson extends Person {
         this.gender = gender;
     }
 
-    public RealPerson(String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender) {
-        super(fullName, addresses, phones, emails);
+    public RealPerson(String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, List<Identification> identifications, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender) {
+        super(fullName, addresses, phones, emails, identifications);
         this.firstName = firstName;
         this.secondName = secondName;
         this.lastName = lastName;

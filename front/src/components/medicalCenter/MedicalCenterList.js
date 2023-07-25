@@ -25,7 +25,7 @@ function MedicalCenterList() {
             },
           }
         );
-
+          console.log(response.data)
         setData(response.data);
       } catch (error) {
         console.error(error);
@@ -65,7 +65,9 @@ function MedicalCenterList() {
                 {medicalCenter.addresses.length > 0
                   ? medicalCenter.addresses.map((address, index) => {
                       if (index === 0) {
-                        return address.location.name;
+                        if (address.location) {
+                          return address.location.name;                          
+                        }
                       }
                     })
                   : "-"}

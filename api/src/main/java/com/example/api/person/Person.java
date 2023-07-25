@@ -44,18 +44,20 @@ public class Person extends AuditableEntity {
     public Person(){
     }
 
-    public Person(Long id, String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails) {
+    public Person(Long id, String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, List<Identification> identifications) {
         this.id = id;
         this.fullName = fullName;
         this.addresses = addresses;
         this.phones = phones;
         this.emails = emails;
+        this.identifications = identifications;
     }
 
-    public Person(String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails) {
+    public Person(String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, List<Identification> identifications) {
         this.fullName = fullName;
         this.addresses = addresses;
         this.phones = phones;
         this.emails = emails;
+        this.identifications = identifications;
     }
 }

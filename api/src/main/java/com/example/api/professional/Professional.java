@@ -4,6 +4,7 @@ import com.example.api.address.Address;
 import com.example.api.clinicHistory.ClinicHistory;
 import com.example.api.email.Email;
 import com.example.api.gender.Gender;
+import com.example.api.identification.Identification;
 import com.example.api.medicalCenter.MedicalCenter;
 import com.example.api.phone.Phone;
 import com.example.api.realPerson.RealPerson;
@@ -37,15 +38,15 @@ public class Professional extends RealPerson {
     public Professional(){
 
     }
-    public Professional(Long id, String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender, String mp, MedicalCenter medicalCenter, Speciality speciality) {
-        super(id, fullName, addresses, phones, emails, firstName, secondName, lastName, secondLastName, birthday, gender);
+    public Professional(Long id, String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, List<Identification> identifications, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender, String mp, MedicalCenter medicalCenter, Speciality speciality) {
+        super(id, fullName, addresses, phones, emails, identifications, firstName, secondName, lastName, secondLastName, birthday, gender);
         this.mp = mp;
         this.medicalCenter = medicalCenter;
         this.speciality = speciality;
     }
 
-    public Professional(String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender, String mp, MedicalCenter medicalCenter, Speciality speciality) {
-        super(fullName, addresses, phones, emails, firstName, secondName, lastName, secondLastName, birthday, gender);
+    public Professional(String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails,List<Identification> identifications, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender, String mp, MedicalCenter medicalCenter, Speciality speciality) {
+        super(fullName, addresses, phones, emails, identifications,firstName, secondName, lastName, secondLastName, birthday, gender);
         this.mp = mp;
         this.medicalCenter = medicalCenter;
         this.speciality = speciality;

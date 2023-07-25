@@ -7,11 +7,13 @@ function ProvinceForm({
   handleClose,
   provinceId = null,
   fetchProvinceList,
+  provinceList
 }) {
   const [provinceData, setProvinceData] = useState(null);
   const [name, setName] = useState(provinceData ? provinceData.name : "");
   const [shouldPostData, setShouldPostData] = useState(false);
-
+  console.log(provinceList)
+  const [localProvinceList, setLocalProvinceList] = useState(provinceList);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,6 +39,7 @@ function ProvinceForm({
       } catch (error) {
         console.error(error);
       }
+      
     };
 
     fetchData();
@@ -77,8 +80,11 @@ function ProvinceForm({
             },
           }
         );
+        setLocalProvinceList([...localProvinceList, response.data]);
       }
-      fetchProvinceList(); //Actualiza lista
+      fetchProvinceList();
+    
+      handleClose();
     } catch (error) {
       console.error(error);
     }
