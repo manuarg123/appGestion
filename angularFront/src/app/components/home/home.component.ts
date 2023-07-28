@@ -12,19 +12,6 @@ export class HomeComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    const expirationDate = localStorage.getItem('expirationDate');
-    if (token && expirationDate) {
-      const currentTime = new Date().getTime();
-      const expirationTime = parseInt(expirationDate, 10);
-      if (currentTime < expirationTime) {
-        this.llenar();
-      } else {
-        window.location.href = '/login';
-      }
-    } else {
-      window.location.href = '/login';
-    }
   }
 
   llenar() {
