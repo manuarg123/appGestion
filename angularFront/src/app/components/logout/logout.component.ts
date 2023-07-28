@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
 export class LogoutComponent {
   logout(){
     localStorage.setItem('token', "");
+    localStorage.setItem('expirationDate', "");
     window.location.href = "/login";
   }
 }
