@@ -1,30 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~bootstrap/dist/css/bootstrap.min.css';
+@import "~bootstrap/dist/css/bootstrap.min.css";
 
 .background-general {
-    background-color: red;
+  background-color: red;
 }
 
-.body-color{
-    background-color: white;
+.body-color {
+  background-color: white;
 }
 
-.index-color{
-    background-color: rgb(93, 23, 221);
+.index-color {
+  background-color: rgb(93, 23, 221);
 }
 
-.margin-top{
-    margin-top: 5px;
+.margin-top {
+  margin-top: 5px;
 }
 
-.btn-index{
-    margin-top: 7px;
-    margin-bottom: 7px;
+.btn-index {
+  margin-top: 7px;
+  margin-bottom: 7px;
 }
-.btn-margin{
-    margin: 3px;
+.btn-margin {
+  margin: 3px;
 }
 
 .main-color {
-    background-image: linear-gradient(45deg, rgba(62, 77, 192, 0.679), rgba(33, 167, 100, 0.5));
+  background-image: linear-gradient(
+    45deg,
+    rgba(62, 77, 192, 0.679),
+    rgba(33, 167, 100, 0.5)
+  );
 }
