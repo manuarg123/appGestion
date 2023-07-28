@@ -1,1 +1,45 @@
-<p>login works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+      <div class="login text-center main-color">
+        <h1 class="login-title">Iniciar Sesión</h1>
+        <form>
+          <div ngClass="['form-group', 'margin-top']">
+            <input
+              class="input-inline"
+              type="text"
+              name="username"
+              [(ngModel)]="loginForm.username"
+            />
+          </div>
+          <div ngClass="['form-group', 'margin-top']">
+            <input
+              class="input-inline"
+              type="password"
+              name="password"
+              [(ngModel)]="loginForm.password"
+            />
+          </div>
+          <div ngClass="['form-group', 'margin-top']">
+            <button
+              type="button"
+              (click)="onSubmit()"
+              class="btn btn-primary btn-sm"
+            >
+              Login
+            </button>
+            <button
+              class="btn btn-success btn-sm btn-margin"
+              type="button"
+              (click)="onCreateUser()"
+            >
+              Crear Usuario
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-4"></div>
+  </div>
+</div>

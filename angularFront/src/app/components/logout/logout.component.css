@@ -1,0 +1,12 @@
+.logout-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-right: 3px;
+}
+
+.logout-button img {
+    width: 33px; 
+    height: 33px;
+    cursor: pointer;
+}

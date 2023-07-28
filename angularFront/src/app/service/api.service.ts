@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-  private urlAPI = "https://apisimpsons.fly.dev/api/personajes";
-  
-  constructor(private http: HttpClient) { }
+  private urlAPI = 'https://apisimpsons.fly.dev/api/personajes';
 
-  public getData() : Observable<any> {
+  constructor(private http: HttpClient) {}
+
+  public getData(): Observable<any> {
     return this.http.get<any>(this.urlAPI);
   }
 }

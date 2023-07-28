@@ -1,0 +1,30 @@
+.login{
+    height: 160px;
+    width: 300px;
+    margin-top: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color:  rgba(200, 200, 200, 0.679);
+    box-shadow: 0 0 25px rgba(50, 4, 234, 0.3);
+}
+.login-title{
+    font-size: 30px;
+}
+.input-inline{
+    display: inline;
+    border: 1px solid rgba(0, 0, 0, 0.368);
+    border-radius: 3px;
+}
+.logout-button {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.logout-button img {
+    width: 33px; 
+    height: 33px;
+    cursor: pointer;
+}
