@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -6,11 +6,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
-  private urlAPI = 'https://apisimpsons.fly.dev/api/personajes';
+  private urlAPI = 'http://localhost:8080/api/';
 
   constructor(private http: HttpClient) {}
 
-  public getData(): Observable<any> {
-    return this.http.get<any>(this.urlAPI);
+  public all(endpoint: string, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    
+    return this.http.get<any>(this.urlAPI + endpoint, { headers });
   }
 }

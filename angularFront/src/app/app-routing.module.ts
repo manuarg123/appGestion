@@ -3,10 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './auth.guard';
+import { ContactosComponent } from './components/contactos/contactos.component';
+import { MedicalCenterComponent } from './components/medical-center/index/medical-center.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'login', component: LoginComponent }
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'contactos', component: ContactosComponent, canActivate: [AuthGuard] },
+  { path: 'medicalCenter', component: MedicalCenterComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 
 @NgModule({

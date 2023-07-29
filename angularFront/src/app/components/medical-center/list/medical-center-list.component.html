@@ -1,0 +1,45 @@
+<table class="table table-responsive">
+  <thead>
+    <tr>
+      <th class="text-center">Centro Médico</th>
+      <th class="text-center">Dirección</th>
+      <th class="text-center">Localidad</th>
+      <th class="text-center">Email</th>
+      <th class="text-center">Teléfono</th>
+      <th class="text-center">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let medicalCenter of medicalCenters">
+      <td class="text-center">{{ medicalCenter.fullName }}</td>
+      <td class="text-center">
+        {{
+          medicalCenter.addresses.length > 0
+            ? medicalCenter.addresses[0].street +
+              " " +
+              medicalCenter.addresses[0].number
+            : "-"
+        }}
+      </td>
+      <td class="text-center">
+        {{
+          medicalCenter.addresses.length > 0 &&
+          medicalCenter.addresses[0].location
+            ? medicalCenter.addresses[0].location.name
+            : "-"
+        }}
+      </td>
+      <td class="text-center">
+        {{
+          medicalCenter.emails.length > 0 ? medicalCenter.emails[0].value : "-"
+        }}
+      </td>
+      <td class="text-center">
+        {{
+          medicalCenter.phones.length > 0 ? medicalCenter.phones[0].number : "-"
+        }}
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>

@@ -8,6 +8,9 @@ import { HomeComponent } from './components/home/home.component';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { ContactosComponent } from './components/contactos/contactos.component';
+import { MedicalCenterComponent } from './components/medical-center/index/medical-center.component';
+import { MedicalCenterListComponent } from './components/medical-center/list/medical-center-list.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +19,9 @@ import { LogoutComponent } from './components/logout/logout.component';
     HomeComponent,
     NavbarComponent,
     LogoutComponent,
+    ContactosComponent,
+    MedicalCenterComponent,
+    MedicalCenterListComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
   providers: [],
