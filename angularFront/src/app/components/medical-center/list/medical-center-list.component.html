@@ -10,36 +10,89 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let medicalCenter of medicalCenters">
-      <td class="text-center">{{ medicalCenter.fullName }}</td>
-      <td class="text-center">
-        {{
-          medicalCenter.addresses.length > 0
-            ? medicalCenter.addresses[0].street +
-              " " +
-              medicalCenter.addresses[0].number
-            : "-"
-        }}
-      </td>
-      <td class="text-center">
-        {{
-          medicalCenter.addresses.length > 0 &&
-          medicalCenter.addresses[0].location
-            ? medicalCenter.addresses[0].location.name
-            : "-"
-        }}
-      </td>
-      <td class="text-center">
-        {{
-          medicalCenter.emails.length > 0 ? medicalCenter.emails[0].value : "-"
-        }}
-      </td>
-      <td class="text-center">
-        {{
-          medicalCenter.phones.length > 0 ? medicalCenter.phones[0].number : "-"
-        }}
-      </td>
-      <td></td>
-    </tr>
+    <ng-container *ngFor="let i of getLoopArray()">
+      <tr>
+        <ng-container *ngIf="medicalCenters[i]">
+          <td class="text-center">{{ medicalCenters[i].fullName }}</td>
+          <td class="text-center">
+            {{
+              medicalCenters[i].addresses.length > 0
+                ? medicalCenters[i].addresses[0].street +
+                  " " +
+                  medicalCenters[i].addresses[0].number
+                : "-"
+            }}
+          </td>
+          <td class="text-center">
+            {{
+              medicalCenters[i].addresses.length > 0 &&
+              medicalCenters[i].addresses[0].location
+                ? medicalCenters[i].addresses[0].location.name
+                : "-"
+            }}
+          </td>
+          <td class="text-center">
+            {{
+              medicalCenters[i].emails.length > 0
+                ? medicalCenters[i].emails[0].value
+                : "-"
+            }}
+          </td>
+          <td class="text-center">
+            {{
+              medicalCenters[i].phones.length > 0
+                ? medicalCenters[i].phones[0].number
+                : "-"
+            }}
+          </td>
+          <td></td>
+        </ng-container>
+
+        <ng-container *ngIf="!medicalCenters[i]">
+          <td class="text-center">-</td>
+          <td class="text-center">-</td>
+          <td class="text-center">-</td>
+          <td class="text-center">-</td>
+          <td class="text-center">-</td>
+          <td></td>
+        </ng-container>
+      </tr>
+    </ng-container>
   </tbody>
 </table>
+
+<nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+      <button
+        class="page-link"
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+      >
+        Anterior
+      </button>
+    </li>
+    <ng-container *ngFor="let page of getPagesArray()">
+      <li class="page-item" [ngClass]="{ active: page === currentPage }">
+        <button class="page-link" *ngIf="page === currentPage; else pageLink">
+          {{ page }}
+        </button>
+        <ng-template #pageLink>
+          <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+        </ng-template>
+      </li>
+    </ng-container>
+    <li
+      class="page-item"
+      [ngClass]="{ disabled: currentPage === getTotalPages() }"
+    >
+      <button
+        class="page-link"
+        (click)="nextPage()"
+        [disabled]="currentPage === getTotalPages()"
+      >
+        Siguiente
+      </button>
+    </li>
+  </ul>
+</nav>

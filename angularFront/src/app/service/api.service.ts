@@ -17,4 +17,12 @@ export class ApiService {
     
     return this.http.get<any>(this.urlAPI + endpoint, { headers });
   }
+
+  public paginated(endpoint: string, token: string, currentPage: number, pageSize: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<any>(this.urlAPI + endpoint + '/paginated?currentPage=' + currentPage + '&pageSize=' + pageSize, {headers});
+  }
 }
