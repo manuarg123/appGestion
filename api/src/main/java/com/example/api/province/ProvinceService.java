@@ -2,6 +2,9 @@ package com.example.api.province;
 
 import com.example.api.common.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -120,5 +123,11 @@ public class ProvinceService {
         apiResponse.setStatus(HttpStatus.OK.value());
         apiResponse.setData(existingProvince);
         return apiResponse;
+    }
+
+    public Page<Province> getProvincesPaginated(int currentPage, int pageSize){
+        int startIndex = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        return provinceRepository.findPageByDeletedAtIsNull(pageable);
     }
 }
