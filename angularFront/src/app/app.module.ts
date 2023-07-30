@@ -11,6 +11,9 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { ContactosComponent } from './components/contactos/contactos.component';
 import { MedicalCenterComponent } from './components/medical-center/index/medical-center.component';
 import { MedicalCenterListComponent } from './components/medical-center/list/medical-center-list.component';
+import { ABMsComponent } from './components/abms/abms.component';
+import { ProvinceComponent } from './components/province/index/province.component';
+import { ProvinceListComponent } from './components/province/list/province-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,6 +24,9 @@ import { MedicalCenterListComponent } from './components/medical-center/list/med
     ContactosComponent,
     MedicalCenterComponent,
     MedicalCenterListComponent,
+    ABMsComponent,
+    ProvinceComponent,
+    ProvinceListComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
   providers: [],
