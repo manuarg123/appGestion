@@ -3,6 +3,7 @@ package com.example.api.medicalCenter;
 import com.example.api.common.APIResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,5 +35,13 @@ public class MedicalCenterController {
     @PutMapping(path = "/edit/{medicalCenterId}")
     public APIResponse editMedicalCenter(@PathVariable("medicalCenterId") Long id, @RequestBody @Valid MedicalCenterDTO medicalCenterDTO) {
         return this.medicalCenterService.editMedicalCenter(id, medicalCenterDTO);
+    }
+
+    @GetMapping(path = "/paginated")
+    public Page<MedicalCenter> getMedicalCentersPaginated(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
+    ){
+        return medicalCenterService.getMedicalCentersPaginated(currentPage, pageSize);
     }
 }

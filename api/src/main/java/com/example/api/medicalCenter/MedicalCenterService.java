@@ -25,6 +25,9 @@ import com.example.api.phoneType.PhoneType;
 import com.example.api.phoneType.PhoneTypeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -156,5 +159,11 @@ public class MedicalCenterService {
             }
             throw e;
         }
+    }
+
+    public Page<MedicalCenter> getMedicalCentersPaginated(int currentPage, int pageSize) {
+        int startIndex = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        return medicalCenterRepository.findPageByDeletedAtIsNull(pageable);
     }
 }
