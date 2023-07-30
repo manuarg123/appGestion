@@ -14,6 +14,9 @@ import { MedicalCenterListComponent } from './components/medical-center/list/med
 import { ABMsComponent } from './components/abms/abms.component';
 import { ProvinceComponent } from './components/province/index/province.component';
 import { ProvinceListComponent } from './components/province/list/province-list.component';
+import { ProvinceFormComponent } from './components/province/form/province-form.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,8 +30,9 @@ import { ProvinceListComponent } from './components/province/list/province-list.
     ABMsComponent,
     ProvinceComponent,
     ProvinceListComponent,
+    ProvinceFormComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule],
   providers: [],
   bootstrap: [AppComponent],
 })

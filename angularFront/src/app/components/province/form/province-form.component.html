@@ -1,0 +1,33 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Agregar Provincia</h5>
+      <button type="button" class="close" (click)="handleClose()">
+        <span>&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="handleSubmit()">
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Ingresar Nombre.."
+            [(ngModel)]="name"
+            name="name"
+            required
+          />
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="handleClose()">
+        Cerrar
+      </button>
+      <button type="button" class="btn btn-primary" (click)="handleSubmit()">
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>
