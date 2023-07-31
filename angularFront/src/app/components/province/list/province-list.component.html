@@ -1,5 +1,5 @@
-<table class="table table-responsive">
-  <thead>
+<table class="table table-responsive table-sm small-table-width table-striped table-hover">
+  <thead class="table-light">
     <tr>
       <th class="text-center">Nombre</th>
       <th class="text-center">Acciones</th>
@@ -11,22 +11,28 @@
         <ng-container *ngIf="provinces[i]">
           <td class="text-center">{{ provinces[i].name }}</td>
           <td class="text-center">
-            <button type="button"
-             class="btn btn-secondary"
-             (click)="handleEdit(provinces[i].id)">Editar</button>
             <button
               type="button"
-              class="btn btn-danger"
-              (click)="handleDelete(provinces[i].id)"
+              class="button-style"
+              (click)="handleEdit(provinces[i].id)"
+              title="Eliminar"
             >
-              Eliminar
+              <img src="../../../assets/images/editar.png" alt="Editar" />
+            </button>
+            <button
+              type="button"
+              class="button-style"
+              (click)="handleDelete(provinces[i].id)"
+              title="Eliminar"
+            >
+              <img src="../../../assets/images/eliminar.png" alt="Eliminar" />
             </button>
           </td>
         </ng-container>
 
         <ng-container *ngIf="!provinces[i]">
-          <td class="text-center">-</td>
-          <td class="text-center">-</td>
+          <td class="text-center"> - </td>
+          <td class="text-center"> - </td>
         </ng-container>
       </tr>
     </ng-container>

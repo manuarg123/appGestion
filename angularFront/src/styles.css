@@ -17,9 +17,13 @@
   margin-top: 5px;
 }
 
+.margin-botton {
+  margin-bottom: 5px;
+}
+
 .btn-index {
   margin-top: 7px;
-  margin-bottom: 7px;  
+  margin-bottom: 7px;
 }
 
 .btn-margin {
@@ -34,27 +38,27 @@
   );
 }
 
-.padding-index{
+.padding-index {
   padding: 30px;
 }
 
-.height-menu-icon{
+.height-menu-icon {
   height: 50px;
 }
 
-.links-none{
+.links-none {
   text-decoration: none;
   color: black;
   font: 1em sans-serif;
   font-size: large;
 }
 
-.margin-ind{
+.margin-ind {
   margin-left: 10%;
   margin-right: 10%;
 }
 
-body{
+body {
   background-color: rgb(148, 143, 143);
 }
 
@@ -63,5 +67,110 @@ body{
   justify-content: center;
   margin-top: 10px;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.small-table-width{
+  width: 50%;
+}
+
+.button-style {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 3px;
+}
+
+.button-style img {
+  width: 22px; 
+  height: 22px;
+  cursor: pointer;
+}
+
+.button-style-add {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 3px;
+  height: auto;
+  width: auto;
+  padding: 3px;
+  color: white;
+  margin-bottom: 3px;
+  background-color: rgb(54, 101, 54);
+  transition: background-color 0.3s;
+}
+
+.button-style-add:hover {
+  background-color: rgb(38, 74, 38);
+}
+
+.button-style-add img {
+  width: 22px; 
+  height: 22px;
+  cursor: pointer;
+}
+
+.button-style-close{
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 3px;
+  height: auto;
+  width: auto;
+  padding: 3px;
+  color: white;
+  margin-bottom: 3px;
+  background-color: rgb(170, 41, 16);
+  transition: background-color 0.3s;
+}
+
+.button-style-close:hover {
+  background-color: rgb(246, 49, 10);
+}
+
+.pagination {
+  font-size: 12px;
+}
+
+.pagination .page-link {
+  padding: 4px 8px;
+}
+
+.pagination .page-item.active .page-link {
+  font-weight: bold;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #777; 
+}
+
+.auto-margin{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 767px) {
+  .small-table-width{
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .small-table-width{
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .small-table-width{
+    width: 50%;
+  }
+  
+}

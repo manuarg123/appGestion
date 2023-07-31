@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class ProvinceListComponent implements OnInit {
   provinces: any[] = [];
   currentPage: number = 1;
-  pageSize: number = 20;
+  pageSize: number = 10;
   totalItems: number = 0;
 
   constructor(
@@ -135,7 +135,8 @@ export class ProvinceListComponent implements OnInit {
       this.apiService.getByid('provinces', token, id).subscribe(
         (provinceData) => {
           const dialogRef = this.dialog.open(ProvinceFormComponent, {
-            data: {...provinceData, id}
+            data: {...provinceData, id},
+            width: '250px',
           });
         }
       );
