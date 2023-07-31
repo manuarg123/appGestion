@@ -1,60 +1,70 @@
 <table class="table table-responsive">
-    <thead>
+  <thead>
+    <tr>
+      <th class="text-center">Nombre</th>
+      <th class="text-center">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let i of getLoopArray()">
       <tr>
-        <th class="text-center">Nombre</th>
-        <th class="text-center">Acciones</th>
+        <ng-container *ngIf="provinces[i]">
+          <td class="text-center">{{ provinces[i].name }}</td>
+          <td class="text-center">
+            <button type="button"
+             class="btn btn-secondary"
+             (click)="handleEdit(provinces[i].id)">Editar</button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="handleDelete(provinces[i].id)"
+            >
+              Eliminar
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="!provinces[i]">
+          <td class="text-center">-</td>
+          <td class="text-center">-</td>
+        </ng-container>
       </tr>
-    </thead>
-    <tbody>
-      <ng-container *ngFor="let i of getLoopArray()">
-        <tr>
-          <ng-container *ngIf="provinces[i]">
-            <td class="text-center">{{ provinces[i].name }}</td>
-            <td></td>
-          </ng-container>
-  
-          <ng-container *ngIf="!provinces[i]">
-            <td class="text-center">-</td>
-            <td class="text-center">-</td>
-          </ng-container>
-        </tr>
-      </ng-container>
-    </tbody>
-  </table>
-  
-  <nav aria-label="...">
-    <ul class="pagination">
-      <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
-        <button
-          class="page-link"
-          (click)="prevPage()"
-          [disabled]="currentPage === 1"
-        >
-          Anterior
-        </button>
-      </li>
-      <ng-container *ngFor="let page of getPagesArray()">
-        <li class="page-item" [ngClass]="{ active: page === currentPage }">
-          <button class="page-link" *ngIf="page === currentPage; else pageLink">
-            {{ page }}
-          </button>
-          <ng-template #pageLink>
-            <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
-          </ng-template>
-        </li>
-      </ng-container>
-      <li
-        class="page-item"
-        [ngClass]="{ disabled: currentPage === getTotalPages() }"
+    </ng-container>
+  </tbody>
+</table>
+
+<nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+      <button
+        class="page-link"
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
       >
-        <button
-          class="page-link"
-          (click)="nextPage()"
-          [disabled]="currentPage === getTotalPages()"
-        >
-          Siguiente
+        Anterior
+      </button>
+    </li>
+    <ng-container *ngFor="let page of getPagesArray()">
+      <li class="page-item" [ngClass]="{ active: page === currentPage }">
+        <button class="page-link" *ngIf="page === currentPage; else pageLink">
+          {{ page }}
         </button>
+        <ng-template #pageLink>
+          <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+        </ng-template>
       </li>
-    </ul>
-  </nav>
-  
+    </ng-container>
+    <li
+      class="page-item"
+      [ngClass]="{ disabled: currentPage === getTotalPages() }"
+    >
+      <button
+        class="page-link"
+        (click)="nextPage()"
+        [disabled]="currentPage === getTotalPages()"
+      >
+        Siguiente
+      </button>
+    </li>
+  </ul>
+</nav>

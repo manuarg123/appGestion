@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/api.service';
+import { ServiceProvinceService } from '../service-province.service';
+import { ProvinceFormComponent } from '../form/province-form.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-province-list',
@@ -12,9 +15,14 @@ export class ProvinceListComponent implements OnInit {
   pageSize: number = 20;
   totalItems: number = 0;
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private provinceDataService: ServiceProvinceService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
+    this.subscribeToProvinceAdded();
     this.getProvinces();
   }
 
@@ -35,6 +43,23 @@ export class ProvinceListComponent implements OnInit {
             );
           }
         );
+    } else {
+      console.log('No se encontro token');
+    }
+  }
+
+  handleDelete(id: string): void {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+      this.apiService.delete('provinces', token, id).subscribe(
+        (data) => {
+          confirm('Desea eliminar el registro');
+          this.getProvinces();
+        },
+        (error) => {
+          console.log('Error al elminar', error);
+        }
+      );
     } else {
       console.log('No se encontro token');
     }
@@ -95,5 +120,26 @@ export class ProvinceListComponent implements OnInit {
     }
 
     return loopArray;
+  }
+
+  private subscribeToProvinceAdded() {
+    this.provinceDataService.provinceAdded$.subscribe(() => {
+      this.getProvinces();
+    });
+  }
+
+  handleEdit(id: string): void {
+    const token = localStorage.getItem('token');
+    let data = {};
+    if (token != null) {
+      this.apiService.getByid('provinces', token, id).subscribe(
+        (provinceData) => {
+          const dialogRef = this.dialog.open(ProvinceFormComponent, {
+            data: {...provinceData, id}
+          });
+        }
+      );
+      //this.apiService.put('provinces', token, data, id);
+    }
   }
 }
