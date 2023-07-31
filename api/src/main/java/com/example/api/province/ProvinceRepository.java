@@ -14,6 +14,7 @@ public interface ProvinceRepository extends JpaRepository<Province,Long> {
     Optional<Province> findProvinceByName(String name);
     List<Province> findByDeletedAtIsNull();
     Optional<Province> findByIdAndDeletedAtIsNull(Long id);
+    Optional<Province> findProvinceByNameAndDeletedAtIsNull(String name);
 
     @Query("SELECT p FROM Province p WHERE p.deletedAt IS NULL")
     Page<Province> findPageByDeletedAtIsNull(Pageable pageable);

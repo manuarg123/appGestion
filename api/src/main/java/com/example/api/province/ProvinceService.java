@@ -39,7 +39,7 @@ public class ProvinceService {
             throw new NotValidException(MessagesResponse.notValidParameters);
         }
 
-        Optional<Province> res = provinceRepository.findProvinceByName(provinceDTO.getName());
+        Optional<Province> res = provinceRepository.findProvinceByNameAndDeletedAtIsNull(provinceDTO.getName());
 
         if (res.isPresent()) {
             Province existingProvince = res.get();
@@ -71,7 +71,7 @@ public class ProvinceService {
         Optional<Province> optionalProvince = provinceRepository.findByIdAndDeletedAtIsNull(id);
 
         if (optionalProvince.isPresent()) {
-            Optional<Province> res = provinceRepository.findProvinceByName(provinceDTO.getName());
+            Optional<Province> res = provinceRepository.findProvinceByNameAndDeletedAtIsNull(provinceDTO.getName());
 
             if (res.isPresent()) {
                 Province existingProvince = res.get();
