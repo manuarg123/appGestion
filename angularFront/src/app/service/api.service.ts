@@ -5,11 +5,21 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
+
+/**
+ * Manejo de solicitudes HTTP con la API
+ */
 export class ApiService {
   private urlAPI = 'http://localhost:8080/api/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
+  /**
+   * Obtiene todos los registros
+   * @param endpoint 
+   * @param token 
+   * @returns 
+   */
   public all(endpoint: string, token: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -18,6 +28,14 @@ export class ApiService {
     return this.http.get<any>(this.urlAPI + endpoint, { headers });
   }
 
+  /**
+   * Paginado
+   * @param endpoint 
+   * @param token 
+   * @param currentPage 
+   * @param pageSize 
+   * @returns 
+   */
   public paginated(
     endpoint: string,
     token: string,
@@ -30,15 +48,22 @@ export class ApiService {
 
     return this.http.get<any>(
       this.urlAPI +
-        endpoint +
-        '/paginated?currentPage=' +
-        currentPage +
-        '&pageSize=' +
-        pageSize,
+      endpoint +
+      '/paginated?currentPage=' +
+      currentPage +
+      '&pageSize=' +
+      pageSize,
       { headers }
     );
   }
 
+  /**
+   * Nuevos Registros
+   * @param endpoint 
+   * @param token 
+   * @param data 
+   * @returns 
+   */
   public post(endpoint: string, token: string, data: object) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -49,6 +74,14 @@ export class ApiService {
     });
   }
 
+  /**
+   * Edición de registros
+   * @param endpoint 
+   * @param token 
+   * @param data 
+   * @param id 
+   * @returns 
+   */
   public put(endpoint: string, token: string, data: object, id: string) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -59,6 +92,13 @@ export class ApiService {
     });
   }
 
+  /**
+   * Obtención por id
+   * @param endpoint 
+   * @param token 
+   * @param id 
+   * @returns 
+   */
   public getByid(endpoint: string, token: string, id: string) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -67,6 +107,13 @@ export class ApiService {
     return this.http.get<any>(this.urlAPI + endpoint + '/show/' + id, { headers });
   }
 
+  /**
+   * Eliminación de registros
+   * @param endpoint 
+   * @param token 
+   * @param id 
+   * @returns 
+   */
   public delete(endpoint: string, token: string, id: string) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,

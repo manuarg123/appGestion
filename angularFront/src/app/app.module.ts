@@ -17,6 +17,9 @@ import { ProvinceListComponent } from './components/province/list/province-list.
 import { ProvinceFormComponent } from './components/province/form/province-form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from './components/common/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,9 +34,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     ProvinceComponent,
     ProvinceListComponent,
     ProvinceFormComponent,
+    ConfirmationDialogComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

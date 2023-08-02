@@ -3,6 +3,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { ServiceProvinceService } from '../service-province.service';
 import { ProvinceFormComponent } from '../form/province-form.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-province-list',
@@ -19,7 +20,7 @@ export class ProvinceListComponent implements OnInit {
     private apiService: ApiService,
     private provinceDataService: ServiceProvinceService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.subscribeToProvinceAdded();
@@ -48,21 +49,47 @@ export class ProvinceListComponent implements OnInit {
     }
   }
 
+  handleEdit(id: string): void {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+      this.apiService.getByid('provinces', token, id).subscribe(
+        (provinceData) => {
+          const dialogRef = this.dialog.open(ProvinceFormComponent, {
+            data: { ...provinceData, id },
+            width: '250px',
+          });
+        }
+      );
+    }
+  }
+
   handleDelete(id: string): void {
     const token = localStorage.getItem('token');
     if (token != null) {
-      this.apiService.delete('provinces', token, id).subscribe(
-        (data) => {
-          confirm('Desea eliminar el registro');
-          this.getProvinces();
-        },
-        (error) => {
-          console.log('Error al elminar', error);
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.apiService.delete('provinces', token, id).subscribe(
+            (data) => {
+              this.getProvinces();
+            },
+            (error) => {
+              console.log('Error al eliminar', error);
+            }
+          );
         }
-      );
+      });
     } else {
-      console.log('No se encontro token');
+      console.log('No se encontró token');
     }
+  }
+
+  private subscribeToProvinceAdded() {
+    this.provinceDataService.provinceAdded$.subscribe(() => {
+      this.getProvinces();
+    });
   }
 
   goToPage(pageNumber: number) {
@@ -83,6 +110,7 @@ export class ProvinceListComponent implements OnInit {
       this.getProvinces();
     }
   }
+
   getTotalPages() {
     return Math.ceil(this.totalItems / this.pageSize);
   }
@@ -120,27 +148,5 @@ export class ProvinceListComponent implements OnInit {
     }
 
     return loopArray;
-  }
-
-  private subscribeToProvinceAdded() {
-    this.provinceDataService.provinceAdded$.subscribe(() => {
-      this.getProvinces();
-    });
-  }
-
-  handleEdit(id: string): void {
-    const token = localStorage.getItem('token');
-    let data = {};
-    if (token != null) {
-      this.apiService.getByid('provinces', token, id).subscribe(
-        (provinceData) => {
-          const dialogRef = this.dialog.open(ProvinceFormComponent, {
-            data: {...provinceData, id},
-            width: '250px',
-          });
-        }
-      );
-      //this.apiService.put('provinces', token, data, id);
-    }
   }
 }

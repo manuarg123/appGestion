@@ -2,7 +2,7 @@ import { Component, Input, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'src/app/service/api.service';
 import { ServiceProvinceService } from '../service-province.service';
-import { error } from 'jquery';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-province-form',
@@ -18,6 +18,7 @@ export class ProvinceFormComponent {
     private dialogRef: MatDialogRef<ProvinceFormComponent>,
     private apiService: ApiService,
     private provinceDataService: ServiceProvinceService,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     if (data) {
@@ -40,26 +41,42 @@ export class ProvinceFormComponent {
       if (id == "") {
         this.apiService.post('provinces', token, data).subscribe(
           (response) => {
-            alert('Se agrego el registro');
             this.provinceDataService.triggerProvinceAdded();
+            this.dialogRef.close();
           },
           (error) => {
-            console.log('Error al agregar el registro', error);
+            if (typeof error.error.error === 'string') {
+              if (error.error.error == "Record with the same name already exists.") {
+                this.openSnackBar('Ya existe un registro con ese nombre, ingrese otro diferente', 'Aceptar');
+              }
+            } else {
+              if (error.error.error[0] == "Name cannot be blank") {
+                this.openSnackBar('No puede dejar en blanco el nombre, ingrese un registro', 'Aceptar');
+              }
+            }
           }
         );
       } else {
         this.apiService.put('provinces', token, data, id).subscribe(
           (response) => {
-            alert('Se edito el registro');
             this.provinceDataService.triggerProvinceAdded();
+            this.dialogRef.close();
           },
           (error) => {
-            console.log('Error al editar el registro', error);
+            if (typeof error.error.error === 'string') {
+              if (error.error.error == "Record with the same name already exists.") {
+                this.openSnackBar('Ya existe un registro con ese nombre, ingrese otro diferente', 'Aceptar');
+              }
+            } else {
+              if (error.error.error[0] == "Name cannot be blank") {
+                this.openSnackBar('No puede dejar en blanco el nombre, ingrese un registro', 'Aceptar');
+              }
+            }
           }
         );
       }
 
-      this.dialogRef.close();
+
     } else {
       console.log('No se encontró token');
     }
@@ -67,5 +84,11 @@ export class ProvinceFormComponent {
 
   handleClose(): void {
     this.dialogRef.close();
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }
