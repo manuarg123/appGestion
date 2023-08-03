@@ -1,24 +1,28 @@
 import { Component, Input, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'src/app/service/api.service';
-import { ServiceProvinceService } from '../service-province.service';
+import { ServiceMedicalCenterService } from '../service-medical-center.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PhoneFormComponent } from '../../phone/phone-form/phone-form.component';
+import { Phone } from '../../phone/phone.model';
 
 @Component({
-  selector: 'app-province-form',
-  templateUrl: './province-form.component.html',
-  styleUrls: ['./province-form.component.css'],
+  selector: 'app-medical-center-form',
+  templateUrl: './medical-center-form.component.html',
+  styleUrls: ['./medical-center-form.component.css']
 })
-export class ProvinceFormComponent {
+export class MedicalCenterFormComponent {
   @Input() show: boolean = false;
   name: string = '';
   id: string = '';
+  phoneList: Phone[] = [];
 
   constructor(
-    private dialogRef: MatDialogRef<ProvinceFormComponent>,
+    private dialogRef: MatDialogRef<MedicalCenterFormComponent>,
     private apiService: ApiService,
-    private provinceDataService: ServiceProvinceService,
+    private medicalCenterDataService: ServiceMedicalCenterService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     if (data) {
@@ -30,18 +34,33 @@ export class ProvinceFormComponent {
     }
   }
 
+  openPhoneFormDialog(): void {
+    const dialogRef = this.dialog.open(PhoneFormComponent, {
+      width: '300px',
+    });
+
+    dialogRef.afterClosed().subscribe((result: Phone) => {
+      if (result) {
+        // Agregar el teléfono ingresado a la lista de teléfonos
+        this.phoneList.push(result);
+      }
+    });
+  }
+
   handleSubmit(): void {
     const token = localStorage.getItem('token');
-    let data = { name: '' };
+    const data = {
+      name: this.name,
+      phones: this.preparePhoneList()
+    };
     let id = this.id;
 
-    data.name = this.name;
-
     if (token != null) {
+
       if (id == "") {
-        this.apiService.post('provinces', token, data).subscribe(
+        this.apiService.post('medicalCenters', token, data).subscribe(
           (response) => {
-            this.provinceDataService.triggerProvinceAdded();
+            this.medicalCenterDataService.triggerMedicalCenterAdded();
             this.dialogRef.close();
           },
           (error) => {
@@ -57,9 +76,9 @@ export class ProvinceFormComponent {
           }
         );
       } else {
-        this.apiService.put('provinces', token, data, id).subscribe(
+        this.apiService.put('medicalCenters', token, data, id).subscribe(
           (response) => {
-            this.provinceDataService.triggerProvinceAdded();
+            this.medicalCenterDataService.triggerMedicalCenterAdded();
             this.dialogRef.close();
           },
           (error) => {
@@ -75,6 +94,8 @@ export class ProvinceFormComponent {
           }
         );
       }
+
+
     } else {
       console.log('No se encontró token');
     }
@@ -88,5 +109,20 @@ export class ProvinceFormComponent {
     this.snackBar.open(message, action, {
       duration: 3000,
     });
+  }
+
+  preparePhoneList() {
+    let listPhone: { value: string; typeId: number }[] = [];
+
+    this.phoneList.forEach(phone => {
+      let phoneObject = {
+        value: phone.number,
+        typeId: Number(phone.id)
+      };
+
+      listPhone.push(phoneObject);
+    });
+
+    return listPhone;
   }
 }

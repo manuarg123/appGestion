@@ -108,7 +108,7 @@ body {
 }
 
 .button-style-add:hover {
-  background-color: rgb(38, 74, 38);
+  background-color: rgb(90, 135, 90);
 }
 
 .button-style-add img {
@@ -129,6 +129,19 @@ body {
   margin-bottom: 3px;
   background-color: rgb(170, 41, 16);
   transition: background-color 0.3s;
+}
+
+.button-l{
+  height: 30px!important;
+  width: 70px!important;
+  margin-bottom: 25px;
+}
+
+.back-grey {
+  background-color: rgb(192, 192, 192);
+}
+.padding-0 {
+  padding: 0!important;
 }
 
 .button-style-close:hover {
@@ -154,6 +167,9 @@ body {
 .auto-margin{
   margin-left: auto;
   margin-right: auto;
+}
+.width-90{
+  width: 90%;
 }
 
 @media (max-width: 767px) {

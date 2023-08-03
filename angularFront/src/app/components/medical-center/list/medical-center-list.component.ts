@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/api.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
+import { MedicalCenterFormComponent } from '../form/medical-center-form.component';
 
 @Component({
   selector: 'app-medical-center-list',
@@ -12,7 +15,7 @@ export class MedicalCenterListComponent implements OnInit {
   pageSize: number = 20;
   totalItems: number = 0;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.getMedicalCenters();
@@ -37,6 +40,43 @@ export class MedicalCenterListComponent implements OnInit {
         );
     } else {
       console.log('No se encontro token');
+    }
+  }
+
+  handleDelete(id: string): void {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.apiService.delete('medicalCenters', token, id).subscribe(
+            (data) => {
+              this.getMedicalCenters();
+            },
+            (error) => {
+              console.log('Error al eliminar', error);
+            }
+          );
+        }
+      });
+    } else {
+      console.log('No se encontró token');
+    }
+  }
+
+  handleEdit(id: string): void {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+      this.apiService.getByid('medicalCenters', token, id).subscribe(
+        (medicalCenterData) => {
+          const dialogRef = this.dialog.open(MedicalCenterFormComponent, {
+            data: { ...medicalCenterData, id },
+            width: '700px',
+          });
+        }
+      );
     }
   }
 

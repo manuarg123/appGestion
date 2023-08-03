@@ -1,4 +1,4 @@
-<table class="table table-responsive">
+<table class="table table-responsive table-m table-striped table-hover">
   <thead>
     <tr>
       <th class="text-center">Centro Médico</th>
@@ -45,7 +45,24 @@
                 : "-"
             }}
           </td>
-          <td></td>
+          <td class="text-center">
+            <button
+              type="button"
+              class="button-style"
+              title="Editar"
+              (click)="handleEdit(medicalCenters[i].id)"
+            >
+              <img src="../../../assets/images/editar.png" alt="Editar" />
+            </button>
+            <button
+              type="button"
+              class="button-style"
+              title="Eliminar"
+              (click)="handleDelete(medicalCenters[i].id)"
+            >
+              <img src="../../../assets/images/eliminar.png" alt="Eliminar" />
+            </button>
+          </td>
         </ng-container>
 
         <ng-container *ngIf="!medicalCenters[i]">

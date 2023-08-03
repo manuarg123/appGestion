@@ -1,8 +1,20 @@
 <div class="container">
     <div class="row margin-top">
         <div class="col-12 padding-index">
-            <h1>hol</h1>
-            <app-medical-center-list></app-medical-center-list>
+            <button
+            type="button"
+            class="button-style-add rounded"
+            title="Agregar Registro"
+            (click)="openMedicalCenterForm()"
+          >
+            Agregar Centro Médico
+            <img
+              src="../../../assets/images/anadir.png"
+              alt="Agregar Registro"
+            />
+          </button>
+          <app-medical-center-list></app-medical-center-list>
+         
         </div>
     </div>
 </div>
