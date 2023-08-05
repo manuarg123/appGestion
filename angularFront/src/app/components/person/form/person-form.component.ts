@@ -1,11 +1,14 @@
 import { PhoneFormComponent } from "../../phone/phone-form/phone-form.component";
+import { EmailFormComponent } from "../../email/email-form/email-form.component";
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from 'src/app/service/api.service';
 import { Phone } from '../../phone/phone.model';
+import { Email } from "../../email/email.model";
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 
 export class PersonFormComponent {
     phoneList: Phone[] = [];
+    emailList: Email[] = [];
 
     constructor(
         private apiService: ApiService,
@@ -13,6 +16,8 @@ export class PersonFormComponent {
     ) {
 
     }
+
+    ///////////////////////////////////////////////HANDLE PHONE/////////////////////////////////////////////////////////////////////////////////
 
     openPhoneFormDialog(): void {
         const dialogRef = this.dialog.open(PhoneFormComponent, {
@@ -25,7 +30,7 @@ export class PersonFormComponent {
             this.phoneList.push(result);
           }
         });
-      }
+    }   
 
     preparePhoneList() {
         let listPhone: { value: string; typeId: number }[] = [];
@@ -88,6 +93,87 @@ export class PersonFormComponent {
                         );
                     } else {
                         this.phoneList = this.phoneList.filter((phone) => phone.number !== number);
+                    }
+                }
+            });
+        } else {
+            console.log('No se encontró token');
+        }    
+    }
+
+    //////////////////////////////////////////////////////////////////HANDLE EMAIL//////////////////////////////////////////////////////////////////////////////
+
+    openEmailFormDialog(): void {
+        const dialogRef = this.dialog.open( EmailFormComponent, {
+            width: '300px'
+        });
+
+        dialogRef.afterClosed().subscribe((result: Email) => {
+            this.emailList.push(result);
+        });
+    }
+
+    prepareEmailList() {
+        let listEmail: { value: string; typeId: number }[] = [];
+
+        this.emailList.forEach(email => {
+            let emailObject = {
+                id: email.id ? email.id : null,
+                value: email.value,
+                typeId: Number(email.type.id)
+            };
+
+            listEmail.push(emailObject);
+        });
+
+        return listEmail;
+    }
+
+    handleEditEmail(id: any) {
+        const token = localStorage.getItem('token');
+        if (token != null) {
+            this.apiService.getByid('emails', token, id).subscribe(
+                (emailData) => {
+                    const dialogRef = this.dialog.open(EmailFormComponent, {
+                        data: emailData,
+                        width: '300px',
+                    });
+
+                    dialogRef.componentInstance.emailId = id;
+
+                    dialogRef.afterClosed().subscribe((result: Email) => {
+                        result.id = id;
+                        if (result) {
+                            const index = this.emailList.findIndex((email) => email.id === result.id);
+                            if (index !== -1) {
+                                this.emailList[index] = result;
+                            }
+                        }
+                    });
+                }
+            );
+        }
+    }
+
+    handleDeleteEmail(id: any, value: string) {
+        const token = localStorage.getItem('token');
+        if (token != null) {
+            const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            });
+
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    if (id) {
+                        this.apiService.delete('emails', token, id).subscribe(
+                            (data) => {
+                                this.emailList = this.emailList.filter((email) => email.id !== id);
+                            },
+                            (error) => {
+                                console.log('Error al eliminar', error);
+                            }
+                        );
+                    } else {
+                        this.emailList = this.emailList.filter((email) => email.value !== value);
                     }
                 }
             });

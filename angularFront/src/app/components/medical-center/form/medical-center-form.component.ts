@@ -3,9 +3,6 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { ApiService } from 'src/app/service/api.service';
 import { ServiceMedicalCenterService } from '../service-medical-center.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PhoneFormComponent } from '../../phone/phone-form/phone-form.component';
-import { Phone } from '../../phone/phone.model';
-import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { PersonFormComponent } from '../../person/form/person-form.component';
 
 @Component({
@@ -31,6 +28,7 @@ export class MedicalCenterFormComponent extends PersonFormComponent {
       this.name = data.data.name;
       this.id = data.id;
       this.phoneList = data.data.phones;
+      this.emailList = data.data.emails;
     } else {
       this.name = '';
       this.id = '';
@@ -41,7 +39,8 @@ export class MedicalCenterFormComponent extends PersonFormComponent {
     const token = localStorage.getItem('token');
     const data = {
       name: this.name,
-      phones: this.preparePhoneList()
+      phones: this.preparePhoneList(),
+      emails: this.prepareEmailList()
     };
     let id = this.id;
 

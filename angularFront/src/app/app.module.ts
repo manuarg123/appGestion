@@ -21,6 +21,7 @@ import { ConfirmationDialogComponent } from './components/common/confirmation-di
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MedicalCenterFormComponent } from './components/medical-center/form/medical-center-form.component';
 import { PhoneFormComponent } from './components/phone/phone-form/phone-form.component';
+import { EmailFormComponent } from './components/email/email-form/email-form.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { PhoneFormComponent } from './components/phone/phone-form/phone-form.com
     ProvinceFormComponent,
     ConfirmationDialogComponent,
     MedicalCenterFormComponent,
-    PhoneFormComponent
+    PhoneFormComponent,
+    EmailFormComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],
