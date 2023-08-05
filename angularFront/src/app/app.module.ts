@@ -38,7 +38,7 @@ import { PhoneFormComponent } from './components/phone/phone-form/phone-form.com
     ProvinceFormComponent,
     ConfirmationDialogComponent,
     MedicalCenterFormComponent,
-    PhoneFormComponent,
+    PhoneFormComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],

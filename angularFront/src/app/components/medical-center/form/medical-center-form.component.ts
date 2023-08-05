@@ -6,27 +6,28 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PhoneFormComponent } from '../../phone/phone-form/phone-form.component';
 import { Phone } from '../../phone/phone.model';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
+import { PersonFormComponent } from '../../person/form/person-form.component';
 
 @Component({
   selector: 'app-medical-center-form',
   templateUrl: './medical-center-form.component.html',
   styleUrls: ['./medical-center-form.component.css']
 })
-export class MedicalCenterFormComponent implements OnInit, OnDestroy{
+export class MedicalCenterFormComponent extends PersonFormComponent {
   @Input() show: boolean = false;
   name: string = '';
   id: string = '';
-  phoneList: Phone[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<MedicalCenterFormComponent>,
-    private apiService: ApiService,
     private medicalCenterDataService: ServiceMedicalCenterService,
+    private serviceApi: ApiService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
+    private dialogMat: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    if (data) {
+    super(serviceApi, dialogMat);
+    if (data) {         
       this.name = data.data.name;
       this.id = data.id;
       this.phoneList = data.data.phones;
@@ -34,25 +35,6 @@ export class MedicalCenterFormComponent implements OnInit, OnDestroy{
       this.name = '';
       this.id = '';
     }
-  }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy() {
-  }
-
-  openPhoneFormDialog(): void {
-    const dialogRef = this.dialog.open(PhoneFormComponent, {
-      width: '300px',
-    });
-
-    dialogRef.afterClosed().subscribe((result: Phone) => {
-      if (result) {
-        // Agregar el teléfono ingresado a la lista de teléfonos
-        this.phoneList.push(result);
-      }
-    });
   }
 
   handleSubmit(): void {
@@ -66,7 +48,7 @@ export class MedicalCenterFormComponent implements OnInit, OnDestroy{
     if (token != null) {
 
       if (id == "") {
-        this.apiService.post('medicalCenters', token, data).subscribe(
+        this.serviceApi.post('medicalCenters', token, data).subscribe(
           (response) => {
             this.medicalCenterDataService.triggerMedicalCenterAdded();
             this.dialogRef.close();
@@ -84,7 +66,7 @@ export class MedicalCenterFormComponent implements OnInit, OnDestroy{
           }
         );
       } else {
-        this.apiService.put('medicalCenters', token, data, id).subscribe(
+        this.serviceApi.put('medicalCenters', token, data, id).subscribe(
           (response) => {
             this.medicalCenterDataService.triggerMedicalCenterAdded();
             this.dialogRef.close();
@@ -119,71 +101,9 @@ export class MedicalCenterFormComponent implements OnInit, OnDestroy{
     });
   }
 
-  preparePhoneList() {
-    let listPhone: { value: string; typeId: number }[] = [];
+  ///////////////////////Handle PHONE//////////////////////////////
 
-    this.phoneList.forEach(phone => {
-      let phoneObject = {
-        id: phone.id ? phone.id : null,
-        value: phone.number,
-        typeId: Number(phone.type.id)
-      };
-
-      listPhone.push(phoneObject);
-    });
-
-    return listPhone;
-  }
-  handleEditPhone(id: any) {
-    const token = localStorage.getItem('token');
-    if (token != null) {
-      this.apiService.getByid('phones', token, id).subscribe(
-        (phoneData) => {
-          const dialogRef = this.dialog.open(PhoneFormComponent, {
-            data: phoneData,
-            width: '300px',
-          });
-
-          dialogRef.componentInstance.phoneId = id;
-
-          dialogRef.afterClosed().subscribe((result: Phone) => {
-            result.id = id;
-            if (result) {
-              const index = this.phoneList.findIndex((phone) => phone.id === result.id);
-              if (index !== -1) {
-                this.phoneList[index] = result;
-              }
-            }
-          });
-        }
-      );
-    }
-  }
-
-  handleDeletePhone(id: any, number: string) {
-    const token = localStorage.getItem('token');
-    if (token != null) {
-      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          if (id) {
-            this.apiService.delete('phones', token, id).subscribe(
-              (data) => {
-                this.phoneList = this.phoneList.filter((phone) => phone.id !== id);
-              },
-              (error) => {
-                console.log('Error al eliminar', error);
-              }
-            );
-          } else {
-            this.phoneList = this.phoneList.filter((phone) => phone.number !== number);
-          }
-        }
-      });
-    } else {
-      console.log('No se encontró token');
-    }
-  }
 }
+
+
+///////////////////////////////Handle EMAIL///////////////////////////////////////
