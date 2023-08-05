@@ -29,6 +29,7 @@ export class MedicalCenterFormComponent extends PersonFormComponent {
       this.id = data.id;
       this.phoneList = data.data.phones;
       this.emailList = data.data.emails;
+      this.identificationList = data.data.identifications;
     } else {
       this.name = '';
       this.id = '';
@@ -40,7 +41,8 @@ export class MedicalCenterFormComponent extends PersonFormComponent {
     const data = {
       name: this.name,
       phones: this.preparePhoneList(),
-      emails: this.prepareEmailList()
+      emails: this.prepareEmailList(),
+      identifications: this.prepareIdentificationList()
     };
     let id = this.id;
 
@@ -99,10 +101,4 @@ export class MedicalCenterFormComponent extends PersonFormComponent {
       duration: 3000,
     });
   }
-
-  ///////////////////////Handle PHONE//////////////////////////////
-
 }
-
-
-///////////////////////////////Handle EMAIL///////////////////////////////////////

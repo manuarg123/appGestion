@@ -22,6 +22,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MedicalCenterFormComponent } from './components/medical-center/form/medical-center-form.component';
 import { PhoneFormComponent } from './components/phone/phone-form/phone-form.component';
 import { EmailFormComponent } from './components/email/email-form/email-form.component';
+import { IdentificationFormComponent } from './components/identification/identification-form/identification-form.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { EmailFormComponent } from './components/email/email-form/email-form.com
     ConfirmationDialogComponent,
     MedicalCenterFormComponent,
     PhoneFormComponent,
-    EmailFormComponent
+    EmailFormComponent,
+    IdentificationFormComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],

@@ -163,8 +163,66 @@
         </div>
 
         <div class="card mb-4 auto-margin width-90 back-grey">
-          <div class="card-header">Identificaciones</div>
-          <div class="card-body"></div>
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>Identificaciones</span>
+              <button
+                type="button"
+                class="button-style-add rounded"
+                title="Agregar Registro"
+                (click)="openIdentificationFormDialog()"
+              >
+                Agregar Identificacion
+                <img
+                  src="../../../assets/images/anadir.png"
+                  alt="Agregar Registro"
+                />
+              </button>
+            </div>
+          </div>
+          <div class="card-body padding-0">
+            <table
+              class="table table-bordered table-striped table-hover table-responsive text-center rounded"
+            >
+              <thead class="table-secondary">
+                <tr>
+                  <th>Identificacion</th>
+                  <th>Tipo</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let identification of identificationList">
+                  <td>{{ identification.number }}</td>
+                  <td>{{ identification.type.name }}</td>
+                  <td class="text-center">
+                    <button
+                      type="button"
+                      class="button-style"
+                      title="Editar"
+                      (click)="handleEditIdentification(identification.id)"
+                    >
+                      <img
+                        src="../../../assets/images/editar.png"
+                        alt="Editar"
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      class="button-style"
+                      title="Eliminar"
+                      (click)="handleDeleteIdentification(identification.id, identification.number)"
+                    >
+                      <img
+                        src="../../../assets/images/eliminar.png"
+                        alt="Eliminar"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </form>
     </div>

@@ -1,14 +1,17 @@
 import { PhoneFormComponent } from "../../phone/phone-form/phone-form.component";
 import { EmailFormComponent } from "../../email/email-form/email-form.component";
+import { IdentificationFormComponent } from "../../identification/identification-form/identification-form.component";
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from 'src/app/service/api.service';
 import { Phone } from '../../phone/phone.model';
 import { Email } from "../../email/email.model";
+import { Identification } from "../../identification/identification.model";
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 
 export class PersonFormComponent {
     phoneList: Phone[] = [];
     emailList: Email[] = [];
+    identificationList: Identification[] = [];
 
     constructor(
         private apiService: ApiService,
@@ -21,16 +24,16 @@ export class PersonFormComponent {
 
     openPhoneFormDialog(): void {
         const dialogRef = this.dialog.open(PhoneFormComponent, {
-          width: '300px',
+            width: '300px',
         });
-    
+
         dialogRef.afterClosed().subscribe((result: Phone) => {
-          if (result) {
-            // Agregar el teléfono ingresado a la lista de teléfonos
-            this.phoneList.push(result);
-          }
+            if (result) {
+                // Agregar el teléfono ingresado a la lista de teléfonos
+                this.phoneList.push(result);
+            }
         });
-    }   
+    }
 
     preparePhoneList() {
         let listPhone: { value: string; typeId: number }[] = [];
@@ -98,13 +101,13 @@ export class PersonFormComponent {
             });
         } else {
             console.log('No se encontró token');
-        }    
+        }
     }
 
     //////////////////////////////////////////////////////////////////HANDLE EMAIL//////////////////////////////////////////////////////////////////////////////
 
     openEmailFormDialog(): void {
-        const dialogRef = this.dialog.open( EmailFormComponent, {
+        const dialogRef = this.dialog.open(EmailFormComponent, {
             width: '300px'
         });
 
@@ -179,6 +182,87 @@ export class PersonFormComponent {
             });
         } else {
             console.log('No se encontró token');
-        }    
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////HANDLE IDENTIFICATION//////////////////////////////////////////////////////////////////////////////
+
+    openIdentificationFormDialog(): void {
+        const dialogRef = this.dialog.open(IdentificationFormComponent, {
+            width: '300px'
+        });
+
+        dialogRef.afterClosed().subscribe((result: Identification) => {
+            this.identificationList.push(result);
+        });
+    }
+
+    prepareIdentificationList() {
+        let listIdentification: { value: string; typeId: number }[] = [];
+
+        this.identificationList.forEach(identification => {
+            let identificationObject = {
+                id: identification.id ? identification.id : null,
+                value: identification.number,
+                typeId: Number(identification.type.id)
+            };
+
+            listIdentification.push(identificationObject);
+        });
+
+        return listIdentification;
+    }
+
+    handleEditIdentification(id: any) {
+        const token = localStorage.getItem('token');
+        if (token != null) {
+            this.apiService.getByid('identifications', token, id).subscribe(
+                (identificationData) => {
+                    const dialogRef = this.dialog.open(IdentificationFormComponent, {
+                        data: identificationData,
+                        width: '300px',
+                    });
+
+                    dialogRef.componentInstance.identificationId = id;
+
+                    dialogRef.afterClosed().subscribe((result: Identification) => {
+                        result.id = id;
+                        if (result) {
+                            const index = this.identificationList.findIndex((identification) => identification.id === result.id);
+                            if (index !== -1) {
+                                this.identificationList[index] = result;
+                            }
+                        }
+                    });
+                }
+            );
+        }
+    }
+
+    handleDeleteIdentification(id: any, value: string) {
+        const token = localStorage.getItem('token');
+        if (token != null) {
+            const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            });
+
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    if (id) {
+                        this.apiService.delete('identifications', token, id).subscribe(
+                            (data) => {
+                                this.identificationList = this.identificationList.filter((identification) => identification.id !== id);
+                            },
+                            (error) => {
+                                console.log('Error al eliminar', error);
+                            }
+                        );
+                    } else {
+                        this.identificationList = this.identificationList.filter((identification) => identification.number !== value);
+                    }
+                }
+            });
+        } else {
+            console.log('No se encontró token');
+        }
     }
 }

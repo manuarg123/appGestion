@@ -1,0 +1,60 @@
+<div class="modal-dialog main-color">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" style="margin-left: auto; margin-right: auto">
+          Agregar Identificacion
+        </h2>
+      </div>
+      <div class="modal-body" style="width: 100%">
+        <div class="card mb-4 auto-margin width-90 back-grey margin-top">
+          <div class="card-body padding-0">
+            <div class="form-group m-3">
+              <label for="identificationType" class="font-weight-bold"
+                >Tipo de Identificacion:</label
+              >
+              <select
+                class="form-control"
+                name="identificationType"
+                [(ngModel)]="identificationType"
+                required
+              >
+                <option
+                  *ngFor="let type of identificationTypes"
+                  [value]="type.id.toString()"
+                >
+                  {{ type.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group m-3">
+              <label for="identificationValue" class="font-weight-bold"
+                >Número de Identificacion:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Ingresar Identificacion.."
+                name="identificationValue"
+                required
+                [(ngModel)]="identificationValue"
+              />
+              <input type="hidden" name="identificationId" [(ngModel)]="identificationId" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" class="button-style-close button-l rounded">
+          Cerrar
+        </button>
+        <button
+          type="button"
+          class="button-style-add button-l rounded"
+          (click)="saveIdentification()"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+  
