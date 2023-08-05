@@ -4,7 +4,6 @@ import { ApiService } from 'src/app/service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ValidationsService } from 'src/app/service/validations.service';
 import { Phone } from '../phone.model';
-import { each } from 'jquery';
 
 @Component({
   selector: 'app-phone-form',
@@ -13,6 +12,7 @@ import { each } from 'jquery';
 })
 export class PhoneFormComponent implements OnInit {
   phoneNumber: string = '';
+  phoneId: any = "";
   phoneTypes: any[] = [];
   phoneTypesIds: any[] = [];
   phoneType: string = ''; 
@@ -22,8 +22,14 @@ export class PhoneFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
     private snackBar: MatSnackBar,
-    private validate: ValidationsService
-  ) { }
+    private validate: ValidationsService,
+  ) {
+    if (data) {
+      this.phoneId = data.data.id;
+      this.phoneNumber = data.data.number;
+      this.phoneType = data.data.type.id;
+    }
+   }
 
   ngOnInit(): void {
     this.loadPhoneTypes();
@@ -47,22 +53,26 @@ export class PhoneFormComponent implements OnInit {
   }
 
   savePhone(): void {
-    console.log(this.phoneNumber);
     if (this.validate.isNumber(this.phoneNumber)) {
         const selectedType = this.phoneTypesIds.find(id => id == this.phoneType);
-        let phoneName = "";
+        let typeName = "";
+        let typeId = "";
 
         this.phoneTypes.forEach(type => {
           if (type.id == this.phoneType) {
-            phoneName = type.name;
+            typeName = type.name;
+            typeId = type.id;
           }
         });
 
         if (selectedType) {
           const phoneData: Phone = {
-            id: selectedType,
+            id: null,
             number: this.phoneNumber,
-            type: phoneName
+            type:  {
+              id : typeId,
+              name : typeName
+            }
           };
 
           this.dialogRef.close(phoneData);

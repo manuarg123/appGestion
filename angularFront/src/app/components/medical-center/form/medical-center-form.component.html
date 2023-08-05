@@ -50,7 +50,9 @@
             </div>
           </div>
           <div class="card-body padding-0">
-            <table class="table table-bordered table-striped table-hover table-responsive text-center rounded">
+            <table
+              class="table table-bordered table-striped table-hover table-responsive text-center rounded"
+            >
               <thead class="table-secondary">
                 <tr>
                   <th>Número</th>
@@ -61,15 +63,25 @@
               <tbody>
                 <tr *ngFor="let phone of phoneList">
                   <td>{{ phone.number }}</td>
-                  <td>{{ phone.type }}</td>
+                  <td>{{ phone.type.name }}</td>
                   <td class="text-center">
-                    <button type="button" class="button-style" title="Editar">
+                    <button
+                      type="button"
+                      class="button-style"
+                      title="Editar"
+                      (click)="handleEditPhone(phone.id)"
+                    >
                       <img
                         src="../../../assets/images/editar.png"
                         alt="Editar"
                       />
                     </button>
-                    <button type="button" class="button-style" title="Eliminar">
+                    <button
+                      type="button"
+                      class="button-style"
+                      title="Eliminar"
+                      (click)="handleDeletePhone(phone.id)"
+                    >
                       <img
                         src="../../../assets/images/eliminar.png"
                         alt="Eliminar"

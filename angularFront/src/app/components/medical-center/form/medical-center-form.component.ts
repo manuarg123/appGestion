@@ -5,6 +5,7 @@ import { ServiceMedicalCenterService } from '../service-medical-center.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PhoneFormComponent } from '../../phone/phone-form/phone-form.component';
 import { Phone } from '../../phone/phone.model';
+import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-medical-center-form',
@@ -28,6 +29,7 @@ export class MedicalCenterFormComponent {
     if (data) {
       this.name = data.data.name;
       this.id = data.id;
+      this.phoneList = data.data.phones;
     } else {
       this.name = '';
       this.id = '';
@@ -116,13 +118,62 @@ export class MedicalCenterFormComponent {
 
     this.phoneList.forEach(phone => {
       let phoneObject = {
+        id: phone.id ? phone.id : null,
         value: phone.number,
-        typeId: Number(phone.id)
+        typeId: Number(phone.type.id)
       };
 
       listPhone.push(phoneObject);
     });
 
     return listPhone;
+  }
+  handleEditPhone(id: any) {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+      this.apiService.getByid('phones', token, id).subscribe(
+        (phoneData) => {
+          const dialogRef = this.dialog.open(PhoneFormComponent, {
+            data: phoneData,
+            width: '300px',
+          });
+
+          dialogRef.componentInstance.phoneId = id;
+
+          dialogRef.afterClosed().subscribe((result: Phone) => {
+            result.id = id;
+            if (result) {
+              const index = this.phoneList.findIndex((phone) => phone.id === result.id);
+              if (index !== -1) {
+                this.phoneList[index] = result;
+              }
+            }
+          });
+        }
+      );
+    }
+  }
+
+  handleDeletePhone(id: any) {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.apiService.delete('phones', token, id).subscribe(
+            (data) => {
+              this.phoneList = this.phoneList.filter((phone) => phone.id !== id);
+            },
+            (error) => {
+              console.log('Error al eliminar', error);
+            }
+          );
+        }
+      });
+    } else {
+      console.log('No se encontró token');
+    }
   }
 }
