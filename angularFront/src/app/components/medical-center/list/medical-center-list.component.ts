@@ -3,6 +3,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { MedicalCenterFormComponent } from '../form/medical-center-form.component';
+import { ServiceMedicalCenterService } from '../service-medical-center.service';
 
 @Component({
   selector: 'app-medical-center-list',
@@ -15,10 +16,13 @@ export class MedicalCenterListComponent implements OnInit {
   pageSize: number = 20;
   totalItems: number = 0;
 
-  constructor(private apiService: ApiService, private dialog: MatDialog) {}
+  constructor(private apiService: ApiService, private dialog: MatDialog, private medicalCenterDataService: ServiceMedicalCenterService) { }
 
   ngOnInit() {
     this.getMedicalCenters();
+    this.medicalCenterDataService.medicalCenterAdded$.subscribe(() => {
+      this.getMedicalCenters();
+    });
   }
 
   getMedicalCenters() {

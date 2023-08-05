@@ -1,4 +1,4 @@
-import { Component, Input, Inject } from '@angular/core';
+import { Component, Input, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'src/app/service/api.service';
 import { ServiceMedicalCenterService } from '../service-medical-center.service';
@@ -12,7 +12,7 @@ import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/co
   templateUrl: './medical-center-form.component.html',
   styleUrls: ['./medical-center-form.component.css']
 })
-export class MedicalCenterFormComponent {
+export class MedicalCenterFormComponent implements OnInit, OnDestroy{
   @Input() show: boolean = false;
   name: string = '';
   id: string = '';
@@ -34,6 +34,12 @@ export class MedicalCenterFormComponent {
       this.name = '';
       this.id = '';
     }
+  }
+
+  ngOnInit() {
+  }
+
+  ngOnDestroy() {
   }
 
   openPhoneFormDialog(): void {
@@ -154,7 +160,7 @@ export class MedicalCenterFormComponent {
     }
   }
 
-  handleDeletePhone(id: any, number:string) {
+  handleDeletePhone(id: any, number: string) {
     const token = localStorage.getItem('token');
     if (token != null) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -173,7 +179,7 @@ export class MedicalCenterFormComponent {
             );
           } else {
             this.phoneList = this.phoneList.filter((phone) => phone.number !== number);
-          }       
+          }
         }
       });
     } else {
