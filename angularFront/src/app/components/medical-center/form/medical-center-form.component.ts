@@ -154,7 +154,7 @@ export class MedicalCenterFormComponent {
     }
   }
 
-  handleDeletePhone(id: any) {
+  handleDeletePhone(id: any, number:string) {
     const token = localStorage.getItem('token');
     if (token != null) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -162,14 +162,18 @@ export class MedicalCenterFormComponent {
 
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
-          this.apiService.delete('phones', token, id).subscribe(
-            (data) => {
-              this.phoneList = this.phoneList.filter((phone) => phone.id !== id);
-            },
-            (error) => {
-              console.log('Error al eliminar', error);
-            }
-          );
+          if (id) {
+            this.apiService.delete('phones', token, id).subscribe(
+              (data) => {
+                this.phoneList = this.phoneList.filter((phone) => phone.id !== id);
+              },
+              (error) => {
+                console.log('Error al eliminar', error);
+              }
+            );
+          } else {
+            this.phoneList = this.phoneList.filter((phone) => phone.number !== number);
+          }       
         }
       });
     } else {
