@@ -110,14 +110,12 @@ export class MedicalCenterListComponent implements OnInit {
     const totalPages = this.getTotalPages();
     const pagesArray = [];
 
-    // Limitar el número de enlaces de página que se mostrarán en el paginador
     const maxPagesToShow = 5;
     const halfMaxPagesToShow = Math.floor(maxPagesToShow / 2);
 
     let startPage = Math.max(1, this.currentPage - halfMaxPagesToShow);
     const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
-    // Ajustar el rango de páginas para no exceder el número total de páginas
     if (endPage - startPage + 1 < maxPagesToShow) {
       startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
@@ -129,7 +127,6 @@ export class MedicalCenterListComponent implements OnInit {
     return pagesArray;
   }
 
-  //Establece limite de iteración en el array de la vista para que complete siempre los especios que quedan vacios y la tabla tiene el mismo tamaño siempre
   getLoopArray() {
     const loopArray = [];
     const maxPageSize = this.pageSize;

@@ -15,7 +15,7 @@ export class PhoneFormComponent implements OnInit {
   phoneId: any = "";
   phoneTypes: any[] = [];
   phoneTypesIds: any[] = [];
-  phoneType: string = ''; 
+  phoneType: string = '';
 
   constructor(
     private dialogRef: MatDialogRef<PhoneFormComponent>,
@@ -29,7 +29,7 @@ export class PhoneFormComponent implements OnInit {
       this.phoneNumber = data.data.number;
       this.phoneType = data.data.type.id;
     }
-   }
+  }
 
   ngOnInit(): void {
     this.loadPhoneTypes();
@@ -39,12 +39,12 @@ export class PhoneFormComponent implements OnInit {
     const token = localStorage.getItem("token");
     if (token) {
       this.apiService.all('phoneTypes', token).subscribe(
-    (response: any[]) => { 
-        response.forEach((type: any) => {
-          this.phoneTypesIds = response.map((type: any) => type.id);
-        });
-        this.phoneTypes = response;
-      },
+        (response: any[]) => {
+          response.forEach((type: any) => {
+            this.phoneTypesIds = response.map((type: any) => type.id);
+          });
+          this.phoneTypes = response;
+        },
         (error) => {
           console.error(error);
         }
@@ -54,32 +54,32 @@ export class PhoneFormComponent implements OnInit {
 
   savePhone(): void {
     if (this.validate.isNumber(this.phoneNumber)) {
-        const selectedType = this.phoneTypesIds.find(id => id == this.phoneType);
-        let typeName = "";
-        let typeId = "";
+      const selectedType = this.phoneTypesIds.find(id => id == this.phoneType);
+      let typeName = "";
+      let typeId = "";
 
-        this.phoneTypes.forEach(type => {
-          if (type.id == this.phoneType) {
-            typeName = type.name;
-            typeId = type.id;
-          }
-        });
-
-        if (selectedType) {
-          const phoneData: Phone = {
-            id: null,
-            number: this.phoneNumber,
-            type:  {
-              id : typeId,
-              name : typeName
-            }
-          };
-
-          this.dialogRef.close(phoneData);
+      this.phoneTypes.forEach(type => {
+        if (type.id == this.phoneType) {
+          typeName = type.name;
+          typeId = type.id;
         }
+      });
+
+      if (selectedType) {
+        const phoneData: Phone = {
+          id: null,
+          number: this.phoneNumber,
+          type: {
+            id: typeId,
+            name: typeName
+          }
+        };
+
+        this.dialogRef.close(phoneData);
+      }
     } else {
       this.openSnackBar('Porfavor, ingrese solo números y sin "-" ', 'Aceptar');
-    }  
+    }
   }
 
   openSnackBar(message: string, action: string) {

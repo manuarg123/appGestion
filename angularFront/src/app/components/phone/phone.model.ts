@@ -4,5 +4,5 @@ export interface Phone {
     type: {
         id: any;
         name: string;
-      };
+    };
 }

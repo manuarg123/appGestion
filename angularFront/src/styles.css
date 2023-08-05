@@ -76,7 +76,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.small-table-width{
+.small-table-width {
   width: 50%;
 }
 
@@ -88,7 +88,7 @@ body {
 }
 
 .button-style img {
-  width: 22px; 
+  width: 22px;
   height: 22px;
   cursor: pointer;
 }
@@ -112,12 +112,12 @@ body {
 }
 
 .button-style-add img {
-  width: 22px; 
+  width: 22px;
   height: 22px;
   cursor: pointer;
 }
 
-.button-style-close{
+.button-style-close {
   background: none;
   border: none;
   padding: 0;
@@ -131,9 +131,9 @@ body {
   transition: background-color 0.3s;
 }
 
-.button-l{
-  height: 30px!important;
-  width: 70px!important;
+.button-l {
+  height: 30px !important;
+  width: 70px !important;
   margin-bottom: 25px;
 }
 
@@ -141,7 +141,7 @@ body {
   background-color: rgb(192, 192, 192);
 }
 .padding-0 {
-  padding: 0!important;
+  padding: 0 !important;
 }
 
 .button-style-close:hover {
@@ -161,32 +161,31 @@ body {
 }
 
 .pagination .page-item.disabled .page-link {
-  color: #777; 
+  color: #777;
 }
 
-.auto-margin{
+.auto-margin {
   margin-left: auto;
   margin-right: auto;
 }
-.width-90{
+.width-90 {
   width: 90%;
 }
 
 @media (max-width: 767px) {
-  .small-table-width{
+  .small-table-width {
     width: 100%;
   }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-  .small-table-width{
+  .small-table-width {
     width: 100%;
   }
 }
 
 @media (min-width: 992px) {
-  .small-table-width{
+  .small-table-width {
     width: 50%;
   }
-  
 }
