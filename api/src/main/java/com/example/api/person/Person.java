@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
@@ -27,18 +28,22 @@ public class Person extends AuditableEntity {
 
     @OneToMany(mappedBy = "person")
     @JsonManagedReference
+    @Where(clause = "deleted_at IS NULL")
     private List<Address> addresses;
 
     @OneToMany(mappedBy = "person")
     @JsonManagedReference
+    @Where(clause = "deleted_at IS NULL")
     private List<Phone> phones;
 
     @OneToMany(mappedBy = "person")
     @JsonManagedReference
+    @Where(clause = "deleted_at IS NULL")
     private List<Email> emails;
 
     @OneToMany(mappedBy = "person")
     @JsonManagedReference
+    @Where(clause = "deleted_at IS NULL")
     private List<Identification> identifications;
 
     public Person(){
