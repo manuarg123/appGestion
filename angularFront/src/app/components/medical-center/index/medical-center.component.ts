@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicalCenterFormComponent } from '../form/medical-center-form.component';
 @Component({

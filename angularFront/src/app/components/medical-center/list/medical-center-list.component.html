@@ -16,7 +16,7 @@
           <td class="text-center">{{ medicalCenters[i].fullName }}</td>
           <td class="text-center">
             {{
-              medicalCenters[i].addresses.length > 0
+              medicalCenters[i].addresses.length > 0 &&  medicalCenters[i].addresses[0].street && medicalCenters[i].addresses[0].number
                 ? medicalCenters[i].addresses[0].street +
                   " " +
                   medicalCenters[i].addresses[0].number

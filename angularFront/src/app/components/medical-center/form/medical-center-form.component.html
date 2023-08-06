@@ -1,4 +1,4 @@
-<div class="modal-dialog main-color">
+<div class="modal-dialog main-color container-esp">
   <div class="modal-content">
     <div class="modal-header">
       <h2 class="modal-title" style="margin-left: auto; margin-right: auto">
@@ -27,6 +27,116 @@
                 required
                 [value]="data?.id"
               />
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-4 auto-margin width-90 back-grey">
+          <div class="card-header">Dirección</div>
+          <div class="card-body">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label for="street">Calle:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="street"
+                  name="street"
+                  [(ngModel)]="street"
+                />
+              </div>
+              <div class="col-md-4">
+                <label for="number">Número:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="number"
+                  name="number"
+                  [(ngModel)]="number"
+                />
+              </div>
+              <div class="col-md-4">
+                <label for="section">Barrio:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="section"
+                  name="section"
+                  [(ngModel)]="section"
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label for="floor">Piso:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="floor"
+                  name="floor"
+                  [(ngModel)]="floor"
+                />
+              </div>
+              <div class="col-md-4">
+                <label for="apartment">Departamento:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="apartment"
+                  name="apartment"
+                  [(ngModel)]="apartment"
+                />
+              </div>
+              <div class="col-md-4">
+                <label for="zip">Zip:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="zip"
+                  name="zip"
+                  [(ngModel)]="zip"
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="location" class="font-weight-bold"
+                  >Localidad:</label
+                >
+                <select
+                  class="form-control"
+                  name="location"
+                  [(ngModel)]="location"
+                  required
+                >
+                  <option
+                    *ngFor="let location of locations"
+                    [value]="location.id.toString()"
+                  >
+                    {{ location.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="province" class="font-weight-bold"
+                  >Provincia:</label
+                >
+                <select
+                  class="form-control"
+                  name="province"
+                  [(ngModel)]="province"
+                  required
+                >
+                  <option
+                    *ngFor="let province of provinces"
+                    [value]="province.id.toString()"
+                  >
+                    {{ province.name }}
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -92,11 +202,6 @@
               </tbody>
             </table>
           </div>
-        </div>
-
-        <div class="card mb-4 auto-margin width-90 back-grey">
-          <div class="card-header">Dirección</div>
-          <div class="card-body"></div>
         </div>
 
         <div class="card mb-4 auto-margin width-90 back-grey">
@@ -211,7 +316,12 @@
                       type="button"
                       class="button-style"
                       title="Eliminar"
-                      (click)="handleDeleteIdentification(identification.id, identification.number)"
+                      (click)="
+                        handleDeleteIdentification(
+                          identification.id,
+                          identification.number
+                        )
+                      "
                     >
                       <img
                         src="../../../assets/images/eliminar.png"

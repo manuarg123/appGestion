@@ -1,23 +1,61 @@
 import { PhoneFormComponent } from "../../phone/phone-form/phone-form.component";
 import { EmailFormComponent } from "../../email/email-form/email-form.component";
 import { IdentificationFormComponent } from "../../identification/identification-form/identification-form.component";
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'src/app/service/api.service';
 import { Phone } from '../../phone/phone.model';
 import { Email } from "../../email/email.model";
 import { Identification } from "../../identification/identification.model";
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
+import { Address } from "../../address/address.model";
+import { Component, OnInit, Inject } from '@angular/core';
 
-export class PersonFormComponent {
+@Component({
+    selector: 'app-person-form',
+    templateUrl: './person-form.component.html',
+    styleUrls: ['./person-form.component.css']
+})
+export class PersonFormComponent implements OnInit {
     phoneList: Phone[] = [];
     emailList: Email[] = [];
     identificationList: Identification[] = [];
-
+    locations: any[] = [];
+    location: string = "";
+    locationsIds: any[] = [];
+    provinces: any[] = [];
+    province: string = "";
+    provincesIds: any[] = [];
+    street: string = "";
+    number: string = "";
+    section: string = "";
+    apartment: string = "";
+    floor: string = "";
+    zip: string = "";
+    addressId: any = "";
     constructor(
         private apiService: ApiService,
         private dialog: MatDialog,
+        @Inject(MAT_DIALOG_DATA) public dataPerson: any
     ) {
+        if (dataPerson) {
+            this.location = dataPerson?.data?.addresses?.[0]?.location?.id ?? "";
+            this.province = dataPerson?.data?.addresses?.[0]?.province?.id ?? "";
+            this.street = dataPerson?.data?.addresses?.[0]?.street ?? "";
+            this.number = dataPerson?.data?.addresses?.[0]?.number ?? "";
+            this.apartment = dataPerson?.data?.addresses?.[0]?.apartment ?? "";
+            this.section = dataPerson?.data?.addresses?.[0]?.section ?? "";
+            this.floor = dataPerson?.data?.addresses?.[0]?.floor ?? "";
+            this.zip = dataPerson?.data?.addresses?.[0]?.zip ?? "";
+            this.addressId = dataPerson?.data?.addresses?.[0]?.id ?? "";
+            this.phoneList = dataPerson.data.phones;
+            this.emailList = dataPerson.data.emails;
+            this.identificationList = dataPerson.data.identifications;
+        }
+    }
 
+    ngOnInit(): void {
+        this.loadLocations();
+        this.loadProvinces();
     }
 
     ///////////////////////////////////////////////HANDLE PHONE/////////////////////////////////////////////////////////////////////////////////
@@ -264,5 +302,57 @@ export class PersonFormComponent {
         } else {
             console.log('No se encontró token');
         }
+    }
+
+    //////////////////////////////////////////////Handle ADDRESS/////////////////////////////////////////////////////////////////
+
+    loadLocations(): void {
+        const token = localStorage.getItem("token");
+        if (token) {
+            this.apiService.all('locations', token).subscribe(
+                (response: any[]) => {
+                    response.forEach((location: any) => {
+                        this.locationsIds = response.map((location: any) => location.id);
+                    });
+                    this.locations = response;
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
+        }
+    }
+
+    loadProvinces(): void {
+        const token = localStorage.getItem("token");
+        if (token) {
+            this.apiService.all('provinces', token).subscribe(
+                (response: any[]) => {
+                    response.forEach((province: any) => {
+                        this.provincesIds = response.map((province: any) => province.id);
+                    });
+                    this.provinces = response;
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
+        }
+    }
+
+    getAddressObject() {
+        let addressObject = {
+            id: this.addressId ? this.addressId : null,
+            street: this.street ? this.street : null,
+            section: this.section ? this.section : null,
+            number: this.number ? this.number : null,
+            floor: this.floor ? this.floor : null,
+            apartment: this.apartment ? this.apartment : null,
+            zip: this.zip ? this.zip : null,
+            locationId: this.location ? this.location : null,
+            provinceId: this.province ? this.province : null
+        }
+
+        return addressObject;
     }
 }

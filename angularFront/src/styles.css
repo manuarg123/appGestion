@@ -172,6 +172,11 @@ body {
   width: 90%;
 }
 
+.container-esp{
+  max-height: 600px;
+  overflow-y: auto;
+}
+
 @media (max-width: 767px) {
   .small-table-width {
     width: 100%;

@@ -23,13 +23,10 @@ export class MedicalCenterFormComponent extends PersonFormComponent {
     private dialogMat: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    super(serviceApi, dialogMat);
+    super(serviceApi, dialogMat,data);
     if (data) {         
       this.name = data.data.name;
-      this.id = data.id;
-      this.phoneList = data.data.phones;
-      this.emailList = data.data.emails;
-      this.identificationList = data.data.identifications;
+      this.id = data.id;   
     } else {
       this.name = '';
       this.id = '';
@@ -38,12 +35,17 @@ export class MedicalCenterFormComponent extends PersonFormComponent {
 
   handleSubmit(): void {
     const token = localStorage.getItem('token');
+    
+    let addressObject = this.getAddressObject();
+
     const data = {
       name: this.name,
       phones: this.preparePhoneList(),
       emails: this.prepareEmailList(),
-      identifications: this.prepareIdentificationList()
+      identifications: this.prepareIdentificationList(),
+      addresses: [addressObject]
     };
+
     let id = this.id;
 
     if (token != null) {

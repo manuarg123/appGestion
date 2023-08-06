@@ -23,7 +23,7 @@ import { MedicalCenterFormComponent } from './components/medical-center/form/med
 import { PhoneFormComponent } from './components/phone/phone-form/phone-form.component';
 import { EmailFormComponent } from './components/email/email-form/email-form.component';
 import { IdentificationFormComponent } from './components/identification/identification-form/identification-form.component';
-
+import { PersonFormComponent } from './components/person/form/person-form.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +42,8 @@ import { IdentificationFormComponent } from './components/identification/identif
     MedicalCenterFormComponent,
     PhoneFormComponent,
     EmailFormComponent,
-    IdentificationFormComponent
+    IdentificationFormComponent,
+    PersonFormComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],
