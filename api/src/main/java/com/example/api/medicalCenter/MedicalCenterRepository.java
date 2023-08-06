@@ -1,6 +1,5 @@
 package com.example.api.medicalCenter;
 
-import com.example.api.location.Location;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
