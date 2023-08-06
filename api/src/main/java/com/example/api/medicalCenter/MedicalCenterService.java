@@ -1,5 +1,6 @@
 package com.example.api.medicalCenter;
 
+import com.example.api.address.Address;
 import com.example.api.address.AddressDTO;
 import com.example.api.address.AddressService;
 import com.example.api.common.*;
@@ -31,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -165,5 +167,49 @@ public class MedicalCenterService {
         int startIndex = (currentPage - 1) * pageSize;
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         return medicalCenterRepository.findPageByDeletedAtIsNull(pageable);
+    }
+
+    public APIResponse deleteMedicalCenter(Long id) {
+        APIResponse apiResponse = new APIResponse();
+        Optional<MedicalCenter> optionalMedicalCenter = medicalCenterRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (!optionalMedicalCenter.isPresent()){
+            throw new NotFoundException(MessagesResponse.recordNotFound);
+        }
+
+        MedicalCenter existingMedicalCenter = optionalMedicalCenter.get();
+        setDeletedAtInDataCollections(existingMedicalCenter);
+        existingMedicalCenter.setDeletedAt(LocalDateTime.now());
+        medicalCenterRepository.save(existingMedicalCenter);
+
+        apiResponse.setData(existingMedicalCenter);
+        apiResponse.setStatus(HttpStatus.OK.value());
+        return apiResponse;
+    }
+
+    public void setDeletedAtInDataCollections(MedicalCenter medicalCenter){
+        if (medicalCenter.getPhones() != null) {
+            for (Phone phone : medicalCenter.getPhones()) {
+                phoneService.deletePhone(phone.getId());
+            }
+        }
+
+        if (medicalCenter.getEmails() != null) {
+            for (Email email : medicalCenter.getEmails()) {
+                emailService.deleteEmail(email.getId());
+            }
+        }
+
+        if (medicalCenter.getAddresses() != null) {
+            for (Address address : medicalCenter.getAddresses()) {
+                addressService.deleteAddress(address.getId());
+            }
+        }
+
+        if (medicalCenter.getIdentifications() != null) {
+            for (Identification identification : medicalCenter.getIdentifications()) {
+                identificationService.deleteIdentification(identification.getId());
+            }
+        }
     }
 }

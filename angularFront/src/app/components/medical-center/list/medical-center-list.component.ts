@@ -82,7 +82,7 @@ export class MedicalCenterListComponent implements OnInit {
         }
       );
     }
-  }
+  } 
 
   goToPage(pageNumber: number) {
     this.currentPage = pageNumber;

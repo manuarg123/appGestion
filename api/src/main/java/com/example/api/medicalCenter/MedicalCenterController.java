@@ -37,6 +37,11 @@ public class MedicalCenterController {
         return this.medicalCenterService.editMedicalCenter(id, medicalCenterDTO);
     }
 
+    @DeleteMapping(path = "/delete/{medicalCenterId}")
+    public APIResponse deleteMedicalCenter(@PathVariable("medicalCenterId") Long id) {
+        return this.medicalCenterService.deleteMedicalCenter(id);
+    }
+
     @GetMapping(path = "/paginated")
     public Page<MedicalCenter> getMedicalCentersPaginated(
             @RequestParam(defaultValue = "1") int currentPage,
