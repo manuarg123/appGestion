@@ -25,6 +25,5 @@ public class Location extends AuditableEntity {
 
     @ManyToOne
     @JoinColumn(name="province_id", nullable=true)
-    @JsonBackReference
     private  Province province;
 }

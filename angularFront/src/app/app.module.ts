@@ -27,6 +27,9 @@ import { PersonFormComponent } from './components/person/form/person-form.compon
 import { SocialWorkFormComponent } from './components/socialWork/form/social-work-form.component';
 import { SocialWorkComponent } from './components/socialWork/index/social-work.component';
 import { SocialWorkListComponent } from './components/socialWork/list/social-work-list.component';
+import { LocationComponent } from './components/location/index/location.component';
+import { LocationFormComponent } from './components/location/form/location-form.component';
+import { LocationListComponent } from './components/location/list/location-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,7 +52,10 @@ import { SocialWorkListComponent } from './components/socialWork/list/social-wor
     PersonFormComponent,
     SocialWorkFormComponent,
     SocialWorkComponent,
-    SocialWorkListComponent
+    SocialWorkListComponent,
+    LocationComponent,
+    LocationFormComponent,
+    LocationListComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],

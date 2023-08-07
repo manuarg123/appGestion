@@ -8,6 +8,7 @@ import { MedicalCenterComponent } from './components/medical-center/index/medica
 import { ABMsComponent } from './components/abms/abms.component';
 import { ProvinceComponent } from './components/province/index/province.component';
 import { SocialWorkComponent } from './components/socialWork/index/social-work.component';
+import { LocationComponent } from './components/location/index/location.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'socialWork', component: SocialWorkComponent, canActivate: [AuthGuard] },
   { path: 'ABMs', component: ABMsComponent, canActivate: [AuthGuard] },
   { path: 'province', component: ProvinceComponent, canActivate: [AuthGuard]},
+  { path: 'location', component: LocationComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 

@@ -90,12 +90,16 @@ public class LocationService {
     }
 
     public APIResponse getLocation(Long id) {
-        Optional<Province> optionalProvince = findProvince(id);
-        APIResponse apiResponse = new APIResponse();
+        Optional<Location> optionalLocation = locationRepository.findByIdAndDeletedAtIsNull(id);
 
-        Province existingProvince = optionalProvince.get();
+        if (!optionalLocation.isPresent()) {
+            throw new NotFoundException(MessagesResponse.recordNotFound);
+        }
+
+        APIResponse apiResponse = new APIResponse();
+        Location existingLocation = optionalLocation.get();
         apiResponse.setStatus(HttpStatus.OK.value());
-        apiResponse.setData(existingProvince);
+        apiResponse.setData(existingLocation);
         return apiResponse;
     }
 
