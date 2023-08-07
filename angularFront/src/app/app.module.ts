@@ -33,6 +33,9 @@ import { LocationListComponent } from './components/location/list/location-list.
 import { EmailTypeComponent } from './components/email-type/index/email-type.component';
 import { EmailTypeFormComponent } from './components/email-type/form/email-type-form.component';
 import { EmailTypeListComponent } from './components/email-type/list/email-type-list.component';
+import { PhoneTypeComponent } from './components/phone-type/index/phone-type.component';
+import { PhoneTypeFormComponent } from './components/phone-type/form/phone-type-form.component';
+import { PhoneTypeListComponent } from './components/phone-type/list/phone-type-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +64,10 @@ import { EmailTypeListComponent } from './components/email-type/list/email-type-
     LocationListComponent,
     EmailTypeComponent,
     EmailTypeFormComponent,
-    EmailTypeListComponent
+    EmailTypeListComponent,
+    PhoneTypeComponent,
+    PhoneTypeFormComponent,
+    PhoneTypeListComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],

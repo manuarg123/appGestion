@@ -3,6 +3,7 @@ package com.example.api.phoneType;
 import com.example.api.common.APIResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +44,13 @@ public class PhoneTypeController {
     @DeleteMapping(path="/delete/{phoneTypeId}")
     public APIResponse deletePhoneType(@PathVariable("phoneTypeId") Long id){
         return this.phoneTypeService.deletePhoneType(id);
+    }
+
+    @GetMapping(path = "/paginated")
+    public Page<PhoneType> getPhoneTypesPaginated(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
+    ){
+        return phoneTypeService.getPhoneTypesPaginated(currentPage, pageSize);
     }
 }
