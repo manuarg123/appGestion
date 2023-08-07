@@ -8,6 +8,9 @@ import com.example.api.province.Province;
 import com.example.api.province.ProvinceDTO;
 import com.example.api.province.ProvinceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -124,5 +127,11 @@ public class LocationService {
                 .anyMatch(provinceId -> provinceId == null || String.valueOf(provinceId).isBlank())) {
             throw new NotValidException(MessagesResponse.notValidParameters);
         }
+    }
+
+    public Page<Location> getLocationsPaginated(int currentPage, int pageSize){
+        int startIndex = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        return locationRepository.findPageByDeletedAtIsNull(pageable);
     }
 }

@@ -2,6 +2,7 @@ package com.example.api.location;
 
 import com.example.api.common.APIResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,5 +40,13 @@ public class LocationController {
     @DeleteMapping(path = "/delete/{locationId}")
     public APIResponse deleteLocation(@PathVariable("locationId") Long id) {
         return this.locationService.deleteLocation(id);
+    }
+
+    @GetMapping(path = "/paginated")
+    public Page<Location> getLocationsPaginated(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
+    ){
+        return locationService.getLocationsPaginated(currentPage, pageSize);
     }
 }
