@@ -24,6 +24,9 @@ import { PhoneFormComponent } from './components/phone/phone-form/phone-form.com
 import { EmailFormComponent } from './components/email/email-form/email-form.component';
 import { IdentificationFormComponent } from './components/identification/identification-form/identification-form.component';
 import { PersonFormComponent } from './components/person/form/person-form.component';
+import { SocialWorkFormComponent } from './components/socialWork/form/social-work-form.component';
+import { SocialWorkComponent } from './components/socialWork/index/social-work.component';
+import { SocialWorkListComponent } from './components/socialWork/list/social-work-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,7 +46,10 @@ import { PersonFormComponent } from './components/person/form/person-form.compon
     PhoneFormComponent,
     EmailFormComponent,
     IdentificationFormComponent,
-    PersonFormComponent
+    PersonFormComponent,
+    SocialWorkFormComponent,
+    SocialWorkComponent,
+    SocialWorkListComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],
