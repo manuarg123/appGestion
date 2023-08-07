@@ -30,6 +30,9 @@ import { SocialWorkListComponent } from './components/socialWork/list/social-wor
 import { LocationComponent } from './components/location/index/location.component';
 import { LocationFormComponent } from './components/location/form/location-form.component';
 import { LocationListComponent } from './components/location/list/location-list.component';
+import { EmailTypeComponent } from './components/email-type/index/email-type.component';
+import { EmailTypeFormComponent } from './components/email-type/form/email-type-form.component';
+import { EmailTypeListComponent } from './components/email-type/list/email-type-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +58,10 @@ import { LocationListComponent } from './components/location/list/location-list.
     SocialWorkListComponent,
     LocationComponent,
     LocationFormComponent,
-    LocationListComponent
+    LocationListComponent,
+    EmailTypeComponent,
+    EmailTypeFormComponent,
+    EmailTypeListComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],

@@ -9,6 +9,7 @@ import { ABMsComponent } from './components/abms/abms.component';
 import { ProvinceComponent } from './components/province/index/province.component';
 import { SocialWorkComponent } from './components/socialWork/index/social-work.component';
 import { LocationComponent } from './components/location/index/location.component';
+import { EmailTypeComponent } from './components/email-type/index/email-type.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'ABMs', component: ABMsComponent, canActivate: [AuthGuard] },
   { path: 'province', component: ProvinceComponent, canActivate: [AuthGuard]},
   { path: 'location', component: LocationComponent, canActivate: [AuthGuard]},
+  { path: 'emailType', component: EmailTypeComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 
