@@ -2,6 +2,9 @@ package com.example.api.identificationType;
 
 import com.example.api.common.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -118,5 +121,11 @@ public class IdentificationTypeService {
         apiResponse.setStatus(HttpStatus.OK.value());
         apiResponse.setData(existingIdentificationType);
         return apiResponse;
+    }
+
+    public Page<IdentificationType> getIdentificationTypesPaginated(int currentPage, int pageSize){
+        int startIndex = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        return identificationTypeRepository.findPageByDeletedAtIsNull(pageable);
     }
 }

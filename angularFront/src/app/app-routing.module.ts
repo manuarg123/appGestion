@@ -11,6 +11,7 @@ import { SocialWorkComponent } from './components/socialWork/index/social-work.c
 import { LocationComponent } from './components/location/index/location.component';
 import { EmailTypeComponent } from './components/email-type/index/email-type.component';
 import { PhoneTypeComponent } from './components/phone-type/index/phone-type.component';
+import { IdentificationTypeComponent } from './components/identification-type/index/identification-type.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'location', component: LocationComponent, canActivate: [AuthGuard]},
   { path: 'emailType', component: EmailTypeComponent, canActivate: [AuthGuard]},
   { path: 'phoneType', component: PhoneTypeComponent, canActivate: [AuthGuard]},
+  { path: 'identificationType', component: IdentificationTypeComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 

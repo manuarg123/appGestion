@@ -3,6 +3,7 @@ package com.example.api.identificationType;
 import com.example.api.common.APIResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +44,13 @@ public class IdentificationTypeController {
     @DeleteMapping(path="/delete/{identificationTypeId}")
     public APIResponse deleteIdentificationType(@PathVariable("identificationTypeId") Long id){
         return this.identificationTypeService.deleteIdentificationType(id);
+    }
+
+    @GetMapping(path = "/paginated")
+    public Page<IdentificationType> getIdentificationTypesPaginated(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
+    ){
+        return identificationTypeService.getIdentificationTypesPaginated(currentPage, pageSize);
     }
 }

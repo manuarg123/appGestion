@@ -36,6 +36,9 @@ import { EmailTypeListComponent } from './components/email-type/list/email-type-
 import { PhoneTypeComponent } from './components/phone-type/index/phone-type.component';
 import { PhoneTypeFormComponent } from './components/phone-type/form/phone-type-form.component';
 import { PhoneTypeListComponent } from './components/phone-type/list/phone-type-list.component';
+import { IdentificationTypeComponent } from './components/identification-type/index/identification-type.component';
+import { IdentificationTypeFormComponent } from './components/identification-type/form/identification-type-form.component';
+import { IdentificationTypeListComponent } from './components/identification-type/list/identification-type-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,7 +70,10 @@ import { PhoneTypeListComponent } from './components/phone-type/list/phone-type-
     EmailTypeListComponent,
     PhoneTypeComponent,
     PhoneTypeFormComponent,
-    PhoneTypeListComponent
+    PhoneTypeListComponent,
+    IdentificationTypeComponent,
+    IdentificationTypeFormComponent,
+    IdentificationTypeListComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],
