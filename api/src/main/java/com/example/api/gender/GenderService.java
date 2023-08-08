@@ -1,90 +1,133 @@
 package com.example.api.gender;
 
-import com.example.api.common.APIResponse;
-import com.example.api.common.MessagesResponse;
+import com.example.api.common.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
+@Validated
 public class GenderService {
-    HashMap<String , Object> data;
     private final GenderRepository genderRepository;
+
     @Autowired
-    public GenderService(GenderRepository genderRepository){this.genderRepository = genderRepository;}
+    public GenderService(GenderRepository genderRepository) {
+        this.genderRepository = genderRepository;
+    }
 
     public List<Gender> getGenders() {
         return this.genderRepository.findByDeletedAtIsNull();
     }
 
+
     public APIResponse newGender(GenderDTO genderDTO) {
-        APIResponse apiResponse = new APIResponse();
-        HashMap<String, Object> data = new HashMap<>();
-
-        Optional<Gender> res = genderRepository.findGenderByName(genderDTO.getName());
-
-        if (res.isPresent()){
-            data.put("error", true);
-            data.put("message", MessagesResponse.recordNameExists);
-            apiResponse.setData(data);
-            return apiResponse;
+        if (Stream.of(genderDTO)
+                .map(GenderDTO::getName)
+                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 144)) {
+            throw new NotValidException(MessagesResponse.notValidParameters);
         }
+
+        Optional<Gender> res = genderRepository.findGenderByNameAndDeletedAtIsNull(genderDTO.getName());
+
+        if (res.isPresent()) {
+            Gender existingGender = res.get();
+            if (existingGender.getDeletedAt() == null) {
+                throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
+            }
+        }
+
+        APIResponse apiResponse = new APIResponse();
         Gender gender = new Gender();
         gender.setName(genderDTO.getName());
-        data.put("message", MessagesResponse.addSuccess);
-
         genderRepository.save(gender);
-        data.put("data", gender);
-        apiResponse.setData(data);
+
+        apiResponse.setData(gender);
+        apiResponse.setMessage(MessagesResponse.addSuccess);
+        apiResponse.setStatus(HttpStatus.CREATED.value());
+
         return apiResponse;
     }
 
     public APIResponse editGender(Long id, GenderDTO genderDTO) {
-        APIResponse apiResponse = new APIResponse();
-        HashMap<String,Object> data = new HashMap<>();
+        if (Stream.of(genderDTO)
+                .map(GenderDTO::getName)
+                .anyMatch(name -> Objects.isNull(name) || name.isBlank() || name.length() > 144)) {
+            throw new NotValidException(MessagesResponse.notValidParameters);
+        }
 
+        APIResponse apiResponse = new APIResponse();
         Optional<Gender> optionalGender = genderRepository.findByIdAndDeletedAtIsNull(id);
 
         if (optionalGender.isPresent()) {
+            Optional<Gender> res = genderRepository.findGenderByNameAndDeletedAtIsNull(genderDTO.getName());
+
+            if (res.isPresent()) {
+                Gender existingGender = res.get();
+                if (existingGender.getDeletedAt() == null) {
+                    throw new DuplicateRecordException(MessagesResponse.nameAlreadyExists);
+                }
+            }
+
             Gender existingGender = optionalGender.get();
             existingGender.setName(genderDTO.getName());
-
             genderRepository.save(existingGender);
-            data.put("message", MessagesResponse.editSuccess);
-            data.put("data", existingGender);
-            apiResponse.setData(data);
+
+            apiResponse.setStatus(HttpStatus.OK.value());
+            apiResponse.setMessage(MessagesResponse.editSuccess);
+            apiResponse.setData(existingGender);
         } else {
-            data.put("error",true);
-            data.put("message", MessagesResponse.recordNotFound);
-            apiResponse.setData(data);
+            throw new NotFoundException(MessagesResponse.recordNotFound);
         }
         return apiResponse;
     }
 
     public APIResponse deleteGender(Long id) {
         APIResponse apiResponse = new APIResponse();
-        HashMap<String, Object> data = new HashMap<>();
+        Optional<Gender> optionalGender = genderRepository.findByIdAndDeletedAtIsNull(id);
 
-        boolean exists = this.genderRepository.existsById(id);
-
-        if (!exists){
-            data.put("error", true);
-            data.put("message", MessagesResponse.recordNotFound);
-            apiResponse.setData(data);
-            return apiResponse;
+        if (!optionalGender.isPresent()) {
+            throw new NotFoundException(MessagesResponse.recordNotFound);
         }
 
-        Optional<Gender> optionalGender = genderRepository.findById(id);
         Gender existingGender = optionalGender.get();
         existingGender.setDeletedAt(LocalDateTime.now());
-
         genderRepository.save(existingGender);
-        data.put("message", MessagesResponse.deleteSuccess);
-        apiResponse.setData(data);
+
+        apiResponse.setMessage(MessagesResponse.deleteSuccess);
+        apiResponse.setData(existingGender);
+        apiResponse.setStatus(HttpStatus.OK.value());
         return apiResponse;
+    }
+
+    public APIResponse getGender(Long id) {
+        Optional<Gender> optionalGender = genderRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (!optionalGender.isPresent()) {
+            throw new NotFoundException(MessagesResponse.recordNotFound);
+        }
+
+        APIResponse apiResponse = new APIResponse();
+        Gender existingGender = optionalGender.get();
+        apiResponse.setStatus(HttpStatus.OK.value());
+        apiResponse.setData(existingGender);
+        return apiResponse;
+    }
+
+    public Page<Gender> getGendersPaginated(int currentPage, int pageSize){
+        int startIndex = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        return genderRepository.findPageByDeletedAtIsNull(pageable);
     }
 }
