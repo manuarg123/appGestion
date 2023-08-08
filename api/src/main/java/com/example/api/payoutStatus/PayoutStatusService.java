@@ -128,7 +128,6 @@ public class PayoutStatusService {
     }
 
     public Page<PayoutStatus> getPayoutStatusPaginated(int currentPage, int pageSize){
-        int startIndex = (currentPage - 1) * pageSize;
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         return payoutStatusRepository.findPageByDeletedAtIsNull(pageable);
     }

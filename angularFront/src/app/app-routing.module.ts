@@ -15,6 +15,7 @@ import { IdentificationTypeComponent } from './components/identification-type/in
 import { SpecialtyComponent } from './components/specialty/index/specialty.component';
 import { GenderComponent } from './components/gender/index/gender.component';
 import { PayoutStatusComponent } from './components/payout-status/index/payout-status.component';
+import { PayoutConceptComponent } from './components/payout-concept/index/payout-concept.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: 'specialty', component: SpecialtyComponent, canActivate: [AuthGuard]},
   { path: 'gender', component: GenderComponent, canActivate: [AuthGuard]},
   { path: 'payoutStatus', component: PayoutStatusComponent, canActivate: [AuthGuard]},
+  { path: 'payoutConcept', component: PayoutConceptComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 
