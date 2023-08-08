@@ -14,6 +14,7 @@ import { PhoneTypeComponent } from './components/phone-type/index/phone-type.com
 import { IdentificationTypeComponent } from './components/identification-type/index/identification-type.component';
 import { SpecialtyComponent } from './components/specialty/index/specialty.component';
 import { GenderComponent } from './components/gender/index/gender.component';
+import { PayoutStatusComponent } from './components/payout-status/index/payout-status.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -29,6 +30,7 @@ const routes: Routes = [
   { path: 'identificationType', component: IdentificationTypeComponent, canActivate: [AuthGuard]},
   { path: 'specialty', component: SpecialtyComponent, canActivate: [AuthGuard]},
   { path: 'gender', component: GenderComponent, canActivate: [AuthGuard]},
+  { path: 'payoutStatus', component: PayoutStatusComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 

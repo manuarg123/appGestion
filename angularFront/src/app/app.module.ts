@@ -45,6 +45,9 @@ import { SpecialtyListComponent } from './components/specialty/list/specialty-li
 import { GenderComponent } from './components/gender/index/gender.component';
 import { GenderFormComponent } from './components/gender/form/gender-form.component';
 import { GenderListComponent } from './components/gender/list/gender-list.component';
+import { PayoutStatusComponent } from './components/payout-status/index/payout-status.component';
+import { PayoutStatusFormComponent } from './components/payout-status/form/payout-status-form.component';
+import { PayoutStatusListComponent } from './components/payout-status/list/payout-status-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -85,7 +88,10 @@ import { GenderListComponent } from './components/gender/list/gender-list.compon
     SpecialtyListComponent,
     GenderComponent,
     GenderFormComponent,
-    GenderListComponent
+    GenderListComponent,
+    PayoutStatusComponent,
+    PayoutStatusFormComponent,
+    PayoutStatusListComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],

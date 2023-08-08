@@ -1,7 +1,11 @@
 package com.example.api.payoutStatus;
 
 import com.example.api.common.*;
+import com.example.api.province.Province;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -121,5 +125,11 @@ public class PayoutStatusService {
         apiResponse.setStatus(HttpStatus.OK.value());
         apiResponse.setData(existingPayoutStatus);
         return apiResponse;
+    }
+
+    public Page<PayoutStatus> getPayoutStatusPaginated(int currentPage, int pageSize){
+        int startIndex = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        return payoutStatusRepository.findPageByDeletedAtIsNull(pageable);
     }
 }

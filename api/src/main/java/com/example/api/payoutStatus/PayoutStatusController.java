@@ -3,6 +3,7 @@ package com.example.api.payoutStatus;
 import com.example.api.common.APIResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +44,13 @@ public class PayoutStatusController {
     @DeleteMapping(path="/delete/{payoutStatusId}")
     public APIResponse deletePayoutStatus(@PathVariable("payoutStatusId") Long id){
         return this.payoutStatusService.deletePayoutStatus(id);
+    }
+
+    @GetMapping(path = "/paginated")
+    public Page<PayoutStatus> getPayoutStatusPaginated(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
+    ){
+        return payoutStatusService.getPayoutStatusPaginated(currentPage, pageSize);
     }
 }
