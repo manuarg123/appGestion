@@ -12,6 +12,7 @@ import { LocationComponent } from './components/location/index/location.componen
 import { EmailTypeComponent } from './components/email-type/index/email-type.component';
 import { PhoneTypeComponent } from './components/phone-type/index/phone-type.component';
 import { IdentificationTypeComponent } from './components/identification-type/index/identification-type.component';
+import { SpecialtyComponent } from './components/specialty/index/specialty.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'emailType', component: EmailTypeComponent, canActivate: [AuthGuard]},
   { path: 'phoneType', component: PhoneTypeComponent, canActivate: [AuthGuard]},
   { path: 'identificationType', component: IdentificationTypeComponent, canActivate: [AuthGuard]},
+  { path: 'specialty', component: SpecialtyComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 

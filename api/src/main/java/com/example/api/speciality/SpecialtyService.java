@@ -2,6 +2,9 @@ package com.example.api.speciality;
 
 import com.example.api.common.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -117,5 +120,10 @@ public class SpecialtyService {
         apiResponse.setStatus(HttpStatus.OK.value());
         apiResponse.setData(existingSpeciality);
         return apiResponse;
+    }
+
+    public Page<Speciality> getSpecialitiesPaginated(int currentPage, int pageSize){
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        return specialtyRepository.findPageByDeletedAtIsNull(pageable);
     }
 }

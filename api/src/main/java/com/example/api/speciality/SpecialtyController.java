@@ -2,6 +2,7 @@ package com.example.api.speciality;
 
 import com.example.api.common.APIResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,5 +32,13 @@ public class SpecialtyController {
     @DeleteMapping(path="/delete/{specialityId}")
     public APIResponse deleteSpeciality(@PathVariable("specialityId") Long id){
             return this.specialtyService.deleteSpeciality(id);
+    }
+
+    @GetMapping(path = "/paginated")
+    public Page<Speciality> getSpecialtiesPaginated(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
+    ){
+        return specialtyService.getSpecialitiesPaginated(currentPage, pageSize);
     }
 }
