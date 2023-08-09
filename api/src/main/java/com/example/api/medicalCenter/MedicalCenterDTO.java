@@ -1,10 +1,6 @@
 package com.example.api.medicalCenter;
 
-import com.example.api.address.AddressDTO;
-import com.example.api.email.EmailDTO;
-import com.example.api.identification.IdentificationDTO;
 import com.example.api.person.PersonDTO;
-import com.example.api.phone.PhoneDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

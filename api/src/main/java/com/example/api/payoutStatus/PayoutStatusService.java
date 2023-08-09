@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 @Service
 @Validated
 public class PayoutStatusService {
-    HashMap<String, Object> data;
     private final PayoutStatusRepository payoutStatusRepository;
 
     @Autowired

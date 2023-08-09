@@ -51,6 +51,9 @@ import { PayoutStatusListComponent } from './components/payout-status/list/payou
 import { PayoutConceptComponent } from './components/payout-concept/index/payout-concept.component';
 import { PayoutConceptFormComponent } from './components/payout-concept/form/payout-concept-form.component';
 import { PayoutConceptListComponent } from './components/payout-concept/list/payout-concept-list.component';
+import { PaymentTypeComponent } from './components/payment-type/index/payment-type.component';
+import { PaymentTypeFormComponent } from './components/payment-type/form/payment-type-form.component';
+import { PaymentTypeListComponent } from './components/payment-type/list/payment-type-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -97,7 +100,10 @@ import { PayoutConceptListComponent } from './components/payout-concept/list/pay
     PayoutStatusListComponent,
     PayoutConceptComponent,
     PayoutConceptFormComponent,
-    PayoutConceptListComponent
+    PayoutConceptListComponent,
+    PaymentTypeComponent,
+    PaymentTypeFormComponent,
+    PaymentTypeListComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],

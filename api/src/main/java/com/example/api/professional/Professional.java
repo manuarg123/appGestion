@@ -9,9 +9,13 @@ import com.example.api.medicalCenter.MedicalCenter;
 import com.example.api.phone.Phone;
 import com.example.api.realPerson.RealPerson;
 import com.example.api.speciality.Speciality;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +24,8 @@ import java.util.List;
 @Table(name="professional")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Professional extends RealPerson {
     @Column(nullable = false, length = 144)
     private String mp;
@@ -28,27 +34,15 @@ public class Professional extends RealPerson {
     @JoinColumn(name="medical_center_id", nullable = true)
     private MedicalCenter medicalCenter;
 
+    @OneToMany(mappedBy = "professional")
+    @JsonManagedReference
+    @Where(clause = "deleted_at IS NULL")
+    private List<MedicalCenter> medicalCenters;
+
     @ManyToOne
     @JoinColumn(name="speciality_id", nullable = false)
     private Speciality speciality;
 
     @OneToMany(mappedBy = "professional")
     private List<ClinicHistory> clinicHistories;
-
-    public Professional(){
-
-    }
-    public Professional(Long id, String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails, List<Identification> identifications, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender, String mp, MedicalCenter medicalCenter, Speciality speciality) {
-        super(id, fullName, addresses, phones, emails, identifications, firstName, secondName, lastName, secondLastName, birthday, gender);
-        this.mp = mp;
-        this.medicalCenter = medicalCenter;
-        this.speciality = speciality;
-    }
-
-    public Professional(String fullName, List<Address> addresses, List<Phone> phones, List<Email> emails,List<Identification> identifications, String firstName, String secondName, String lastName, String secondLastName, LocalDate birthday, Gender gender, String mp, MedicalCenter medicalCenter, Speciality speciality) {
-        super(fullName, addresses, phones, emails, identifications,firstName, secondName, lastName, secondLastName, birthday, gender);
-        this.mp = mp;
-        this.medicalCenter = medicalCenter;
-        this.speciality = speciality;
-    }
 }
