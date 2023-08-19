@@ -14,6 +14,7 @@ import com.example.api.phone.Phone;
 import com.example.api.phone.PhoneDTO;
 import com.example.api.phone.PhoneService;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
+@AllArgsConstructor
 public class MedicalCenterService {
     private final MedicalCenterRepository medicalCenterRepository;
     private final IdentificationService identificationService;
@@ -34,14 +36,6 @@ public class MedicalCenterService {
     private final PhoneService phoneService;
     private final EmailService emailService;
 
-    @Autowired
-    public MedicalCenterService(MedicalCenterRepository medicalCenterRepository, AddressService addressService, IdentificationService identificationService, PhoneService phoneService, EmailService emailService) {
-        this.medicalCenterRepository = medicalCenterRepository;
-        this.addressService = addressService;
-        this.identificationService = identificationService;
-        this.phoneService = phoneService;
-        this.emailService = emailService;
-    }
 
     public List<MedicalCenter> geMedicalCenters() {
         return medicalCenterRepository.findByDeletedAtIsNull();
@@ -94,8 +88,7 @@ public class MedicalCenterService {
         Optional<MedicalCenter> optionalMedicalCenter = findMedicalCenter(id);
         APIResponse apiResponse = new APIResponse();
 
-        MedicalCenter existingMedicalCenter = optionalMedicalCenter.get();
-        apiResponse.setData(existingMedicalCenter);
+        apiResponse.setData(optionalMedicalCenter.get());
         apiResponse.setStatus(HttpStatus.OK.value());
         return apiResponse;
     }

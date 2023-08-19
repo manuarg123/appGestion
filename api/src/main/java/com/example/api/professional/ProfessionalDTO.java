@@ -1,9 +1,8 @@
 package com.example.api.professional;
 
-import com.example.api.clinicHistory.ClinicHistory;
-import com.example.api.medicalCenter.MedicalCenterDTO;
 import com.example.api.realPerson.RealPersonDTO;
-import com.example.api.speciality.Speciality;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +13,14 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProfessionalDTO extends RealPersonDTO {
+
+    @Size(max = 144, message = "mp cannot exceed 144 characters")
     private String mp;
-    private List<MedicalCenterDTO> medicalCenters;
-    private Speciality speciality;
-    private List<ClinicHistory> clinicHistories;
+
+    private List<Long> medicalCenterIds;
+
+    @NotNull(message = "Specialty cannot be null")
+    private Long specialityId;
 }

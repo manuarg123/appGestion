@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name="medical_center")
 @Getter
@@ -19,8 +21,7 @@ public class MedicalCenter extends Person {
     @Column(nullable = false, length = 144)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name="professional_id", nullable = true)
+    @ManyToMany(mappedBy = "medicalCenters")
     @JsonBackReference
-    private Professional professional;
+    private List<Professional> professionals;
 }

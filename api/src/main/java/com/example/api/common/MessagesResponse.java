@@ -31,5 +31,6 @@ public class MessagesResponse {
     public static String medicalCenterCannotBeNull = "MedicalCenter cannot be null";
     public static String socialWorkNotFound = "SocialWork not found";
     public static String socialWorkCannotBeNull = "SocialWork cannot be null";
+    public static String specialtyCannotBeNull = "Specialty cannot be null";
     public static String identificationTypeNotFound = "Identification Type not found";
 }

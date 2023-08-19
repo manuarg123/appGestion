@@ -21,28 +21,22 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name="professional")
+@Table(name = "professional")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Professional extends RealPerson {
-    @Column(nullable = false, length = 144)
+    @Column(nullable = true, length = 144)
     private String mp;
 
-    @ManyToOne
-    @JoinColumn(name="medical_center_id", nullable = true)
-    private MedicalCenter medicalCenter;
-
-    @OneToMany(mappedBy = "professional")
-    @JsonManagedReference
-    @Where(clause = "deleted_at IS NULL")
+    @ManyToMany
+    @JoinTable(name = "professional_medical_center",
+            joinColumns = @JoinColumn(name = "professional_id"),
+            inverseJoinColumns = @JoinColumn(name = "medical_center_id"))
     private List<MedicalCenter> medicalCenters;
 
     @ManyToOne
-    @JoinColumn(name="speciality_id", nullable = false)
+    @JoinColumn(name = "speciality_id", nullable = false)
     private Speciality speciality;
-
-    @OneToMany(mappedBy = "professional")
-    private List<ClinicHistory> clinicHistories;
 }
