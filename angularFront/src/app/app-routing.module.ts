@@ -17,12 +17,14 @@ import { GenderComponent } from './components/gender/index/gender.component';
 import { PayoutStatusComponent } from './components/payout-status/index/payout-status.component';
 import { PayoutConceptComponent } from './components/payout-concept/index/payout-concept.component';
 import { PaymentTypeComponent } from './components/payment-type/index/payment-type.component';
+import { ProfessionalComponent } from './components/professional/index/professional.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'contactos', component: ContactosComponent, canActivate: [AuthGuard] },
   { path: 'medicalCenter', component: MedicalCenterComponent, canActivate: [AuthGuard] },
+  { path: 'professional', component: ProfessionalComponent, canActivate: [AuthGuard] },
   { path: 'socialWork', component: SocialWorkComponent, canActivate: [AuthGuard] },
   { path: 'ABMs', component: ABMsComponent, canActivate: [AuthGuard] },
   { path: 'province', component: ProvinceComponent, canActivate: [AuthGuard]},
