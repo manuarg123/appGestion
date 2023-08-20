@@ -123,4 +123,17 @@ export class ApiService {
       headers,
     });
   }
+
+  /**
+   * Obtengo DTO de medicalCenter
+   */
+  public getMedicalCenterDTOById(endpoint: string, token:string, id:string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<any>(this.urlAPI + endpoint + '/minDto/' + id, {
+      headers,
+    });
+  }
 }

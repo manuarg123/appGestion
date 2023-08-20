@@ -47,4 +47,9 @@ public class MedicalCenterController {
     ){
         return medicalCenterService.getMedicalCentersPaginated(currentPage, pageSize);
     }
+
+    @GetMapping(path = "/minDto/{medicalCenterId}")
+    public MedicalCenterMinDTO getMedicalCentersDto(@PathVariable("medicalCenterId") Long id) {
+        return this.medicalCenterService.getMedicalCentersDto(id);
+    }
 }

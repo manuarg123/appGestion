@@ -1,0 +1,45 @@
+<div class="modal-dialog main-color">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title" style="margin-left: auto; margin-right: auto">
+        Agregar Centro de Atención
+      </h2>
+    </div>
+    <div class="modal-body" style="width: 100%">
+      <div class="card mb-4 auto-margin width-90 back-grey margin-top">
+        <div class="card-body padding-0">
+          <div class="form-group m-3">
+            <label for="medicalCenter" class="font-weight-bold"
+              >Centro de Atención:</label
+            >
+            <select
+              class="form-control"
+              name="medicalCenter"
+              [(ngModel)]="medicalCenterName"
+              required
+            >
+              <option
+                *ngFor="let medicalCenter of medicalCenters"
+                [value]="medicalCenter.id.toString()"
+              >
+                {{ medicalCenter.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-center">
+      <button type="button" class="button-style-close button-l rounded">
+        Cerrar
+      </button>
+      <button
+        type="button"
+        class="button-style-add button-l rounded"
+        (click)="saveMedicalCenter()"
+      >
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>

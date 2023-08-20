@@ -57,6 +57,7 @@ import { PaymentTypeListComponent } from './components/payment-type/list/payment
 import { ProfessionalComponent } from './components/professional/index/professional.component';
 import { ProfessionalFormComponent } from './components/professional/form/professional-form.component';
 import { ProfessionalListComponent } from './components/professional/list/professional-list.component';
+import { MedicalCenterFormMinComponent } from './components/medical-center/formMin/medical-center-form-min.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -109,7 +110,8 @@ import { ProfessionalListComponent } from './components/professional/list/profes
     PaymentTypeListComponent,
     ProfessionalComponent,
     ProfessionalFormComponent,
-    ProfessionalListComponent
+    ProfessionalListComponent,
+    MedicalCenterFormMinComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],

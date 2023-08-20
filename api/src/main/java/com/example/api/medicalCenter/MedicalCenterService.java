@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -35,6 +36,7 @@ public class MedicalCenterService {
     private final AddressService addressService;
     private final PhoneService phoneService;
     private final EmailService emailService;
+    private final MedicalCenterMinDTOMapper medicalCenterMinDTOMapper;
 
 
     public List<MedicalCenter> geMedicalCenters() {
@@ -191,5 +193,25 @@ public class MedicalCenterService {
                 identificationService.deleteIdentification(identification.getId());
             }
         }
+    }
+
+    public List<MedicalCenterMinDTO> getMedicalCentersDtos() {
+        List<MedicalCenterMinDTO> medicalCenterMinDTOS = medicalCenterRepository.findByDeletedAtIsNull()
+                .stream()
+                .map(medicalCenterMinDTOMapper::apply)
+                .collect(Collectors.toList());
+        return medicalCenterMinDTOS;
+    }
+
+    public MedicalCenterMinDTO getMedicalCentersDto(Long id) {
+        Optional<MedicalCenter> optionalMedicalCenter = medicalCenterRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (!optionalMedicalCenter.isPresent()) {
+            throw new NotFoundException(MessagesResponse.recordNotFound);
+        }
+
+        MedicalCenter medicalCenter = optionalMedicalCenter.get();
+
+        return medicalCenterMinDTOMapper.apply(medicalCenter);
     }
 }

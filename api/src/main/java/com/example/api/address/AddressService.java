@@ -126,18 +126,9 @@ public class AddressService {
             completeAddress = completeAddress.concat(addressDTO.getNumber()) + " - ";
         }
 
-        if (addressDTO.getFloor() != null) {
-            completeAddress = completeAddress.concat(addressDTO.getFloor()) + "  ";
-        }
-        if (addressDTO.getApartment() != null) {
-            completeAddress = completeAddress.concat(addressDTO.getApartment());
-        }
         completeAddress = completeAddress.concat(" - ");
         if (addressDTO.getSection() != null) {
-            completeAddress = completeAddress.concat(addressDTO.getSection() + " - ");
-        }
-        if (addressDTO.getZip() != null) {
-            completeAddress = completeAddress.concat(addressDTO.getZip());
+            completeAddress = completeAddress.concat(addressDTO.getSection());
         }
         return completeAddress;
     }

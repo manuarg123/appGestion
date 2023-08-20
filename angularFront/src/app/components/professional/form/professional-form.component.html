@@ -79,9 +79,7 @@
               />
             </div>
             <div class="form-group">
-              <label for="mp" class="font-weight-bold"
-                >Especialidad:
-              </label>
+              <label for="mp" class="font-weight-bold">Especialidad: </label>
               <select
                 class="form-control"
                 name="specialty"
@@ -95,6 +93,58 @@
                   {{ specialty.name }}
                 </option>
               </select>
+            </div>
+
+            <div class="card mb-4 auto-margin width-90 back-grey margin-top">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span>Centros de Atención</span>
+                  <button
+                    type="button"
+                    class="button-style-add rounded"
+                    title="Agregar Registro"
+                    (click)="openMedicalCenterFormMinDialog()"
+                  >
+                    Agregar
+                    <img
+                      src="../../../assets/images/anadir.png"
+                      alt="Agregar Registro"
+                    />
+                  </button>
+                </div>
+              </div>
+              <div class="card-body padding-0">
+                <table
+                  class="table table-bordered table-striped table-hover table-responsive text-center rounded"
+                >
+                  <thead class="table-secondary">
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Dirección</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let medicalCenter of medicalCenterList">
+                      <td>{{ medicalCenter.name }}</td>
+                      <td>{{ medicalCenter.addresses[0].complete_address }}</td>
+                      <td class="text-center">
+                        <button
+                          type="button"
+                          class="button-style"
+                          title="Eliminar"
+                        >
+                          <img
+                            src="../../../assets/images/eliminar.png"
+                            alt="Eliminar"
+                            (click)="handleDeleteMedicalCenter(medicalCenter.id)"
+                          />
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
