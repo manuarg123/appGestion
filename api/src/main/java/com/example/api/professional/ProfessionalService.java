@@ -131,7 +131,7 @@ public class ProfessionalService {
 
         Long professionalId = professional.getId();
 
-        setDataCollectionsForPerson(professionalId, professionalDTO, true);
+        setDataCollectionsForPerson(professionalId, professionalDTO, false);
 
         apiResponse.setStatus(HttpStatus.OK.value());
         apiResponse.setMessage(MessagesResponse.editSuccess);

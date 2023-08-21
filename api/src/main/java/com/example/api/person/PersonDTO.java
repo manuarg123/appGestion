@@ -16,4 +16,14 @@ public class PersonDTO {
     private List<PhoneDTO> phones;
     private List<EmailDTO> emails;
     private List<IdentificationDTO> identifications;
+
+    public PersonDTO() {
+    }
+
+    public PersonDTO(List<AddressDTO> addressDTOS, List<PhoneDTO> phoneDTOS, List<EmailDTO> emailDTOS, List<IdentificationDTO> identificationDTOS) {
+        this.addresses = addressDTOS;
+        this.phones = phoneDTOS;
+        this.emails = emailDTOS;
+        this.identifications = identificationDTOS;
+    }
 }
