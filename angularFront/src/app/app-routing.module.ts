@@ -18,6 +18,7 @@ import { PayoutStatusComponent } from './components/payout-status/index/payout-s
 import { PayoutConceptComponent } from './components/payout-concept/index/payout-concept.component';
 import { PaymentTypeComponent } from './components/payment-type/index/payment-type.component';
 import { ProfessionalComponent } from './components/professional/index/professional.component';
+import { PatientComponent } from './components/patient/index/patient.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'payoutStatus', component: PayoutStatusComponent, canActivate: [AuthGuard]},
   { path: 'payoutConcept', component: PayoutConceptComponent, canActivate: [AuthGuard]},
   { path: 'paymentType', component: PaymentTypeComponent, canActivate: [AuthGuard]},
+  { path: 'patient', component: PatientComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 

@@ -2,16 +2,24 @@ package com.example.api.patient;
 
 import com.example.api.address.AddressDTO;
 import com.example.api.address.AddressDTOMapper;
+import com.example.api.address.AddressFormDTO;
+import com.example.api.address.AddressFormDTOMapper;
 import com.example.api.clinicHistory.ClinicHistoryDTO;
+import com.example.api.clinicHistory.ClinicHistoryDTOMapper;
 import com.example.api.email.EmailDTO;
 import com.example.api.email.EmailDTOMapper;
+import com.example.api.email.EmailFormDTO;
+import com.example.api.email.EmailFormDTOMapper;
 import com.example.api.emergencyContact.EmergencyContact;
 import com.example.api.emergencyContact.EmergencyContactDTO;
 import com.example.api.emergencyContact.EmergencyContactDTOMapper;
 import com.example.api.identification.IdentificationDTO;
 import com.example.api.identification.IdentificationDTOMapper;
+import com.example.api.identification.IdentificationFormDTO;
+import com.example.api.identification.IdentificationFormDTOMapper;
 import com.example.api.phone.PhoneDTO;
 import com.example.api.phone.PhoneDTOMapper;
+import com.example.api.phone.PhoneFormDTO;
 import com.example.api.socialWork.SocialWork;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,15 +31,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PatientFormDTOMapper implements Function<Patient, PatientDTO> {
+public class PatientFormDTOMapper implements Function<Patient, PatientFormDTO> {
     private final EmergencyContactDTOMapper emergencyContactDTOMapper;
-    private final AddressDTOMapper addressDTOMapper;
+    private final AddressFormDTOMapper addressFormDTOMapper;
     private final PhoneDTOMapper phoneDTOMapper;
-    private final EmailDTOMapper emailDTOMapper;
-    private final IdentificationDTOMapper identificationDTOMapper;
+    private final EmailFormDTOMapper emailFormDTOMapper;
+    private final IdentificationFormDTOMapper identificationFormDTOMapper;
+    private final ClinicHistoryDTOMapper clinicHistoryDTOMapper;
 
     @Override
-    public PatientDTO apply(Patient patient) {
+    public PatientFormDTO apply(Patient patient) {
         List<Long> socialWorksIds = new ArrayList<>();
         if (patient.getSocialWorks() != null && !patient.getSocialWorks().isEmpty()) {
             for (SocialWork socialWork : patient.getSocialWorks()) {
@@ -45,42 +54,46 @@ public class PatientFormDTOMapper implements Function<Patient, PatientDTO> {
                 .map(emergencyContactDTOMapper::apply)
                 .collect(Collectors.toList());
 
-        List<ClinicHistoryDTO> clinicHistoryDTOS = new ArrayList<>();
-
-        List<AddressDTO> addressDTOS = patient.getAddresses()
+        List<ClinicHistoryDTO> clinicHistoryDTOS = patient.getClinicHistories()
                 .stream()
-                .map(addressDTOMapper::apply)
+                .map(clinicHistoryDTOMapper::apply)
                 .collect(Collectors.toList());
 
-        List<PhoneDTO> phoneDTOS = patient.getPhones()
+        List<AddressFormDTO> addressDTOS = patient.getAddresses()
+                .stream()
+                .map(addressFormDTOMapper::apply)
+                .collect(Collectors.toList());
+
+        List<PhoneFormDTO> phoneDTOS = patient.getPhones()
                 .stream()
                 .map(phoneDTOMapper::apply)
                 .collect(Collectors.toList());
 
-        List<EmailDTO> emailDTOS = patient.getEmails()
+        List<EmailFormDTO> emailDTOS = patient.getEmails()
                 .stream()
-                .map(emailDTOMapper)
+                .map(emailFormDTOMapper)
                 .collect(Collectors.toList());
 
-        List<IdentificationDTO> identificationDTOS = patient.getIdentifications()
+        List<IdentificationFormDTO> identificationDTOS = patient.getIdentifications()
                 .stream()
-                .map(identificationDTOMapper::apply)
+                .map(identificationFormDTOMapper::apply)
                 .collect(Collectors.toList());
 
-        return new PatientDTO(
-                patient.getId(),
-                patient.isSmoker(),
+        return new PatientFormDTO(
+                patient.getFirstName(),
+                patient.getSecondName(),
                 patient.getOccupation(),
                 patient.getMedicalHistory(),
+                patient.getBirthday(),
+                patient.getGender().getId(),
+                patient.getGender().getName(),
+                patient.getId(),
+                patient.isSmoker(),
+                patient.getLastName(),
+                patient.getSecondLastName(),
                 socialWorksIds,
                 emergencyContactDTOS,
                 clinicHistoryDTOS,
-                patient.getFirstName(),
-                patient.getSecondName(),
-                patient.getLastName(),
-                patient.getSecondLastName(),
-                patient.getBirthday(),
-                patient.getGender().getId(),
                 addressDTOS,
                 phoneDTOS,
                 emailDTOS,

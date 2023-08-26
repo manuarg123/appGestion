@@ -162,7 +162,7 @@ public class PatientService {
         APIResponse apiResponse = new APIResponse();
         Patient patient = optionalPatient.get();
 
-        PatientDTO patientDTO = patientFormDTOMapper.apply(patient);
+        PatientFormDTO patientDTO = patientFormDTOMapper.apply(patient);
 
         apiResponse.setData(patientDTO);
         apiResponse.setStatus(HttpStatus.OK.value());

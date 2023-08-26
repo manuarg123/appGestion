@@ -47,6 +47,7 @@ export class PersonFormComponent implements OnInit {
             this.floor = dataPerson?.data?.addresses?.[0]?.floor ?? "";
             this.zip = dataPerson?.data?.addresses?.[0]?.zip ?? "";
             this.addressId = dataPerson?.data?.addresses?.[0]?.id ?? "";
+            console.log(dataPerson.data)
             this.phoneList = dataPerson.data.phones;
             this.emailList = dataPerson.data.emails;
             this.identificationList = dataPerson.data.identifications;
