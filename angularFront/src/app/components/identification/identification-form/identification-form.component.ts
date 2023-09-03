@@ -25,9 +25,16 @@ export class IdentificationFormComponent implements OnInit {
     private validate: ValidationsService,
   ) {
     if (data) {
-      this.identificationId = data.data.id;
-      this.identificationValue = data.data.value;
-      this.identificationType = data.data.type.id;
+      if (data.data) {
+        this.identificationId = data.data.id;
+        this.identificationValue = data.data.number;
+        this.identificationType = data.data.type.id;
+      } else {
+        this.identificationId = data.id;
+        this.identificationValue = data.number;
+        this.identificationType = data.type.id;
+      }
+
     }
   }
 

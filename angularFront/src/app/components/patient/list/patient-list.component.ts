@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { PatientFormComponent } from '../form/patient-form.component';
 import { ServicePatientService } from '../service-patient.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-patient-list',
@@ -16,7 +17,7 @@ export class PatientListComponent implements OnInit {
   pageSize: number = 20;
   totalItems: number = 0;
 
-  constructor(private apiService: ApiService, private dialog: MatDialog, private patientDataService: ServicePatientService) { }
+  constructor(private apiService: ApiService, private dialog: MatDialog, private patientDataService: ServicePatientService, private router: Router) { }
 
   ngOnInit() {
     this.getPatients();
@@ -70,19 +71,23 @@ export class PatientListComponent implements OnInit {
     }
   }
 
+  // handleEdit(id: string): void {
+  //   const token = localStorage.getItem('token');
+  //   if (token != null) {
+  //     this.apiService.getByid('patients', token, id).subscribe(
+  //       (patientData) => {
+  //         const dialogRef = this.dialog.open(PatientFormComponent, {
+  //           data: { ...patientData, id },
+  //           width: '700px',
+  //         });
+  //       }
+  //     );
+  //   }
+  // } 
+
   handleEdit(id: string): void {
-    const token = localStorage.getItem('token');
-    if (token != null) {
-      this.apiService.getByid('patients', token, id).subscribe(
-        (patientData) => {
-          const dialogRef = this.dialog.open(PatientFormComponent, {
-            data: { ...patientData, id },
-            width: '700px',
-          });
-        }
-      );
-    }
-  } 
+    this.router.navigate(['patient', id]);
+  }
 
   goToPage(pageNumber: number) {
     this.currentPage = pageNumber;

@@ -1,0 +1,62 @@
+<div class="modal-dialog main-color">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title" style="margin-left: auto; margin-right: auto">
+        Agregar Contacto de Emergencia
+      </h2>
+    </div>
+    <div class="modal-body" style="width: 100%">
+      <div class="card mb-4 auto-margin width-90 back-grey margin-top">
+        <div class="card-body padding-0">
+          <div class="form-group m-3">
+            <label for="emergencyContactName" class="font-weight-bold"
+              >Nombre:</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Ingresar Nombre.."
+              name="emergencyContactName"
+              required
+              [(ngModel)]="emergencyContactName"
+            />
+            <input
+              type="hidden"
+              name="emergencyContactId"
+              [(ngModel)]="emergencyContactId"
+            />
+          </div>
+          <div class="form-group m-3">
+            <label for="emergencyContactPhoneNumber" class="font-weight-bold"
+              >Teléfono:</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Ingresar Teléfono.."
+              name="emergencyContactPhoneNumber"
+              required
+              [(ngModel)]="emergencyContactPhoneNumber"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-center">
+      <button
+        type="button"
+        class="button-style-close button-l rounded"
+        (click)="handleClose()"
+      >
+        Cerrar
+      </button>
+      <button
+        type="button"
+        class="button-style-add button-l rounded"
+        (click)="saveEmergencyContact()"
+      >
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>

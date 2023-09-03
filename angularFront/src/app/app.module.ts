@@ -61,6 +61,8 @@ import { MedicalCenterFormMinComponent } from './components/medical-center/formM
 import { PatientComponent } from './components/patient/index/patient.component';
 import { PatientFormComponent } from './components/patient/form/patient-form.component';
 import { PatientListComponent } from './components/patient/list/patient-list.component';
+import { PatientMainFormComponent } from './components/patient/patient-main-form/patient-main-form.component';
+import { EmergencyContactFormComponent } from './components/emergency-contact/emergency-contact-form/emergency-contact-form.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -117,7 +119,9 @@ import { PatientListComponent } from './components/patient/list/patient-list.com
     MedicalCenterFormMinComponent,
     PatientComponent,
     PatientFormComponent,
-    PatientListComponent
+    PatientListComponent,
+    PatientMainFormComponent,
+    EmergencyContactFormComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
   providers: [],

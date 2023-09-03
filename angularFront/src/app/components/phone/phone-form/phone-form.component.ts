@@ -25,9 +25,15 @@ export class PhoneFormComponent implements OnInit {
     private validate: ValidationsService,
   ) {
     if (data) {
-      this.phoneId = data.data.id;
-      this.phoneNumber = data.data.number;
-      this.phoneType = data.data.type.id;
+      if (data.data) {
+        this.phoneId = data.data.id;
+        this.phoneNumber = data.data.number;
+        this.phoneType = data.data.type.id;
+      } else {
+        this.phoneId = data.id;
+        this.phoneNumber = data.number;
+        this.phoneType = data.type.id;
+      }   
     }
   }
 

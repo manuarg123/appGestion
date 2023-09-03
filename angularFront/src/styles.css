@@ -131,6 +131,20 @@ body {
   transition: background-color 0.3s;
 }
 
+.button-style-return {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 3px;
+  height: auto;
+  width: auto;
+  padding: 3px;
+  color: white;
+  margin-bottom: 3px;
+  background-color: rgb(59, 11, 130);
+  transition: background-color 0.3s;
+}
+
 .button-l {
   height: 30px !important;
   width: 70px !important;

@@ -25,9 +25,15 @@ export class EmailFormComponent implements OnInit {
     private validate: ValidationsService,
   ) {
     if (data) {
-      this.emailId = data.data.id;
-      this.emailValue = data.data.value;
-      this.emailType = data.data.type.id;
+      if (data.data) {
+        this.emailId = data.data.id;
+        this.emailValue = data.data.value;
+        this.emailType = data.data.type.id;
+      } else {
+        this.emailId = data.id;
+        this.emailValue = data.value;
+        this.emailType = data.type.id;
+      }
     }
   }
 
