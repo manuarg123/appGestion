@@ -20,6 +20,7 @@ import { PaymentTypeComponent } from './components/payment-type/index/payment-ty
 import { ProfessionalComponent } from './components/professional/index/professional.component';
 import { PatientComponent } from './components/patient/index/patient.component';
 import { PatientMainFormComponent } from './components/patient/patient-main-form/patient-main-form.component';
+import { PlanComponent } from './components/plan/index/plan.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -42,6 +43,7 @@ const routes: Routes = [
   { path: 'patient', component: PatientComponent, canActivate: [AuthGuard]},
   { path: 'patient/:id', component: PatientMainFormComponent, canActivate: [AuthGuard]},
   { path: 'patient/new', component: PatientMainFormComponent, canActivate: [AuthGuard]},
+  { path: 'plan', component: PlanComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 

@@ -7,6 +7,7 @@ import com.example.api.emergencyContact.EmergencyContact;
 import com.example.api.gender.Gender;
 import com.example.api.identification.Identification;
 import com.example.api.phone.Phone;
+import com.example.api.plan.Plan;
 import com.example.api.realPerson.RealPerson;
 import com.example.api.socialWork.SocialWork;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -41,6 +42,12 @@ public class Patient extends RealPerson {
             joinColumns = @JoinColumn(name = "patient_id"),
             inverseJoinColumns = @JoinColumn(name = "social_work_id"))
     private List<SocialWork> socialWorks;
+
+    @ManyToMany
+    @JoinTable(name = "patient_plan",
+            joinColumns = @JoinColumn(name = "patient_id"),
+            inverseJoinColumns = @JoinColumn(name = "plan_id"))
+    private List<Plan> plans;
 
     @OneToMany(mappedBy = "patient")
     @JsonManagedReference

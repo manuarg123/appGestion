@@ -61,7 +61,7 @@ public class PatientService {
     }
 
     public Page<PatientListDTO> getPatientsPaginated(int currentPage, int pageSize) {
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+            Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 
         Page<Patient> patientPage = patientRepository.findPageByDeletedAtIsNull(pageable);
         Page<PatientListDTO> patientListDTOS = patientPage.map(patientListDTOMapper::apply);
@@ -258,6 +258,8 @@ public class PatientService {
 
         apiResponse.setData(existingPatient);
         apiResponse.setStatus(HttpStatus.OK.value());
+        apiResponse.setMessage(MessagesResponse.deleteSuccess);
+
         return apiResponse;
     }
 

@@ -1,0 +1,66 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" style="margin-left: auto; margin-right: auto">
+          Agregar Plan
+        </h3>
+      </div>
+      <div
+        class="modal-body d-flex flex-column justify-content-center align-items-center"
+        style="width: 100%"
+      >
+        <form (ngSubmit)="handleSubmit()">
+          <div class="form-group">
+            <label>Nombre:</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Ingresar Nombre.."
+              [(ngModel)]="name"
+              name="name"
+              required
+              [value]="data?.name"
+            />
+            <input
+              type="hidden"
+              class="form-control"
+              name="id"
+              required
+              [value]="data?.id"
+            />
+          </div>
+          <label for="socialWork" class="font-weight-bold">Obra Social:</label>
+          <select
+            class="form-control"
+            name="socialWork"
+            [(ngModel)]="socialWork"
+            required
+          >
+            <option
+              *ngFor="let socialWork of socialWorks"
+              [value]="socialWork.id.toString()"
+            >
+              {{ socialWork.name }}
+            </option>
+          </select>
+        </form>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button
+          type="button"
+          class="button-style-close rounded margin-top"
+          (click)="handleClose()"
+        >
+          Cerrar
+        </button>
+        <button
+          type="button"
+          class="button-style-add rounded margin-top"
+          (click)="handleSubmit()"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+  
