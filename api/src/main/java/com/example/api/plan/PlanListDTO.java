@@ -9,4 +9,5 @@ public class PlanListDTO {
     private Long id;
     private String name;
     private String socialWorkName;
+    private Long socialWorkId;
 }

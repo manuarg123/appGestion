@@ -1,0 +1,61 @@
+<div class="modal-dialog main-color">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title" style="margin-left: auto; margin-right: auto">
+        Agregar Plan/Obra Social
+      </h2>
+    </div>
+    <div class="modal-body" style="width: 100%">
+      <div class="card mb-4 auto-margin width-90 back-grey margin-top">
+        <div class="card-body padding-0">
+          <div class="form-group m-3">
+            <label for="socialWork" class="font-weight-bold"
+              >Obra Social:</label
+            >
+            <select
+              class="form-control"
+              name="socialWork"
+              [(ngModel)]="selectedSocialWorkId"
+              (change)="loadPlansBySocialWork()"
+              required
+            >
+              <option disabled selected value=0>Seleccionar Obra Social</option>
+              <option
+                *ngFor="let socialWork of socialWorks"
+                [value]="socialWork.id.toString()"
+              >
+                {{ socialWork.fullName }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group m-3">
+            <label for="plan" class="font-weight-bold">Plan:</label>
+            <select
+              class="form-control"
+              name="plan"
+              [(ngModel)]="selectedPlanId"
+              required
+            >
+              <option disabled selected value=0>Seleccionar Plan</option>
+              <option *ngFor="let plan of plans" [value]="plan.id.toString()">
+                {{ plan.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-center">
+      <button type="button" class="button-style-close button-l rounded">
+        Cerrar
+      </button>
+      <button
+        type="button"
+        class="button-style-add button-l rounded"
+        (click)="savePlan()"
+      >
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>

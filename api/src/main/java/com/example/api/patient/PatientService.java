@@ -20,6 +20,8 @@ import com.example.api.identification.IdentificationService;
 import com.example.api.phone.Phone;
 import com.example.api.phone.PhoneDTO;
 import com.example.api.phone.PhoneService;
+import com.example.api.plan.Plan;
+import com.example.api.plan.PlanRepository;
 import com.example.api.socialWork.SocialWork;
 import com.example.api.socialWork.SocialWorkRepository;
 import jakarta.transaction.Transactional;
@@ -50,6 +52,7 @@ public class PatientService {
     private final EmergencyContactService emergencyContactService;
     private final PatientFormDTOMapper patientFormDTOMapper;
     private final PatientListDTOMapper patientListDTOMapper;
+    private final PlanRepository planRepository;
 
     public List<PatientListDTO> getPatients() {
         List<PatientListDTO> patientListDTOS = patientRepository.findByDeletedAtIsNull()
@@ -91,11 +94,21 @@ public class PatientService {
             }
         }
         patient.setSocialWorks(socialWorks);
+
+        List<Plan> plans = new ArrayList<>();
+        if (patientDTO.getPlansIds() != null) {
+            for (Long planId : patientDTO.getPlansIds()) {
+                Optional<Plan> optionalPlan = findPlan(planId);
+                optionalPlan.ifPresent(plans::add);
+            }
+        }
+        patient.setPlans(plans);
         patientRepository.save(patient);
 
         Long patientId = patient.getId();
-
+        System.out.println("Antes del set data collection");
         setDataCollectionsForPerson(patientId, patientDTO, true);
+        System.out.println("despues del set data colection");
 
         apiResponse.setStatus(HttpStatus.CREATED.value());
         apiResponse.setMessage(MessagesResponse.addSuccess);
@@ -108,7 +121,6 @@ public class PatientService {
     public APIResponse editPatient(Long id, PatientDTO patientDTO) {
         Optional<Patient> optionalPatient = findPatient(id);
         validatePatient(patientDTO);
-
         APIResponse apiResponse = new APIResponse();
         Patient patient = optionalPatient.get();
         patient.setSmoker(patientDTO.isSmoker());
@@ -130,10 +142,20 @@ public class PatientService {
             }
         }
         patient.setSocialWorks(socialWorks);
+
+        List<Plan> plans = new ArrayList<>();
+        if (patientDTO.getPlansIds() != null) {
+            for (Long planId : patientDTO.getPlansIds()) {
+                Optional<Plan> optionalPlan = findPlan(planId);
+                optionalPlan.ifPresent(plans::add);
+            }
+
+        }
+        patient.setPlans(plans);
         patientRepository.save(patient);
 
         Long patientId = patient.getId();
-
+        System.out.println(patientId);
         setDataCollectionsForPerson(patientId, patientDTO, false);
 
         apiResponse.setStatus(HttpStatus.OK.value());
@@ -150,6 +172,16 @@ public class PatientService {
         }
 
         return optionalSocialWork;
+    }
+
+    private Optional<Plan> findPlan(Long planId) {
+        Optional<Plan> optionalPlan = planRepository.findByIdAndDeletedAtIsNull(planId);
+        System.out.println("find plan");
+        if (!optionalPlan.isPresent()) {
+            throw new NotFoundException(MessagesResponse.recordNotFound);
+        }
+
+        return optionalPlan;
     }
 
     public APIResponse getPatient(Long id) {
@@ -172,7 +204,7 @@ public class PatientService {
 
     public void validatePatient(PatientDTO patientDTO) {
         if (Stream.of(patientDTO)
-                .anyMatch(dto -> dto.getGenderId() == null)) {
+                .anyMatch(dto -> dto.getGenderId() == null || !(dto.getGenderId() instanceof Number))) {
             throw new NotValidException(MessagesResponse.notValidParameters);
         }
     }
@@ -203,14 +235,12 @@ public class PatientService {
                     addressService.createAddress(addressDTO);
                 }
             }
-
             if (patientDTO.getEmergencyContacts() != null) {
                 for (EmergencyContactDTO emergencyContactDTO : patientDTO.getEmergencyContacts()) {
                     emergencyContactDTO.setPersonId(patientId);
                     emergencyContactService.createEmergencyContact(emergencyContactDTO);
                 }
             }
-
             //Pendiente
             if (patientDTO.getClinicHistories() != null) {
                 for (ClinicHistoryDTO clinicHistoryDTO : patientDTO.getClinicHistories()) {
@@ -237,6 +267,7 @@ public class PatientService {
 
     public Optional<Patient> findPatient(Long id) {
         Optional<Patient> optionalPatient = patientRepository.findByIdAndDeletedAtIsNull(id);
+
         if (!optionalPatient.isPresent()) {
             throw new NotFoundException(MessagesResponse.personNotFund);
         }

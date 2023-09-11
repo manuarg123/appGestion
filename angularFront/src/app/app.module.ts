@@ -66,6 +66,8 @@ import { EmergencyContactFormComponent } from './components/emergency-contact/em
 import { PlanComponent } from './components/plan/index/plan.component';
 import { PlanFormComponent } from './components/plan/form/plan-form.component';
 import { PlanListComponent } from './components/plan/list/plan-list.component';
+import { PlanSocialWorkFormComponent } from './components/patient/plan-form/plan-social-work-form.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -127,10 +129,18 @@ import { PlanListComponent } from './components/plan/list/plan-list.component';
     EmergencyContactFormComponent,
     PlanComponent,
     PlanFormComponent,
-    PlanListComponent
+    PlanListComponent,
+    PlanSocialWorkFormComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatSnackBarModule],
-  providers: [],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    MatSnackBarModule
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

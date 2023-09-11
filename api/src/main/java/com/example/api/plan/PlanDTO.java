@@ -19,6 +19,5 @@ public class PlanDTO {
     @Size(max = 144, message = "Plan name cannot be exceed 144 characters")
     private String name;
 
-    @NotNull(message = "socialWorkId cannot be null")
     private Long socialWorkId;
 }

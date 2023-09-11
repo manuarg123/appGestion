@@ -107,6 +107,24 @@
                 <label class="form-check-label" for="smoker-no">No</label>
               </div>
             </div>
+
+            <div class="form-group row align-items-center">
+              <div class="col-md-6">
+                <label for="occupation" class="font-weight-bold"
+                  >Ocupación:
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Ingresar Nombre.."
+                  [(ngModel)]="occupation"
+                  name="occupation"
+                  required
+                  [value]="patientData?.data?.occupation"
+                />
+              </div>
+              <div class="col-md-6"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -440,7 +458,12 @@
                           type="button"
                           class="button-style"
                           title="Editar"
-                          (click)="handleEditIdentification(identification.id, identification.number)"
+                          (click)="
+                            handleEditIdentification(
+                              identification.id,
+                              identification.number
+                            )
+                          "
                         >
                           <img
                             src="../../../assets/images/editar.png"
@@ -472,72 +495,78 @@
           </div>
           <div class="form-group row">
             <div class="card mb-4 auto-margin width-90 back-grey">
-                <div class="card-header">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <span>Contactos de Emergencia</span>
-                    <button
-                      type="button"
-                      class="button-style-add rounded"
-                      title="Agregar Registro"
-                      (click)="openEmergencyContactFormDialog()"
-                    >
-                      Agregar Contacto de Emergencia
-                      <img
-                        src="../../../assets/images/anadir.png"
-                        alt="Agregar Registro"
-                      />
-                    </button>
-                  </div>
-                </div>
-                <div class="card-body padding-0">
-                  <table
-                    class="table table-bordered table-striped table-hover table-responsive text-center rounded"
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span>Contactos de Emergencia</span>
+                  <button
+                    type="button"
+                    class="button-style-add rounded"
+                    title="Agregar Registro"
+                    (click)="openEmergencyContactFormDialog()"
                   >
-                    <thead class="table-secondary">
-                      <tr>
-                        <th>Nombre</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let emergencyContact of emergencyContactsList">
-                        <td>{{ emergencyContact.name }}</td>
-                        <td>{{ emergencyContact.phoneNumber }}</td>
-                        <td class="text-center">
-                          <button
-                            type="button"
-                            class="button-style"
-                            title="Editar"
-                            (click)="handleEditEmergencyContact(emergencyContact.id, emergencyContact.name, emergencyContact.phoneNumber)"
-                          >
-                            <img
-                              src="../../../assets/images/editar.png"
-                              alt="Editar"
-                            />
-                          </button>
-                          <button
-                            type="button"
-                            class="button-style"
-                            title="Eliminar"
-                            (click)="
-                              handleDeleteEmergencyContact(
-                                emergencyContact.id,
-                                emergencyContact.name
-                              )
-                            "
-                          >
-                            <img
-                              src="../../../assets/images/eliminar.png"
-                              alt="Eliminar"
-                            />
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                    Agregar Contacto de Emergencia
+                    <img
+                      src="../../../assets/images/anadir.png"
+                      alt="Agregar Registro"
+                    />
+                  </button>
                 </div>
               </div>
+              <div class="card-body padding-0">
+                <table
+                  class="table table-bordered table-striped table-hover table-responsive text-center rounded"
+                >
+                  <thead class="table-secondary">
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Teléfono</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let emergencyContact of emergencyContactsList">
+                      <td>{{ emergencyContact.name }}</td>
+                      <td>{{ emergencyContact.phoneNumber }}</td>
+                      <td class="text-center">
+                        <button
+                          type="button"
+                          class="button-style"
+                          title="Editar"
+                          (click)="
+                            handleEditEmergencyContact(
+                              emergencyContact.id,
+                              emergencyContact.name,
+                              emergencyContact.phoneNumber
+                            )
+                          "
+                        >
+                          <img
+                            src="../../../assets/images/editar.png"
+                            alt="Editar"
+                          />
+                        </button>
+                        <button
+                          type="button"
+                          class="button-style"
+                          title="Eliminar"
+                          (click)="
+                            handleDeleteEmergencyContact(
+                              emergencyContact.id,
+                              emergencyContact.name
+                            )
+                          "
+                        >
+                          <img
+                            src="../../../assets/images/eliminar.png"
+                            alt="Eliminar"
+                          />
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
           <div class="form-group row">
             <div class="card mb-4 auto-margin width-90 back-grey">
@@ -548,6 +577,7 @@
                     type="button"
                     class="button-style-add rounded"
                     title="Agregar Registro"
+                    (click)="openPlanFormDialog()"
                   >
                     Agregar Obra Social
                     <img
@@ -569,14 +599,17 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>prueba</td>
-                      <td>prueba</td>
+                    <tr *ngFor="let planSocialWork of planSocialWorksList">
+                      <td>{{ planSocialWork.socialWork.name }}</td>
+                      <td>{{ planSocialWork.name }}</td>
                       <td class="text-center">
                         <button
                           type="button"
                           class="button-style"
                           title="Editar"
+                          (click)="
+                            handleEditPlanSocialWork(planSocialWork.code)
+                          "
                         >
                           <img
                             src="../../../assets/images/editar.png"
@@ -587,6 +620,9 @@
                           type="button"
                           class="button-style"
                           title="Eliminar"
+                          (click)="
+                            handleDeletePlanSocialWork(planSocialWork.code)
+                          "
                         >
                           <img
                             src="../../../assets/images/eliminar.png"
@@ -612,7 +648,11 @@
     >
       Volver
     </button>
-    <button type="button" class="button-style-add button-l rounded margin-top">
+    <button
+      type="button"
+      class="button-style-add button-l rounded margin-top"
+      (click)="handleSubmit()"
+    >
       Guardar
     </button>
   </div>

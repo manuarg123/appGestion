@@ -5,13 +5,18 @@ import { Router } from '@angular/router';
 import { Phone } from '../../phone/phone.model';
 import { Email } from '../../email/email.model';
 import { Identification } from '../../identification/identification.model';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { PhoneFormComponent } from '../../phone/phone-form/phone-form.component';
 import { EmailFormComponent } from '../../email/email-form/email-form.component';
 import { IdentificationFormComponent } from '../../identification/identification-form/identification-form.component';
 import { EmergencyContactFormComponent } from '../../emergency-contact/emergency-contact-form/emergency-contact-form.component';
 import { EmergencyContact } from '../../emergency-contact/emergency-contact.model';
+import { PlanSocialWorkFormComponent } from '../plan-form/plan-social-work-form.component';
+import { Plan } from '../plan-form/plan.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ServicePatientService } from '../service-patient.service';
+
 
 @Component({
   selector: 'app-patient-main-form',
@@ -19,10 +24,12 @@ import { EmergencyContact } from '../../emergency-contact/emergency-contact.mode
   styleUrls: ['./patient-main-form.component.css']
 })
 export class PatientMainFormComponent implements OnInit {
+  id: any = "";
   phoneList: Phone[] = [];
   emailList: Email[] = [];
   identificationList: Identification[] = [];
   emergencyContactsList: EmergencyContact[] = [];
+  planSocialWorksList: Plan[] = [];
   patientId: any = "";
   patientData: any = {};
   locations: any[] = [];
@@ -45,8 +52,16 @@ export class PatientMainFormComponent implements OnInit {
   lastName: string = '';
   smoker: boolean = false;
   medicalHistory: string = "";
+  occupation: string = "";
+  addressId: any = "";
 
-  constructor(private route: ActivatedRoute, private apiService: ApiService, private router: Router, private dialog: MatDialog) { }
+  constructor(
+    private route: ActivatedRoute,
+    private apiService: ApiService,
+    private router: Router,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private patientDataService: ServicePatientService) { }
 
   ngOnInit(): void {
     this.patientId = this.route.snapshot.paramMap.get('id');
@@ -458,12 +473,77 @@ export class PatientMainFormComponent implements OnInit {
     }
   }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////HANDLE SOCIAL WOrK PLAN//////////////////////////////////////////////////////////////////////////////
+  openPlanFormDialog(): void {
+    const dialogRef = this.dialog.open(PlanSocialWorkFormComponent, {
+      width: '300px'
+    });
+
+    dialogRef.afterClosed().subscribe((result: Plan) => {
+      if (result) {
+        this.planSocialWorksList.push(result);
+      }
+    });
+  }
+
+  handleDeletePlanSocialWork(code: string) {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          if (code) {
+            this.planSocialWorksList = this.planSocialWorksList.filter((planSocialWork) => planSocialWork.code !== code);
+          }
+        }
+      });
+    } else {
+      console.log("No se encontró token");
+    }
+  }
+
+  handleEditPlanSocialWork(code: string) {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+      console.log(code)
+      console.log(this.planSocialWorksList)
+      if (code) {
+        const index = this.planSocialWorksList.findIndex((planSocialWork) => planSocialWork.code === code);
+
+        if (index !== -1) {
+          const planSocialWork = this.planSocialWorksList[index];
+          const dialogRef = this.dialog.open(PlanSocialWorkFormComponent, {
+            data: planSocialWork,
+            width: '300px',
+          });
+
+          dialogRef.componentInstance.socialWork = planSocialWork.id;
+
+          dialogRef.afterClosed().subscribe((result: Plan) => {
+            result.id = planSocialWork.id;
+            if (result) {
+              this.planSocialWorksList[index] = result;
+            }
+          });
+        }
+      }
+    } else {
+      console.log("No se encontró token");
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   loadPatient(patientId: any): void {
     const token = localStorage.getItem("token");
     if (token != null) {
       this.apiService.getByid('patients', token, patientId).subscribe(
         (patientData) => {
           this.patientData = patientData;
+          this.firstName = this.patientData?.data?.firstName;
+          this.lastName = this.patientData?.data?.lastName;
+          this.occupation = this.patientData?.data?.occupation;
+          this.addressId = this.patientData?.data?.addresses[0]?.id ?? "";
           this.location = this.patientData?.data?.addresses[0]?.locationId ?? "";
           this.province = this.patientData?.data?.addresses[0]?.provinceId ?? "";
           this.street = this.patientData?.data?.addresses[0]?.street ?? "";
@@ -479,6 +559,7 @@ export class PatientMainFormComponent implements OnInit {
           this.emailList = this.patientData?.data?.emails;
           this.identificationList = this.patientData?.data?.identifications;
           this.emergencyContactsList = this.patientData?.data?.emergencyContacts;
+          this.planSocialWorksList = this.patientData?.data?.planSocialWorkDTOS;
         }
       );
     }
@@ -507,5 +588,139 @@ export class PatientMainFormComponent implements OnInit {
 
   onSmokerClick(value: boolean): void {
     this.smoker = value;
+  }
+
+  handleSubmit() {
+    const token = localStorage.getItem('token');
+    let addressObject = this.getAddressObject();
+    let id = this.patientId != "new" ? this.patientId : "";
+
+    const data = {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      genderId: this.gender,
+      isSmoker: this.smoker,
+      occupation: this.occupation,
+      medicalHistory: this.medicalHistory,
+      birthday: null,
+      addresses: [addressObject],
+      phones: this.preparePhoneList(),
+      emails: this.prepareEmailList(),
+      identifications: this.prepareIdentificationList(),
+      socialWorksIds: this.preparePlanSocialWorkList()[1],
+      plansIds: this.preparePlanSocialWorkList()[0],
+      emergencyContacts: id != "" ? this.prepareEmergencyContactsList(id) : this.prepareEmergencyContactsList(),
+      clinicHistories: []
+    }
+
+    if (token != null) {
+      if (id == "") {
+        this.apiService.post("patients", token, data).subscribe(
+          (response) => {
+            this.patientDataService.triggerPatientAdded;
+          },
+          (error) => {
+            console.log("ocurrio un error")
+          }
+        );
+      } else {
+        this.apiService.put("patients", token, data, id).subscribe(
+          (response) => {
+            this.patientDataService.triggerPatientAdded;
+          },
+          (error) => {
+            console.log("ocurrio un error")
+          }
+        );
+      }
+    } else {
+      console.log('No se encontró token');
+    }
+  }
+
+  preparePhoneList() {
+    let listPhone: { value: string; typeId: number }[] = [];
+
+    this.phoneList.forEach(phone => {
+      let phoneObject = {
+        id: phone.id ? phone.id : null,
+        value: phone.number,
+        typeId: Number(phone.type.id)
+      };
+
+      listPhone.push(phoneObject);
+    });
+
+    return listPhone;
+  }
+
+  prepareEmailList() {
+    let listEmail: { value: string; typeId: number }[] = [];
+
+    this.emailList.forEach(email => {
+      let emailObject = {
+        id: email.id ? email.id : null,
+        value: email.value,
+        typeId: Number(email.type.id)
+      };
+
+      listEmail.push(emailObject);
+    });
+
+    return listEmail;
+  }
+
+  getAddressObject() {
+    let addressObject = {
+      id: this.addressId ? this.addressId : null,
+      street: this.street ? this.street : null,
+      section: this.section ? this.section : null,
+      number: this.number ? this.number : null,
+      floor: this.floor ? this.floor : null,
+      apartment: this.apartment ? this.apartment : null,
+      zip: this.zip ? this.zip : null,
+      locationId: this.location ? this.location : null,
+      provinceId: this.province ? this.province : null
+    }
+    return addressObject;
+  }
+
+  prepareEmergencyContactsList(person_id:any = null) {
+    let listEmergencyContacts: { id: any; name: string; phoneNumber: string; personId: any } [] = [];
+
+    if (this.emergencyContactsList.length != 0) {
+      this.emergencyContactsList.forEach(emergencyContact => {
+        let emergencyContactObject = {
+          id: emergencyContact.id ? emergencyContact.id : null,
+          name: emergencyContact.name ? emergencyContact.name : "",
+          phoneNumber : emergencyContact.phoneNumber ? emergencyContact.phoneNumber : "",
+          personId : person_id != "" ? person_id : null
+        };
+  
+        listEmergencyContacts.push(emergencyContactObject);
+      });      
+    }
+
+    return listEmergencyContacts;
+  }
+
+  preparePlanSocialWorkList() {
+    let listPlans:any[] = [];
+    let listSocialWorks:any[] = [];
+    let listPlanSocialWorkIds: any[] = [];
+
+    if (this.planSocialWorksList.length != 0) {
+      this.planSocialWorksList.forEach(planSocialWork => {
+        if (planSocialWork.id) {
+          listPlans.push(Number(planSocialWork.id));
+        } else {
+          listSocialWorks.push(Number(planSocialWork.socialWork.id));
+        }
+      })
+    }
+
+    listPlanSocialWorkIds.push(listPlans);
+    listPlanSocialWorkIds.push(listSocialWorks);
+    return listPlanSocialWorkIds;
   }
 }

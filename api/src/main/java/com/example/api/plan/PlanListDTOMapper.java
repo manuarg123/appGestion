@@ -11,7 +11,8 @@ public class PlanListDTOMapper implements Function<Plan, PlanListDTO> {
         return new PlanListDTO(
                 plan.getId(),
                 plan.getName(),
-                plan.getSocialWork().getName()
+                plan.getSocialWork().getName(),
+                plan.getSocialWork().getId()
         );
     }
 }
