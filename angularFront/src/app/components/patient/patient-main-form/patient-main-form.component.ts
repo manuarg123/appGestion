@@ -593,6 +593,7 @@ export class PatientMainFormComponent implements OnInit {
   handleSubmit() {
     const token = localStorage.getItem('token');
     let addressObject = this.getAddressObject();
+
     let id = this.patientId != "new" ? this.patientId : "";
 
     const data = {
@@ -603,7 +604,7 @@ export class PatientMainFormComponent implements OnInit {
       occupation: this.occupation,
       medicalHistory: this.medicalHistory,
       birthday: null,
-      addresses: [addressObject],
+      addresses: this.getAddressObject(),
       phones: this.preparePhoneList(),
       emails: this.prepareEmailList(),
       identifications: this.prepareIdentificationList(),
@@ -612,12 +613,17 @@ export class PatientMainFormComponent implements OnInit {
       emergencyContacts: id != "" ? this.prepareEmergencyContactsList(id) : this.prepareEmergencyContactsList(),
       clinicHistories: []
     }
-
     if (token != null) {
       if (id == "") {
         this.apiService.post("patients", token, data).subscribe(
           (response) => {
             this.patientDataService.triggerPatientAdded;
+            this.openSnackBar("Registro agregado con éxito, seras redirigido a la lista de pacientes", "Aceptar");
+
+            setTimeout(() => {
+              let redirectUrl = window.location.origin + '/patient';
+              window.location.href = redirectUrl;
+            }, 3000);
           },
           (error) => {
             console.log("ocurrio un error")
@@ -627,6 +633,7 @@ export class PatientMainFormComponent implements OnInit {
         this.apiService.put("patients", token, data, id).subscribe(
           (response) => {
             this.patientDataService.triggerPatientAdded;
+            this.openSnackBar("Registro editado con éxito", "Aceptar");
           },
           (error) => {
             console.log("ocurrio un error")
@@ -682,31 +689,66 @@ export class PatientMainFormComponent implements OnInit {
       locationId: this.location ? this.location : null,
       provinceId: this.province ? this.province : null
     }
-    return addressObject;
+
+    let allNull = true;
+
+    if (addressObject.street) {
+      allNull = false;
+    }
+
+    if (addressObject.section) {
+      allNull = false;
+    }
+
+    if (addressObject.number) {
+      allNull = false;
+    }
+
+    if (addressObject.floor) {
+      allNull = false;
+    }
+
+    if (addressObject.apartment) {
+      allNull = false;
+    }
+
+    if (addressObject.zip) {
+      allNull = false;
+    }
+
+    if (addressObject.locationId) {
+      allNull = false;
+    }
+
+    if (addressObject.provinceId) {
+      allNull = false;
+    }
+
+    return !allNull ? [addressObject] : [];
   }
 
-  prepareEmergencyContactsList(person_id:any = null) {
-    let listEmergencyContacts: { id: any; name: string; phoneNumber: string; personId: any } [] = [];
+  prepareEmergencyContactsList(person_id: any = null) {
+    let listEmergencyContacts: { id: any; name: string; phoneNumber: string; personId: any }[] = [];
 
     if (this.emergencyContactsList.length != 0) {
       this.emergencyContactsList.forEach(emergencyContact => {
         let emergencyContactObject = {
           id: emergencyContact.id ? emergencyContact.id : null,
           name: emergencyContact.name ? emergencyContact.name : "",
-          phoneNumber : emergencyContact.phoneNumber ? emergencyContact.phoneNumber : "",
-          personId : person_id != "" ? person_id : null
+          phoneNumber: emergencyContact.phoneNumber ? emergencyContact.phoneNumber : "",
+          personId: person_id != "" ? person_id : null
         };
-  
+
         listEmergencyContacts.push(emergencyContactObject);
-      });      
+      });
     }
 
     return listEmergencyContacts;
   }
 
   preparePlanSocialWorkList() {
-    let listPlans:any[] = [];
-    let listSocialWorks:any[] = [];
+    let listPlans: any[] = [];
+    let listSocialWorks: any[] = [];
     let listPlanSocialWorkIds: any[] = [];
 
     if (this.planSocialWorksList.length != 0) {
@@ -722,5 +764,11 @@ export class PatientMainFormComponent implements OnInit {
     listPlanSocialWorkIds.push(listPlans);
     listPlanSocialWorkIds.push(listSocialWorks);
     return listPlanSocialWorkIds;
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }

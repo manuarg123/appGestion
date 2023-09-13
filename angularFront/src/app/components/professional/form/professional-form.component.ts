@@ -102,7 +102,6 @@ export class ProfessionalFormComponent extends PersonFormComponent implements On
   handleSubmit(): void {
     const token = localStorage.getItem('token');
 
-    let addressObject = this.getAddressObject();
 
     const data = {
       firstName: this.firstName,
@@ -114,7 +113,7 @@ export class ProfessionalFormComponent extends PersonFormComponent implements On
       emails: this.prepareEmailList(),
       identifications: this.prepareIdentificationList(),
       medicalCenterIds: this.prepareMedicalCenterList(),
-      addresses: [addressObject]
+      addresses: this.getAddressObject()
     };
     
     let id = this.id;

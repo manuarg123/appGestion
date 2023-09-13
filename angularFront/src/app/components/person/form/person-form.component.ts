@@ -352,7 +352,41 @@ export class PersonFormComponent implements OnInit {
             locationId: this.location ? this.location : null,
             provinceId: this.province ? this.province : null
         }
+        
+        let allNull = true;
+        
+        if (addressObject.street) {
+            allNull = false;
+        }
 
-        return addressObject;
+        if (addressObject.section) {
+            allNull = false;
+        }
+
+        if (addressObject.number) {
+            allNull = false;
+        }
+
+        if (addressObject.floor) {
+            allNull = false;
+        }
+
+        if (addressObject.apartment) {
+            allNull = false;
+        }
+
+        if (addressObject.zip) {
+            allNull = false;
+        }
+
+        if (addressObject.locationId) {
+            allNull = false;
+        }
+        
+        if (addressObject.provinceId) {
+            allNull = false;
+        }
+
+        return !allNull ? [addressObject] : [];
     }
 }
